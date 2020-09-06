@@ -1,0 +1,65 @@
+
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8089
+
+
+
+
+# 日志配置
+logging:
+  root: info
+  level:
+    com:
+      stcode: debug
+
+
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        druid:
+            url: jdbc:mysql://154.221.18.115:3306/stcode_bootstrap?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+            username: root
+            password: 123456
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            #validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        #允许一次执行多条语句
+                        multi-statement-allow: true
+# 前端thymeleaf模板配置
+    thymeleaf:
+      prefix: classpath:/templates/
+      suffix: .html
+      enabled: true
+      cache: false
+      encoding: UTF-8
+      mode: HTML5
+
+
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
