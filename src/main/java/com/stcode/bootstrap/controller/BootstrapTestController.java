@@ -1,20 +1,26 @@
 package com.stcode.bootstrap.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.fastjson.JSONObject;
 import com.stcode.bootstrap.domain.User;
 import com.stcode.bootstrap.dto.TestDto;
+import com.stcode.bootstrap.export.ComplexHeadData;
 import com.stcode.bootstrap.service.TestService;
 import com.stcode.bootstrap.utils.R;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLEncoder;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -82,4 +88,74 @@ public class BootstrapTestController {
         System.out.println(testDto.getDaiban());
         return R.ok().put("data",listT);
     }
+
+    //查询检查结果
+    @RequestMapping(value = "/checkResult")
+    @ResponseBody
+    public R checkResult(TestDto testDto){
+        Map<String,String> map = new HashMap<>();
+        map.put("1","通过");
+        map.put("2","材料不齐全");
+        map.put("3","材料不合规矩");
+        map.put("4","没有复核");
+        map.put("5","没有审批");
+        map.put("6","表示不规范");
+
+        return R.ok().put("data",map);
+    }
+
+
+    //测试下
+    @RequestMapping(value = "/downloadTest")
+    @ResponseBody
+    public R downloadTest(HttpServletResponse response,HttpServletRequest request,TestDto testDto){
+
+        try {
+            download(response,request,testDto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return R.ok();
+    }
+
+
+//    导出
+    /**
+     * 文件下载（失败了会返回一个有部分数据的Excel）
+     * <p>
+     * 1. 创建excel对应的实体对象 参照{@link DownloadData}
+     * <p>
+     * 2. 设置返回的 参数
+     * <p>
+     * 3. 直接写，这里注意，finish的时候会自动关闭OutputStream,当然你外面再关闭流问题不大
+     */
+//    @GetMapping(value = "/download")
+    @RequestMapping(value = "/download")
+    public void download(HttpServletResponse response, HttpServletRequest request, TestDto testDto) throws IOException {
+
+        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = URLEncoder.encode("测试", "UTF-8");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        EasyExcel.write(response.getOutputStream(), ComplexHeadData.class).sheet("模板").doWrite(data());
+    }
+
+    private List<ComplexHeadData> data() {
+        List<ComplexHeadData> list = new ArrayList<ComplexHeadData>();
+        for (int i = 0; i < 10; i++) {
+            ComplexHeadData data = new ComplexHeadData();
+            data.setString("字符串" + i);
+            data.setDate(new Date());
+            data.setDoubleData(0.56);
+            data.setTest1("字符串测试" + i);
+            data.setTest2("字符串测试" + i);
+            data.setTest3("字符串测试" + i);
+            data.setTest4("字符串测试" + i);
+            list.add(data);
+        }
+        return list;
+    }
+
 }

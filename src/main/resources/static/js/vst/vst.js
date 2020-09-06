@@ -1,7 +1,7 @@
 $(function(){
     _vst.init();
 
-
+    //查询表格
     $("#query_btn").click(function(){
        // var formdata = JSON.stringify($("form").serialize());
        var formdata = $("form").serialize();
@@ -22,12 +22,92 @@ $(function(){
         });
     });
 
+
+    //检查
     $("#check-btn").click(function(){
+        // _vst.modalDataGrid();
+        // $('#modalCbdw').bootstrapTable("load",temp);
+        var formdata = $("form").serialize();
+        $.ajax({
+            type: "post",
+            url: "/user/checkResult",
+            data: formdata,
+            success: function(msg){
+                if (msg.code == 0) {
+                    debugger
+                    $("#addP").find("tbody").empty();
+                    var dataMap = msg.data;
+                    $.each(dataMap,function(key,values){
+                        $("#addP").find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+key+"'/></div></td><td>"+values+"</td></tr>");
+                    });
+                    $("#addP").find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><input class=\"form-control\" type=\"text\" name=\"memo\"/></td></tr>");
+
+                    $("#queryResult").show();
+
+                } else {
+                    bootbox.alert(msg.error);
+                }
+            }
+        });
+
+
         $("#myModal").modal('show');
     });
 
 
+    //导出
+    $("#export-btn").on('click',
+        function() {
+            var data= JSON.stringify($('#cbdw').bootstrapTable('getData',false));
+            // var param = data;
+            // var param = {"name":"list"};
+            postDownLoadFile({
+                url:"/user/download",
+                data:data,
+                method:'post'
+            });
+        });
+
+
+    // $("#export-btn").click(function(){
+    //
+    //     var formdata = $("form").serialize();
+    //     $.ajax({
+    //         type: "post",
+    //         url: "/user/downloadTest",
+    //         data: formdata,
+    //         success: function(msg){
+    //             if (msg.code == 0) {
+    //
+    //                 alert("11111")
+    //             } else {
+    //                alert("222222")
+    //             }
+    //         }
+    //     });
+    //
+    // });
+
+
 });
+
+
+
+var postDownLoadFile = function (options) {
+    var config = $.extend(true, { method: 'post' }, options);
+    var $iframe = $('<iframe id="down-file-iframe" />');
+    var $form = $('<form target="down-file-iframe" method="' + config.method + '" />');
+    $form.attr('action', config.url);
+    for (var key in config.data) {
+        $form.append('<input type="hidden" name="' + key + '" value="' + config.data[key] + '" />');
+    }
+    $iframe.append($form);
+    $(document.body).append($iframe);
+    $form[0].submit();
+    $iframe.remove();
+}
+
+
 
 var _vst = {
     init:function () {
@@ -96,7 +176,30 @@ var _vst = {
                 ]
 
             })
+    },
 
 
+    modalDataGrid:function () {
+        $('#modalCbdw').bootstrapTable({
+            method: 'post',
+            url: "", // 请求路径
+            striped: true, // 是否显示行间隔色
+            pageNumber: 1, // 初始化加载第一页
+            pagination: true, // 是否分页
+            sidePagination: 'client', // server:服务器端分页|client：前端分页
+            pageSize: 5, // 单页记录数
+            cache: false,
+            pageList: [5, 20, 30],
+
+            columns: [
+                [{checkbox: true},
+                    {title: 'id', field: 'id', visible: false},
+                    {title: '检查结果', field: 'companyName', align: 'center', valign: 'middle',  width: '8%'},
+                    {title: '检查结果', field: 'companyName', align: 'center', valign: 'middle',  width: '8%'}
+                ]
+            ]
+
+        })
     }
+
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
 
     <link th:href="@{/plugins/bootstrap/css/bootstrap.css}" rel="stylesheet" />
@@ -20,6 +20,8 @@
         label {
             text-align: right;
         }
+
+
 
     </style>
 
@@ -372,16 +374,18 @@
                 <h4 class="modal-title" id="myModalLabel">检查结果</h4>
             </div>
             <div class="modal-body">
-                <select aria-describedby="effectiveType_helpBlock" id="priceSelect">
-                </select>
-                <span>X</span>
-                <input type="text" id="precentPrice" /> <span>%=</span>
-                <select id="priceSelect1">
-                </select>
+
+                <form>
+                    <table class="table table-bordered table-hover" id="addP">
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="changePrice()">提交更改</button>
+                <button type="button" class="btn btn-default" >【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【关闭】</button>
             </div>
         </div>
         <!-- /.modal-content -->
