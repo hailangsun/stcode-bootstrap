@@ -107,7 +107,14 @@ var postDownLoadFile = function (options) {
     $iframe.remove();
 }
 
+function company(value) {
+    alert(value) ;
+}
 
+function operateEvents(value , record , index) {
+
+    return '<span onclick="company(\''+record.companyName+'\')">' + value + '</span>';
+}
 
 var _vst = {
     init:function () {
@@ -148,7 +155,7 @@ var _vst = {
                                 return index + 1;
                             }
                         },
-                        {title: '单位名称', field: 'companyName', align: 'center', valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: '8%',},
+                        {title: '单位名称', field: 'companyName', align: 'center', valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: '8%',formatter: operateEvents},
                         {title: '经代办机构', field: 'jdbjg', align: 'center', valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: '8%',},
                         {title: '统一社区信用代码', field: 'jdbjg', align: 'center', valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: '8%',},
                         {title: '单位类型', field: 'jdbjg', align: 'center', valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: '8%',},
