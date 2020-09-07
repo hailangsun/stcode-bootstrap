@@ -55,6 +55,13 @@ public class BootstrapTestController {
     @RequestMapping(value = "/search")
     @ResponseBody
     public R search(TestDto testDto){
+        List<TestDto> listT = getTestLists(testDto);
+
+        System.out.println(testDto.getDaiban());
+        return R.ok().put("data",listT);
+    }
+
+    private List<TestDto> getTestLists(TestDto testDto) {
         List<TestDto> listT = new ArrayList<>();
         TestDto dto1 = new TestDto();
         dto1.setCompanyName("上海");
@@ -84,9 +91,7 @@ public class BootstrapTestController {
         listT.add(dto2);
         listT.add(dto3);
         listT.add(dto4);
-
-        System.out.println(testDto.getDaiban());
-        return R.ok().put("data",listT);
+        return listT;
     }
 
     //查询检查结果
@@ -123,7 +128,7 @@ public class BootstrapTestController {
     /**
      * 文件下载（失败了会返回一个有部分数据的Excel）
      * <p>
-     * 1. 创建excel对应的实体对象 参照{@link DownloadData}
+     * 1. 创建excel对应的实体对象 参照{@link }
      * <p>
      * 2. 设置返回的 参数
      * <p>
@@ -156,6 +161,16 @@ public class BootstrapTestController {
             list.add(data);
         }
         return list;
+    }
+
+    //点击单位信息
+    @RequestMapping(value = "/companyInfo")
+    @ResponseBody
+    public R company(TestDto testDto){
+        List<TestDto> listT = getTestLists(testDto);
+
+
+        return R.ok().put("rows",listT).put("total",listT.size());
     }
 
 }

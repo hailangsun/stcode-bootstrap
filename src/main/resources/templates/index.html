@@ -374,11 +374,9 @@
                 <h4 class="modal-title" id="myModalLabel">检查结果</h4>
             </div>
             <div class="modal-body">
-
                 <form>
                     <table class="table table-bordered table-hover" id="addP">
                         <tbody>
-
                         </tbody>
                     </table>
                 </form>
@@ -394,6 +392,30 @@
 </div>
 
 
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="companyInfo" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">单位增减信息</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table id="companyDataGrid" class="table table-hover"></table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
 
 
 </body>
