@@ -22,25 +22,36 @@ $(function(){
         });
     });
 
+    $("#ceshia").click(function(){
+        var fomd =  $("#testMt").serializeArray();
+        $.each(fomd,function(index,item){
+            debugger
+            console.log(item.name);
+            console.log(item.value)
+        });
+
+    });
 
     //检查
     $("#check-btn").click(function(){
-        // _vst.modalDataGrid();
-        // $('#modalCbdw').bootstrapTable("load",temp);
-        var formdata = $("form").serialize();
+        debugger
         $.ajax({
             type: "post",
             url: "/user/checkResult",
-            data: formdata,
+            data: "",
             success: function(msg){
                 if (msg.code == 0) {
-                    debugger
                     $("#addP").find("tbody").empty();
                     var dataMap = msg.data;
-                    $.each(dataMap,function(key,values){
-                        $("#addP").find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+key+"'/></div></td><td>"+values+"</td></tr>");
+                    // $.each(dataMap,function(key,values){
+                    //     $("#addP").find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+key+"'/></div></td><td>"+values+"</td></tr>");
+                    // });
+
+                    $.each(dataMap,function(index,item){
+                        $("#addP").find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+item.name+"' value='"+item.vl+"'/></div></td><td>"+item.mc+"</td></tr>");
                     });
-                    $("#addP").find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><input class=\"form-control\" type=\"text\" name=\"memo\"/></td></tr>");
+
+                    $("#addP").find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><textarea style='resize: none' class=\"form-control\" type=\"text\" name=\"memo\"></textarea></td></tr>");
 
                     $("#queryResult").show();
 

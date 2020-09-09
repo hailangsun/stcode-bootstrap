@@ -1,11 +1,14 @@
 package com.stcode.bootstrap.export;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.HeadStyle;
 import lombok.Data;
+import org.apache.poi.ss.usermodel.FillPatternType;
 
 import java.util.Date;
 
 @Data
+@HeadStyle(fillPatternType = FillPatternType.SOLID_FOREGROUND, fillForegroundColor = 245)
 public class ComplexHeadData {
     @ExcelProperty({"主标题", "字符串标题"})
     private String string;

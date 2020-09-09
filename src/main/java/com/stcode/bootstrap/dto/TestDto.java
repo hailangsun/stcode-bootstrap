@@ -16,4 +16,8 @@ public class TestDto {
     private String jbr;
     private String yl;
 
+    private String vl;
+    private String mc;
+
+
 }

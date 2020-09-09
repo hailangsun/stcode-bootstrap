@@ -98,6 +98,40 @@ public class BootstrapTestController {
     @RequestMapping(value = "/checkResult")
     @ResponseBody
     public R checkResult(TestDto testDto){
+        List<TestDto> lists = new ArrayList<>();
+        TestDto test1 = new TestDto();
+        test1.setName("sb");
+        test1.setVl("1");
+        test1.setMc("通过");
+
+        TestDto test2 = new TestDto();
+        test2.setName("sb");
+        test2.setVl("2");
+        test2.setMc("材料不齐全");
+        TestDto test3 = new TestDto();
+        test3.setName("sb");
+        test3.setVl("3");
+        test3.setMc("材料不合规矩");
+        TestDto test4 = new TestDto();
+        test4.setName("sb");
+        test4.setVl("4");
+        test4.setMc("没有复核");
+        TestDto test5 = new TestDto();
+        test5.setName("sb");
+        test5.setVl("5");
+        test5.setMc("没有审批");
+        TestDto test6 = new TestDto();
+        test6.setName("sb");
+        test6.setVl("6");
+        test6.setMc("表示不规范");
+
+        lists.add(test1);
+        lists.add(test2);
+        lists.add(test3);
+        lists.add(test4);
+        lists.add(test5);
+        lists.add(test6);
+
         Map<String,String> map = new HashMap<>();
         map.put("1","通过");
         map.put("2","材料不齐全");
@@ -106,7 +140,7 @@ public class BootstrapTestController {
         map.put("5","没有审批");
         map.put("6","表示不规范");
 
-        return R.ok().put("data",map);
+        return R.ok().put("data",lists);
     }
 
 
