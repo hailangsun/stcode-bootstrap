@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vstsoft.fxkz.mapper.common.DmMxMapper">
+
+  <resultMap id="BaseResultMap" type="com.stcode.bootstrap.domain.DmMx">
+    <result column="DMMXID" jdbcType="VARCHAR" property="dmmxid" />
+    <result column="DMLBID" jdbcType="VARCHAR" property="dmlbid" />
+    <result column="MXMC" jdbcType="VARCHAR" property="mxmc" />
+    <result column="MXDM" jdbcType="VARCHAR" property="mxdm" />
+    <result column="DMZT" jdbcType="VARCHAR" property="dmzt" />
+    <result column="LRRY" jdbcType="VARCHAR" property="lrry" />
+    <result column="LRRQ" jdbcType="DATE" property="lrrq" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    DMMXID, DMLBID, MXMC, MXDM, DMZT, LRRY, LRRQ
+  </sql>
+  <select id="selectByExample" parameterType="com.stcode.bootstrap.domain.DmMxExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from DM_MX
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.stcode.bootstrap.domain.DmMxExample">
+    delete from DM_MX
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.stcode.bootstrap.domain.DmMx">
+    insert into DM_MX (DMMXID, DMLBID, MXMC,
+      MXDM, DMZT, LRRY, LRRQ
+      )
+    values (#{dmmxid,jdbcType=VARCHAR}, #{dmlbid,jdbcType=VARCHAR}, #{mxmc,jdbcType=VARCHAR},
+      #{mxdm,jdbcType=VARCHAR}, #{dmzt,jdbcType=VARCHAR}, #{lrry,jdbcType=VARCHAR}, #{lrrq,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.stcode.bootstrap.domain.DmMx">
+    insert into DM_MX
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dmmxid != null">
+        DMMXID,
+      </if>
+      <if test="dmlbid != null">
+        DMLBID,
+      </if>
+      <if test="mxmc != null">
+        MXMC,
+      </if>
+      <if test="mxdm != null">
+        MXDM,
+      </if>
+      <if test="dmzt != null">
+        DMZT,
+      </if>
+      <if test="lrry != null">
+        LRRY,
+      </if>
+      <if test="lrrq != null">
+        LRRQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dmmxid != null">
+        #{dmmxid,jdbcType=VARCHAR},
+      </if>
+      <if test="dmlbid != null">
+        #{dmlbid,jdbcType=VARCHAR},
+      </if>
+      <if test="mxmc != null">
+        #{mxmc,jdbcType=VARCHAR},
+      </if>
+      <if test="mxdm != null">
+        #{mxdm,jdbcType=VARCHAR},
+      </if>
+      <if test="dmzt != null">
+        #{dmzt,jdbcType=VARCHAR},
+      </if>
+      <if test="lrry != null">
+        #{lrry,jdbcType=VARCHAR},
+      </if>
+      <if test="lrrq != null">
+        #{lrrq,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.stcode.bootstrap.domain.DmMxExample" resultType="java.lang.Long">
+    select count(*) from DM_MX
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+    <update id="updateByExampleSelective" parameterType="map">
+    update DM_MX
+    <set>
+      <if test="record.dmmxid != null">
+        DMMXID = #{record.dmmxid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dmlbid != null">
+        DMLBID = #{record.dmlbid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mxmc != null">
+        MXMC = #{record.mxmc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mxdm != null">
+        MXDM = #{record.mxdm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dmzt != null">
+        DMZT = #{record.dmzt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lrry != null">
+        LRRY = #{record.lrry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lrrq != null">
+        LRRQ = #{record.lrrq,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update DM_MX
+    set DMMXID = #{record.dmmxid,jdbcType=VARCHAR},
+      DMLBID = #{record.dmlbid,jdbcType=VARCHAR},
+      MXMC = #{record.mxmc,jdbcType=VARCHAR},
+      MXDM = #{record.mxdm,jdbcType=VARCHAR},
+      DMZT = #{record.dmzt,jdbcType=VARCHAR},
+      LRRY = #{record.lrry,jdbcType=VARCHAR},
+      LRRQ = #{record.lrrq,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <select id="getDmMxListByDmm" resultType="com.stcode.bootstrap.domain.DmMx">
+    select * from dm_mx where dmlbid = #{dmm}
+  </select>
+</mapper>
