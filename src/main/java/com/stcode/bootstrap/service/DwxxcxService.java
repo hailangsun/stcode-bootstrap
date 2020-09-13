@@ -32,4 +32,8 @@ public interface DwxxcxService {
      */
     ServerResponse getZJByDwid(String dwid);
 
+    /**
+     * 全部导出
+     */
+
 }

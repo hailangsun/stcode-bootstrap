@@ -1,25 +1,35 @@
 package com.stcode.bootstrap.export;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentFontStyle;
+import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@HeadRowHeight(20)
 public class DwxxcxExport {
 
+    @ColumnWidth(35)
     @ExcelProperty({"参保单位信息", "单位名称"})
     private String dwmc;
+    @ColumnWidth(15)
     @ExcelProperty({"参保单位信息", "经代办机构"})
     private String ssqx;
+    @ColumnWidth(25)
     @ExcelProperty({"参保单位信息", "统一社区信用代码"})
     private String dwdm;
     @ExcelProperty({"参保单位信息", "单位类型"})
     private String dwlx;
     @ExcelProperty({"参保单位信息", "隶属关系"})
     private String lsgx;
+
+    @ColumnWidth(30)
     @ExcelProperty({"参保单位信息", "行业类型"})
     private String hydm;
+    @ColumnWidth(25)
     @ExcelProperty({"参保单位信息", "经办人"})
     private String jbr;
     @ExcelProperty({"参保单位信息", "增减原因"})
