@@ -51,15 +51,15 @@ logging:
 #                        multi-statement-allow: true
 
 
-
+# 公司库测试
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: oracle.jdbc.driver.OracleDriver
         druid:
-            url: jdbc:oracle:thin:@192.168.1.254:1521:helowin
-            username: stcode
-            password: stcode
+            url: jdbc:oracle:thin:@140.100.130.110:1521/orclpdb
+            username: risk_vsta
+            password: risk_vsta
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -100,4 +100,5 @@ spring:
 
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
+#  mapper-locations: com/stcode/bootstrap/mapper/**/*.xml

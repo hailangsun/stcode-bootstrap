@@ -772,17 +772,16 @@
 
   <select id="getCbdwxx" parameterType="com.stcode.bootstrap.domain.Dwxxcx" resultMap="BaseResultMap">
 
-    SELECT a.DWID,a.DWMC,a.SSQX,a.DWDM,f.MC DWLX,a.LSGX,c.MXMC HYDM,a.JBR,d.MXMC ZJFS,b.ZJRQ,a.FLAG,e.JCJG,e.JCR,e.JC,e.CXJC,e.MEMO,
-      (case when b.XZDM = '01' then '养老' else null end) yl,
-      (case when b.XZDM = '02' then '失业' else null end) sy,
-      (case when b.XZDM = '04' then '工伤' else null end) gs,
-      (case when b.XZDM = '06' then '养老机关' else null end) jgyl
+    SELECT a.DWID,a.DWMC,a.SSQX,a.DWDM,a.DWLX,a.LSGX,c.MXMC HYDM,a.JBR,d.MXMC ZJFS,b.ZJRQ,a.FLAG,e.JCJG,e.JCR,e.JC,e.CXJC,e.MEMO,
+    (case when b.XZDM = '01' then '养老' else null end) yl,
+    (case when b.XZDM = '02' then '失业' else null end) sy,
+    (case when b.XZDM = '04' then '工伤' else null end) gs,
+    (case when b.XZDM = '06' then '养老机关' else null end) jgyl
     FROM DW_XX a
     LEFT JOIN DW_ZJ b on a.DWID = b.DWID
     LEFT JOIN DM_MX c on a.HYDM = c.DMMXID AND c.DMLBID = '1108'
     LEFT JOIN DM_MX d on b.ZJFS = d.DMMXID AND d.DMLBID = '0173'
     LEFT JOIN JC_JG e on a.DWID = e.DWID   AND e.XM='1'
-    LEFT JOIN DM_MX_BJSX f on a.DWLX = f.DM AND f.DMM = '0101'
 
     WHERE
     1=1
@@ -895,6 +894,15 @@
       from DW_ZJ zj
       LEFT JOIN DW_XX xx ON zj.DWID = XX.DWID
       WHERE xx.DWID =  #{dwid}
+  </select>
+
+
+  <select id="getAllNum" resultType="int">
+        SELECT COUNT(*) FROM  DW_XX
+  </select>
+
+  <select id="getAllExprot" resultType="com.stcode.bootstrap.domain.Dwxxcx">
+       SELECT DWMC,SSQX,DWDM,DWLX,HYDM,JBR FROM DW_XX
   </select>
 
 

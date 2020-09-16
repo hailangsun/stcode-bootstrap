@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.vstsoft.fxkz.mapper.common.DmMxMapper">
+<mapper namespace="com.stcode.bootstrap.mapper.DmMxMapper">
 
   <resultMap id="BaseResultMap" type="com.stcode.bootstrap.domain.DmMx">
     <result column="DMMXID" jdbcType="VARCHAR" property="dmmxid" />

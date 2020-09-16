@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.ylybcx.YlYbCxMapper">
+
+  <select id="getYlybcx" resultType="com.stcode.bootstrap.model.Ylybcx">
+    SELECT a.YWXH,a.DWID,c.DWMC,a.BBRQ,a.JBR,a.BLRQ,b.SCRQ,
+    b.ZFJE,a.FUYAN,b.FFFS,c.SSQX
+    FROM GR_YLZF_YMX a
+    LEFT JOIN YL_ZFYB b on a.YWXH = b.YWXH
+    LEFT JOIN DW_XX	  c on a.DWID = c.DWID
+    WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+
+  </select>
+
+  <select id="getYlybzfDetail" resultType="com.stcode.bootstrap.model.Ylybcx" parameterType="java.util.Map">
+        SELECT a.YWXH,a.DWID,c.DWMC,a.BBRQ,a.JBR,a.BLRQ,b.SCRQ,
+        b.ZFJE,a.FUYAN,b.FFFS,c.SSQX
+        FROM GR_YLZF_YMX a
+        LEFT JOIN YL_ZFYB b on a.YWXH = b.YWXH
+        LEFT JOIN DW_XX	  c on a.DWID = c.DWID
+        WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+  </select>
+
+</mapper>

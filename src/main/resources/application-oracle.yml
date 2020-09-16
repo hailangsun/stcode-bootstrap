@@ -1,12 +1,11 @@
-
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.jdbc.Driver
+        driverClassName: oracle.jdbc.driver.OracleDriver
         druid:
-            url: jdbc:mysql://154.221.18.115:3306/stcode_bootstrap?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
-            username: root
-            password: 123456
+            url: jdbc:oracle:thin:@192.168.1.254:1521:helowinXDB
+            username: stcode
+            password: stcode
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -31,5 +30,5 @@ spring:
                     merge-sql: false
                 wall:
                     config:
-                        #����һ��ִ�ж������
+                        #允许一次执行多条语句
                         multi-statement-allow: true

@@ -7,6 +7,7 @@ import java.util.List;
 import com.stcode.bootstrap.domain.DwXx;
 import com.stcode.bootstrap.domain.DwXxExample;
 import com.stcode.bootstrap.domain.Dwxxcx;
+import com.stcode.bootstrap.export.DwxxcxExport;
 import org.apache.ibatis.annotations.Param;
 
 public interface DwXxMapper {
@@ -67,4 +68,12 @@ public interface DwXxMapper {
      * @return
      */
     List<Dwxxcx> getZJByDwid(@Param("dwid") String dwid);
+
+    /**
+     * 导出查询所有
+     */
+    int getAllNum();
+
+    List<DwXx> getAllExprot();
+
 }

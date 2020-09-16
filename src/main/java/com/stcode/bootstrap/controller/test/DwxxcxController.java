@@ -1,4 +1,4 @@
-package com.stcode.bootstrap.controller;
+package com.stcode.bootstrap.controller.test;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
@@ -8,11 +8,13 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
 import com.stcode.bootstrap.domain.DmMx;
 import com.stcode.bootstrap.domain.DwXx;
 import com.stcode.bootstrap.domain.Dwxxcx;
 import com.stcode.bootstrap.export.DwxxcxExport;
 import com.stcode.bootstrap.mapper.DmMxMapper;
+import com.stcode.bootstrap.mapper.DwXxMapper;
 import com.stcode.bootstrap.service.DwxxcxService;
 
 import com.stcode.bootstrap.utils.R;
@@ -213,6 +215,7 @@ public class DwxxcxController {
     }
 
 
+
     //点击单位信息
     @RequestMapping("/companyInfo")
     @ResponseBody
@@ -230,13 +233,16 @@ public class DwxxcxController {
     }
 
 
+    @Resource
+    DwXxMapper dwXxMapper;
+
     /**
      * 文件下载（失败了会返回一个有部分数据的Excel）
      * <p>1. 创建excel对应的实体对象 参照{@link }
      * <p>2. 设置返回的 参数
      * <p>3. 直接写，这里注意，finish的时候会自动关闭OutputStream,当然你外面再关闭流问题不大
      */
-    @GetMapping("myOKexport")
+    @GetMapping("allexport")
     public void download(HttpServletResponse response) throws IOException {
         // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.ms-excel");
@@ -284,6 +290,8 @@ public class DwxxcxController {
 
             List<DwxxcxExport> dataList = new ArrayList<>(1024);
 
+            int allNum = dwXxMapper.getAllNum();
+
             Dwxxcx dwxxcx = new Dwxxcx();
             for (int a = 1; a <= 2; a++) {//模拟拿100 次数据
                 if(a == 1){
@@ -293,7 +301,7 @@ public class DwxxcxController {
                     dwxxcx.setOffset("995");
                     dwxxcx.setLimit("995");
                 }
-                dataList = data(dwxxcx);
+                dataList = Alldata(dwxxcx);
 
                 excelWriter.write(dataList, writeSheet);
                 dataList.clear();//必须clear,否则数据会重复
@@ -307,5 +315,21 @@ public class DwxxcxController {
         }
 
     }
+
+
+    private List<DwxxcxExport> Alldata(Dwxxcx dwxxcx) {
+        Integer page = dwxxcx.getOffset() == null ? 1 : Integer.valueOf(dwxxcx.getOffset());
+        Integer rows = dwxxcx.getLimit() == null ? 10 : Integer.valueOf(dwxxcx.getLimit());
+        PageHelper.offsetPage(page,rows);
+        List<DwxxcxExport> list = new ArrayList<DwxxcxExport>();
+        List<DwXx> cbdwxx = dwXxMapper.getAllExprot();
+        for (DwXx dwxx: cbdwxx) {
+            DwxxcxExport de = new DwxxcxExport();
+            BeanUtils.copyProperties(dwxx, de);
+            list.add(de);
+        }
+        return list;
+    }
+
 
 }
