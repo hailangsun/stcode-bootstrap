@@ -30,9 +30,7 @@
             font-weight:bold;
             color: red;
         }
-        button{
-            float: right;
-        }
+
     </style>
 
 </head>
@@ -224,7 +222,7 @@
 
 
 
-            <div class="row" style="margin-right: auto">
+            <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="query_btn" >查询</button>
                 <button type="reset" class="btn btn-default" id="clear_btn" >清空</button>
             </div>
@@ -240,7 +238,7 @@
 <div class="panel-body" id="queryResult">
     <table id="mainDataGrid" class="table table-hover"></table>
 
-    <div class="row" style="margin-right: auto">
+    <div class="modal-footer">
         <button type="button" class="btn btn-default" id="all-check-btn" >全部检查</button>
         <button type="button" class="btn btn-default" id="random-btn" >随机抽取</button>
         <button type="button" class="btn btn-default" id="print-btn" >打印</button>
@@ -251,9 +249,9 @@
 </div>
 
 
-<!-- 职工养老月报外支付人员明细 模态框（Modal） -->
+<!-- 职工养老月报外支付人员明细  -->
 <div class="modal fade" id="ylybzfDetail" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" style="width:900px">
+    <div class="modal-dialog" style="width:1000px">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -300,7 +298,7 @@
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label class="col-md-4 control-label">单位名称</label>
                                 <div class="col-md-8">
@@ -308,8 +306,10 @@
                                 </div>
                             </div>
                         </div>
+                        <input class="form-control" type="hidden" name="ywxh" id="ywxhDetail"/>
+                        <input class="form-control" type="hidden" name="dwid" id="dwidDetail"/>
                     </div>
-                    <div class="row" style="margin-right: auto">
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-default" id="query-ylybzfDetail-btn">查询</button>
                     </div>
 
@@ -317,7 +317,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >检查</button>
+                <button type="button" class="btn btn-default" id="check-btn">检查</button>
                 <button type="button" class="btn btn-default" >重新检查</button>
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" >导出</button>
@@ -327,6 +327,126 @@
     </div>
 </div>
 
+
+<!-- 职工养老月报外支付人员明细 检查表格 -->
+<div class="modal fade" id="ylybzfDetailCheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查结果</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="resultDetailForm">
+                    <table class="table table-bordered table-hover" id="ylybzfDetailCheckTable">
+                        <tbody></tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id = "check-enter-btn">【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【取消】</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 个人详情信息 -->
+<div class="modal fade" id="grDetailInfo" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1050px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查结果</h4>
+            </div>
+            <div class="modal-body">
+                <form id="grDetailInfoForm" th:object="${gr_detail_info}">
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr height="30">
+                            <td colspan="6" style="text-align: center;">养老月报外支付人员详细情况</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">组织机构代码</td>
+                            <td width="150px" th:text="*{dwmc}"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">单位名称</td>
+                            <td  colspan="3" width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">姓名</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">公民身份号码</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">电脑序号</td>
+                            <td  width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">人员身份</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;">发放地点</td>
+                            <td  colspan="3" width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="text-align: center; ">各项金额</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">离退休金</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">各项补贴</td>
+                            <td  width="150px">1</td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付个人账户</td>
+                            <td  width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付补偿金</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">医疗费</td>
+                            <td  width="150px">1</td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">丧葬抚恤补助</td>
+                            <td  width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">补支基础性养老金</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">补支过渡性养老金</td>
+                            <td  width="150px">1</td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">补支个人账户</td>
+                            <td  width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">取暖补贴</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">护理费</td>
+                            <td  width="150px">1</td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">异地安置费</td>
+                            <td  width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">破产企业统筹外负担</td>
+                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">救济金</td>
+                            <td  width="150px">1</td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;">合计金额</td>
+                            <td  width="150px"></td>
+                        </tr>
+
+                        <tr style="right: auto;">
+                            <td colspan="6" style="text-align: right;">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" id = "print-gr-btn">【打印】</button>
+                                    <button type="button" class="btn btn-default" id = "export-gr-btn">【导出】</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

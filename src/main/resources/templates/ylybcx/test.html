@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+
+    <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
+
+    <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+
+    <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+
+    <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+
+    <script type="application/javascript" th:src="@{/js/ylybcx/ylybcx.js}"></script>
+
+</head>
+<body>
+<!-- 个人详情信息 -->
+<form id="grDetailInfoForm"  th:object="${gr_detail_info}">
+    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+        <tr height="30">
+            <td colspan="6" style="text-align: center;">养老月报外支付人员详细情况</td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px; padding-right:10px;">组织机构代码</td>
+            <td width="150px" th:text="*{dwmc}"></td>
+            <td style="text-align: right; width: 150px; padding-right:10px;">单位名称</td>
+            <td  colspan="3" width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px; padding-right:10px;">姓名</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px; padding-right:10px;">公民身份号码</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px; padding-right:10px;">电脑序号</td>
+            <td  width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px; padding-right:10px;">人员身份</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px; padding-right:10px;">发放地点</td>
+            <td  colspan="3" width="150px"></td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align: center; ">各项金额</td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px;padding-right:10px;">离退休金</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">各项补贴</td>
+            <td  width="150px">1</td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付个人账户</td>
+            <td  width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付补偿金</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">医疗费</td>
+            <td  width="150px">1</td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">丧葬抚恤补助</td>
+            <td  width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px;padding-right:10px;">补支基础性养老金</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">补支过渡性养老金</td>
+            <td  width="150px">1</td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">补支个人账户</td>
+            <td  width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px;padding-right:10px;">取暖补贴</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">护理费</td>
+            <td  width="150px">1</td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">异地安置费</td>
+            <td  width="150px"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; width: 150px;padding-right:10px;">破产企业统筹外负担</td>
+            <td  width="150px"></td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">救济金</td>
+            <td  width="150px">1</td>
+            <td style="text-align: right; width: 150px;padding-right:10px;">合计金额</td>
+            <td  width="150px"></td>
+        </tr>
+
+        <tr style="right: auto;">
+            <td colspan="6" style="text-align: right;">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id = "print-gr-btn">【打印】</button>
+                    <button type="button" class="btn btn-default" id = "export-gr-btn">【导出】</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

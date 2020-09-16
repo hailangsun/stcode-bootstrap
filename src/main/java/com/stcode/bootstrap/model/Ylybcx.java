@@ -1,13 +1,17 @@
 package com.stcode.bootstrap.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 /**
  * 监督检查-日常检查-职工养老月报外支付查询 model
  */
-@Data
+//@Data
+@Getter
+@Setter
 public class Ylybcx {
     /**
      *前端条件
@@ -78,10 +82,11 @@ public class Ylybcx {
     /**
      * 职工养老月报外支付人员明细
      */
+    private String grid;
     //项目
     private String xm;
     //姓名
-    private String name;
+    private String grname;
     //公民身份证号码:
     private String bzhm;
     //补发原因
@@ -98,5 +103,19 @@ public class Ylybcx {
     private String jcjg;
     //备注
     private String memo;
+
+    /**
+     * 字典表，DM_MX
+     */
+    //代码明细ID
+    private String dmmxid;
+    //明细名称
+    private String mxmc;
+
+    /**
+     * 检查结果jcjg
+     */
+    private String[] formIds;
+    private String[] grIds;
 
 }

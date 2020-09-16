@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.jcjg.JcjgMapper">
+
+    <insert id="insertJcjg" parameterType="com.stcode.bootstrap.model.Jcjg">
+        insert
+        into JC_JG (JCID,DWID,JCR,JCRQ,JC,CXJC,JCJG,MEMO,XM,YWXH,GRID)
+        values (#{jcid,jdbcType=VARCHAR},#{dwid,jdbcType=VARCHAR}
+        ,#{jcr,jdbcType=VARCHAR},#{jcrq,jdbcType=DATE},#{jc,jdbcType=VARCHAR},#{cxjc,jdbcType=VARCHAR}
+        ,#{jcjg,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{xm,jdbcType=VARCHAR},#{ywxh,jdbcType=VARCHAR},#{grid,jdbcType=VARCHAR})
+
+    </insert>
+
+    <select id="queryMXMC" resultType="String">
+        select MXMC from DM_MX where DMLBID ='10101010' AND DMMXID in
+        <foreach item="jcid" collection="jcids" open="(" separator="," close=")">
+            #{jcid}
+        </foreach>
+    </select>
+
+    <update id="updateJcjg" parameterType="java.util.Map">
+        update JC_JG
+        <set>
+            <if test="ywxh != null">
+                YWXH = #{ywxh,jdbcType=VARCHAR},
+            </if>
+            <if test="jcr != null">
+                JCR = #{jcr,jdbcType=VARCHAR},
+            </if>
+            <if test="jcrq != null">
+                JCRQ = #{jcrq,jdbcType=DATE},
+            </if>
+            <if test="jcjg != null">
+                JCJG = #{jcjg,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                MEMO = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="xm != null">
+                XM = #{xm,jdbcType=VARCHAR},
+            </if>
+            <if test="cxjc != null">
+                CXJC = #{cxjc,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where JCID=#{jcid}
+    </update>
+
+</mapper>

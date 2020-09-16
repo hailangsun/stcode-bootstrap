@@ -21,4 +21,9 @@ public interface YlybcxService {
      * @return
      */
     R getYlybzfDetail(Map ylybcxMap);
+
+    /**
+     * 新增检查结果jcjg
+     */
+    R insertJcjg(Ylybcx ylybcx);
 }

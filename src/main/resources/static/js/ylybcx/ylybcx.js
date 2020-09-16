@@ -3,46 +3,122 @@ $(function(){
 
     //主页面查询表格
     $("#query_btn").click(function(){
-        flag = true;
         $("#mainDataGrid").bootstrapTable("destroy");
         _ylybcx.mainDataGrid();
     });
 
     //单位全称细单查询按钮
     $("#query-ylybzfDetail-btn").click(function(){
-        detailFlag = true;
         $("#ylybzfDetailDataGrid").bootstrapTable("destroy");
         _ylybcx.ylybzfDetailDataGrid();
     });
 
 
+    //单位全称细单查询按钮 - 检查
+    $("#check-btn").click(function () {
+        //判断是否有值
+        var isRows = $('#ylybzfDetailDataGrid').bootstrapTable('getData',false);
+        if(isRows.length <= 0){
+            bootbox.alert("请选择记录!");
+            return;
+        }
+
+        var rows =  $("#ylybzfDetailDataGrid").bootstrapTable('getSelections');
+        if(rows.length <= 0){
+            bootbox.confirm("是否对本次查询结果中【未检查】记录全部检查?",
+                function(result) {
+                    if (result) {
+                        getCheckResultTable();
+                    }
+                });
+        }else {
+            getCheckResultTable();
+        }
+    });
+
+    //检查确定
+    $("#check-enter-btn").click(function () {
+        var grIds           = new Array();
+        var formIds         = new Array();
+        var memo;
+        //取提交的
+        var formdata    =  $("#resultDetailForm").serializeArray();
+        $.each(formdata,function(index,item){
+            if(item.name == "memo"){
+                memo = item.value;
+            } else {
+                formIds.push(item.value)
+            }
+        });
+
+        var rows =  $("#ylybzfDetailDataGrid").bootstrapTable('getSelections');
+        if(rows.length > 0){
+            rows =  $("#ylybzfDetailDataGrid").bootstrapTable('getSelections');
+        }else {
+            //获取当前全部
+            rows = $('#ylybzfDetailDataGrid').bootstrapTable('getData',false);
+        }
+
+        for(var i=0;i<rows.length;i++){
+            grIds[i] = rows[i].grid;
+        }
+        var params = $.param({'grIds' : grIds,"formIds":formIds,"memo":memo,"dwid":$("#dwidDetail").val()},true);
+        $.ajax({
+            type: "post",
+            url: "/ylybcx/insertJcjg",
+            data: params,
+            success: function(msg){
+                if (msg.code == 0) {
+                    bootbox.alert({
+                        message: "检查完成",
+                        size: 'small'
+                    });
+                    $("#ylybzfDetailCheck").modal('hide');
+                    $("#ylybzfDetailDataGrid").bootstrapTable('refresh');
+                }else {
+                    bootbox.alert(msg.error);
+                }
+            }
+        });
+
+    });
 
 });
 
-function getMyDate(str){
-    var oDate = new Date(str),
-        oYear = oDate.getFullYear(),
-        oMonth = oDate.getMonth()+1,
-        oDay = oDate.getDate(),
-        oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay);//最后拼接时间
-    return oTime;
-};
-//补0操作
-function getzf(num){
-    if(parseInt(num) < 10){
-        num = '0'+num;
-    }
-    return num;
-}
+
 
 //总合计金额
 var totalAmount = 1800;
 //本页合计金额
 var currentAmount = 150;
-//查询标记
-var flag = false;
-//细单标记
-var detailFlag = false;
+// 查询检查项
+function getCheckResultTable(){
+    $.ajax({
+        type: "post",
+        url: "/ylybcx/checkResultTable",
+        data: "",
+        success: function(msg){
+            if (msg.code == 0) {
+                $("#ylybzfDetailCheckTable").find("tbody").empty();
+                var datalist = msg.data;
+                $.each(datalist,function(index,item){
+                    $("#ylybzfDetailCheckTable").find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+item.mxdm+"' value='"+item.dmmxid+"'/></div></td><td>"+item.mxmc+"</td></tr>");
+                });
+                $("#ylybzfDetailCheckTable").find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><textarea style='resize: none' class=\"form-control\" type=\"text\" name=\"memo\"></textarea></td></tr>");
+            } else {
+                bootbox.alert(msg.error);
+            }
+        }
+    });
+    $("#ylybzfDetailCheck").modal('show');
+}
+
+
+
+function grDetail(value , record , index) {
+    return '<span id="hoverspan" onclick="_ylybcx.grDetailInfo('+index+')">' + value + '</span>';
+}
+
 
 
 _ylybcx = {
@@ -56,6 +132,22 @@ _ylybcx = {
         //获取行号
         var record =  $('#mainDataGrid').bootstrapTable("getData")[index];
         _ylybcx.ylybzfDetailDataGrid(record);
+    },
+    //点击姓名，显示个人详细信息
+    grDetailInfo:function (index) {
+        debugger
+        $.ajax({
+            type: "post",
+            url: "/ylybcx/grDetailInfo",
+            data: "",
+            success: function(msg){
+                $("#grDetailInfo").modal('show');
+                $("#grDetailInfo").load(data);
+                // $("#grDetailInfo").html(data);
+            }
+        });
+
+
     },
 
     mainDataGrid:function () {
@@ -71,11 +163,6 @@ _ylybcx = {
             pageList: [5, 25, 50, 100],
             showFooter:true,                        //合计
             queryParams: function(params) {
-                if(flag){
-                    flag =false;
-                    params.offset = 0;
-                    params.limit  = 5;
-                }
                 var formdata = $("#mainform").serialize();
                 var paging =formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 return paging;
@@ -125,73 +212,100 @@ _ylybcx = {
         })
     },
 
-
-
+    //查询 - 职工养老月报外支付人员明细
     ylybzfDetailDataGrid:function (record) {
-        debugger
-        //身份证号码
-        //办理日期
-        $("#blrqDetail").val( getMyDate(record.blrq));
+        if(!isNull(record)){
+            //办理日期
+            $("#blrqDetail").val(getMyDate(record.blrq));
+            //经（代）办机构
+            $("#dbjgDetail").val(record.dbjg);
+            //报表日期
+            $("#bbrqDetail").val(record.bbrq);
+            //单位名称
+            $("#dwmcDetail").val(record.dwmc);
+            //业务序号
+            $("#ywxhDetail").val(record.ywxh);
+            //单位id
+            $("#dwidDetail").val(record.dwid);
+
+        }
+
         $('#ylybzfDetailDataGrid').bootstrapTable({
             method: 'post',
-            url: "/ylybcx/ylybzfDetail",
-            striped: true,                      // 是否显示行间隔色
-            pagination: true,                   // 是否分页
-            sidePagination: 'server',           // server:服务器端分页|client：前端分页
-            pageSize: 5,                        // 单页记录数
-            // contentType:"application/x-www-form-urlencoded",
-            // contentType:"application/json charset=utf-8",
+            url: "/ylybcx/ylybzfDetail",            // 请求路径
+            striped: true,                          // 是否显示行间隔色
+            pagination: true,                       // 是否分页
+            sidePagination: 'server',               // server:服务器端分页|client：前端分页
+            pageSize: 5,                            // 单页记录数
+            //:"application/x-www-form-urlencoded",
             cache: false,
             pageList: [5, 25, 50, 100],
+            showFooter:true,                        //合计
             queryParams: function(params) {
-                debugger;
-                // if(detailFlag){
-                //     detailFlag =false;
-                //     params.offset = 0;
-                //     params.limit  = 5;
-                // }else {
-                    var temp = {
-                        offset: params.offset,
-                        limit: params.limit,
-                        ywxh:record.ywxh
-                    };
-                    params = JSON.parse((JSON.stringify($("#ylybzfDetailForm").serializeJSON()) + JSON.stringify(temp)).replace(/}{/, ','));
-                // }
+                var page = {
+                    offset: params.offset,
+                    limit: params.limit,
+                };
+                params = JSON.parse((JSON.stringify($("#ylybzfDetailForm").serializeJSON()) + JSON.stringify(page)).replace(/}{/, ','));
                 return params;
             },
 
             columns: [
-                [{"title": "职工养老月报外支付人员明细", "halign": "center", "align": "center", "colspan": 14}],
-                [
-                    {title: 'id', field: 'id', visible: false},
-                    {title: '序号', align: 'center', valign: 'middle', width: '5%', sortable: true,
+                [{"title": "职工养老月报外支付人员明细", "halign": "center", "align": "center", "colspan": 24}],
+                [{checkbox: true},
+                    {title: 'ywxh', field: 'ywxh', visible: false},
+                    {title: 'grid', field: 'grid', visible: false},
+                    {title: '序号', align: 'center', valign: 'middle', width: 100, sortable: true,
                         formatter: function(value, row, index) {
                             var pageSize    = $('#ylybzfDetailDataGrid').bootstrapTable('getOptions').pageSize;
                             var pageNumber  = $('#ylybzfDetailDataGrid').bootstrapTable('getOptions').pageNumber;
                             return pageSize * (pageNumber - 1) + index + 1;
                         }
                     },
-                    {title: '单位全称', field: 'dwmc', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '统一社区信用代码', field: 'dwdm', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '姓名', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '公民身份证号码', field: 'bzhm', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '附言', field: 'fuyan', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '补发原因', field: 'bfyy', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '发放地点', field: 'fffs', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '经办人', field: 'jbr', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '审核人', field: 'shr', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '检查日期', field: 'jcrq', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '检查', field: 'jc', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '重新检查', field: 'cxjc', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '检查结果', field: 'jcjg', align: 'center', valign: 'middle', sortable: true, width: '8%'},
-                    {title: '备注', field: 'memo', align: 'center', valign: 'middle', sortable: true, width: '8%'}
-
+                    {title: '单位全称'			,field: 'dwmc', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '统一社区信用代码'	,field: 'dwdm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '姓名'				,field: 'grname', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,formatter: grDetail},
+                    {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '附言'				,field: 'fuyan', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '补发原因'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '发放地点'			,field: 'fffs', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '经办人'			,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '审核人'			,field: 'shr', 		align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '检查日期'			,field: 'jcrq', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '检查'				,field: 'jc', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '重新检查'			,field: 'cxjc', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '检查结果'			,field: 'jcjg', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '备注'				,field: 'memo', 	align: 'center', valign: 'middle', sortable: true,	width: 100}
                 ]
             ]
 
-        });
+        })
     },
+
+
 
 
 }
 
+function isNull(a) {
+    if (a == null || a == undefined || (typeof a == 'string' && a == '')) {
+        return true;
+    }
+    return false;
+}
+
+function getMyDate(str){
+    var oDate = new Date(str),
+        oYear = oDate.getFullYear(),
+        oMonth = oDate.getMonth()+1,
+        oDay = oDate.getDate(),
+        oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay);//最后拼接时间
+    return oTime;
+};
+//补0操作
+function getzf(num){
+    if(parseInt(num) < 10){
+        num = '0'+num;
+    }
+    return num;
+}
