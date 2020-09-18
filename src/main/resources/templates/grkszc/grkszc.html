@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+
+    <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+    <script type="application/javascript" th:src="@{/js/grkszc/grkszc.js}"></script>
+
+    <style>
+        label {
+            text-align: right;
+        }
+
+        #hoverspan:hover{
+            font-weight:bold;
+            color: red;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<form  id="mainform">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title accordion-toggle">监督检查/日常检查</h3>
+        </div>
+
+        <div class="panel-body" style="width: auto">
+
+            <div class="row">
+                <!-- r1 -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
+                        <div class="col-md-8">
+                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
+                                <option th:value="0">请选择</option>
+                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">统一社会信用代码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="xydm"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">单位名称</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="dwmc"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">社会保障号码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="jgname"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期起</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">转入地行政区划</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzjgdy"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">姓名</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="grname"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期止</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">转出地行政区划</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzjgdy"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >检查类型</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="jbr" id="jbr"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="query_btn" >查询</button>
+                <button type="reset" class="btn btn-default"  id="clear_btn" >清空</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+<!--主页table-->
+<div class="panel-body" id="queryResult">
+    <table id="mainDataGrid" class="table table-hover"></table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="check-btn" >检查</button>
+        <button type="button" class="btn btn-default" id="restart-check-btn" >重新检查</button>
+        <button type="button" class="btn btn-default" id="examine-btn" >检查审核</button>
+        <button type="button" class="btn btn-default" id="export-btn" >导出</button>
+        <button type="button" class="btn btn-default" id="close-btn" >返回</button>
+    </div>
+
+</div>
+
+<!--基本养老参保缴费凭证-->
+<div class="modal fade" id="payDetail" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1030px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">基本养老参保缴费凭证</h4>
+            </div>
+            <div class="modal-body">
+                <form id="payDetailForm">
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr height="30">
+                            <td colspan="7" style="text-align: center;font-weight: bold;font-size: large">参保人员基本信息</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">姓名</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">性别</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">个人编号</td>
+                            <td width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">公民身份号码</td>
+                            <td  colspan="2" width="150px" ></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">户籍</td>
+                            <td  colspan="2" width="150px"></td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">在本地参保起止时间</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">本地实际缴费月数</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">本地参保期间个人账户存储额(元)</td>
+                            <td width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" style="text-align: center; font-weight: bold;">社会保险经办机构信息</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">行政区划代码</td>
+                            <td  colspan="2" width="150px" ></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">单位名称</td>
+                            <td  colspan="2" width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">电话</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">地址</td>
+                            <td width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">邮政编码</td>
+                            <td width="150px"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                <p style="padding: 10px;display: inline-block;">经办人(签章):</p>
+
+                                <p style="padding: 10px;display: inline-block;float: right;width: 300px;">社会保险经办机构(章):</p>
+
+                                <p style="text-align: right;margin-right: 160px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</p>
+                                <p style="margin-left: 20px;">(本凭证一式两联,填发本凭证的社保机构和参保人员本人各一份)</p>
+
+                                <p style="margin-left: 10px;">
+                                    1、本凭证是您参加基本养老保险的权益记录，是申请办理基本养老保险关系转移接续手续的重要凭证，
+                                    请妥善保管。
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    2、当您跨省(自治区、直辖市)流动就业时,基本养老保险关系在原参保地社会保险经办机构保留,
+                                    个人账户存储额按规定计息计算利息。到新就业地参保时，请向当地社会保险经办机构出示本凭证,
+                                    办理基本养老保险关系接续手续。
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    3、本凭证如果不慎遗失，请于填发此凭证的社会保险经办机构联系,申请补办。联系方式可到任何一个
+                                    社会保险经办机构查询。
+                                </p>
+                                <p style="margin-left: 10px;font-weight: bold;">
+                                    温馨提示:
+                                <p style="margin-left: 10px;">
+                                    1、由于打印《参保缴费凭证》与生成《信息表》存在时间间隔,期间可能因为换欠费、计息等
+                                    原因导致《参保缴费凭证》与《信息表》中所示金额不一致,请以《信息表》为准！
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    2、临时基本养老保险缴费账户，待达到待遇领取条件时,由待遇领取地社会保险经办机构
+                                    统一归集临时养老保险关系。
+                                </p>
+
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

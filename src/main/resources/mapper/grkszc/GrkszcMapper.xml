@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.grkszc.GrkszcMapper">
+
+  <select id="getGrkszc" resultType="com.stcode.bootstrap.model.Grkszc">
+      SELECT a.YWXH,a.DWID,b.DWMC,a.BBRQ,a.JBR,a.BLRQ,a.SCRQ,a.ZFJE,a.FUYAN,a.FFFS,b.SSQX FROM YL_ZFYB a
+      LEFT JOIN DW_XX b on a.DWID = b.DWID
+      WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+  </select>
+
+
+</mapper>

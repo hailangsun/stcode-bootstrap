@@ -29,6 +29,12 @@ $(function(){
         }
     });
 
+    //审核
+    $("#examine-btn").click(function () {
+        $("#examineModal").modal('show');
+    });
+
+
 });
 
 //个人信息详情
@@ -94,8 +100,8 @@ _jgylybcx = {
                // $("#mainoffset").val(params.offset);
                // $("#mainlimit").val(params.limit);
 
-                var formdata = $("#mainform").serialize();
-                var paging =formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
+                var formdata    = $("#mainform").serialize();
+                var paging      = formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 return paging;
             },
 
@@ -204,9 +210,9 @@ _jgylybcx = {
 
 
                     {title: '发放地点'			,field: 'ffdd', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '经办人'			,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '经（代）办机构'  ,field: 'dbjg',     align: 'center', valign: 'middle', sortable: true,  width: 100},
-                    {title: '办理日期'        ,field: 'blrq',       align: 'center', valign: 'middle', sortable: true,     width: 100}
+                    {title: '经办人'		    ,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '经（代）办机构'    ,field: 'dbjg',     align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '办理日期'          ,field: 'blrq',       align: 'center', valign: 'middle', sortable: true,     width: 100}
                 ]
             ]
 
