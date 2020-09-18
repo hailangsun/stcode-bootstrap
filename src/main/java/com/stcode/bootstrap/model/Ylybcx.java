@@ -9,9 +9,7 @@ import java.util.Date;
 /**
  * 监督检查-日常检查-职工养老月报外支付查询 model
  */
-//@Data
-@Getter
-@Setter
+@Data
 public class Ylybcx {
     /**
      *前端条件
@@ -20,7 +18,7 @@ public class Ylybcx {
     private String dbjg;
     //多选
     private String[] dbjgs;
-    //统一社会信用代码
+    //统一社会信用代码 [组织机构代码]
     private String dwdm;
     //汇总日期起
     private String hzDateFrom;
@@ -30,7 +28,7 @@ public class Ylybcx {
     private String hzr;
     //报表日期
     private String bbrq;
-    //支付原因
+    //支付原因 补支原因  (dmm=0323)
     private String bzyy;
     //业务转财务标志
     private String cwbz;
@@ -43,10 +41,12 @@ public class Ylybcx {
     //附言
     private String fuyan;
     //发放地点
-    private String fffs;
+    private String ffdd;
     //月报生成日期
     private String scrq;
     //检查类型
+    private String shlx;
+    //审核标志 0-未审核 1-已审核 审核状态
     private String shbz;
     //支付人数合计
     private String zfrs;
@@ -78,6 +78,11 @@ public class Ylybcx {
      */
     private String offset;
     private String limit;
+    /**
+     * 主页导出用
+     */
+    private String mainoffset;
+    private String mainlimit;
 
     /**
      * 职工养老月报外支付人员明细

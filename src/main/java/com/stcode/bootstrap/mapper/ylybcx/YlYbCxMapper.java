@@ -2,6 +2,7 @@ package com.stcode.bootstrap.mapper.ylybcx;
 
 import com.stcode.bootstrap.domain.DmMx;
 import com.stcode.bootstrap.domain.DmMxExample;
+import com.stcode.bootstrap.model.Grxx;
 import com.stcode.bootstrap.model.Ylybcx;
 import com.stcode.bootstrap.utils.R;
 import org.apache.ibatis.annotations.Param;
@@ -25,5 +26,8 @@ public interface YlYbCxMapper {
      */
     List<Ylybcx> getYlybzfDetail(Map ylybcxMap);
 
-
+    /**
+     * 查询 个人信息 - 养老月报外支付人员详细情况
+     */
+    List<Grxx>getGRDetailInfo(Ylybcx grDetailInfo);
 }

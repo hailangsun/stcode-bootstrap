@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.stcode.bootstrap.mapper.DwXxMapper;
 import com.stcode.bootstrap.mapper.jcjg.JcjgMapper;
 import com.stcode.bootstrap.mapper.ylybcx.YlYbCxMapper;
+import com.stcode.bootstrap.model.Grxx;
 import com.stcode.bootstrap.model.Jcjg;
 import com.stcode.bootstrap.model.Ylybcx;
 import com.stcode.bootstrap.utils.GenerateId;
@@ -83,6 +84,15 @@ public class YlybcxServiceImpl implements YlybcxService {
             jcjgMapper.insertJcjg(addJcjg);
         }
 
+        return R.ok();
+    }
+
+    @Override
+    public R getGRDetailInfo(Ylybcx grDetailInfo) {
+        List<Grxx> grDetailList = ylYbCxMapper.getGRDetailInfo(grDetailInfo);
+        if(grDetailList.size() > 0){
+            return R.ok().put("data",grDetailList.get(0));
+        }
         return R.ok();
     }
 

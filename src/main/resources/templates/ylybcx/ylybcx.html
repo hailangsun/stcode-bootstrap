@@ -7,18 +7,14 @@
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
 
     <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
-
     <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
-
     <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
-
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
-
     <script type="application/javascript" th:src="@{/js/ylybcx/ylybcx.js}"></script>
 
     <style>
@@ -216,6 +212,8 @@
                             </div>
                             <span class="help-block"></span>
                         </div>
+                        <input  type="hidden" name="mainoffset" id="mainoffset"/>
+                        <input  type="hidden" name="mainlimit"  id="mainlimit"/>
                     </div>
                 </div>
             </div>
@@ -355,80 +353,80 @@
 
 <!-- 个人详情信息 -->
 <div class="modal fade" id="grDetailInfo" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" style="width:1050px">
+    <div class="modal-dialog" style="width:1050px;height: auto">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">检查结果</h4>
+                <h4 class="modal-title">养老月报外支付人员详细情况</h4>
             </div>
             <div class="modal-body">
-                <form id="grDetailInfoForm" th:object="${gr_detail_info}">
+                <form id="grDetailInfoForm">
                     <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
                         <tr height="30">
-                            <td colspan="6" style="text-align: center;">养老月报外支付人员详细情况</td>
+                            <td colspan="6" style="text-align: center; font-weight: bold;font-size: large">养老月报外支付人员详细情况</td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">组织机构代码</td>
-                            <td width="150px" th:text="*{dwmc}"></td>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">单位名称</td>
-                            <td  colspan="3" width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">组织机构代码</td>
+                            <td width="150px"><span name="dwdm"></span></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">单位名称</td>
+                            <td  colspan="3" width="150px"><span name="dwmc"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">姓名</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">公民身份号码</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">电脑序号</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">姓名</td>
+                            <td  width="150px"><span name="grname"></span></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">公民身份号码</td>
+                            <td  width="150px"><span name="bzhm"></span></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">电脑序号</td>
+                            <td  width="150px"><span name="bxh"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">人员身份</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px; padding-right:10px;">发放地点</td>
-                            <td  colspan="3" width="150px"></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">人员身份</td>
+                            <td  width="150px"><span name="grsf"></span></td>
+                            <td style="text-align: right; width: 150px; padding-right:10px;font-weight: bold;">发放地点</td>
+                            <td  colspan="3" width="150px"><span name="ffdd"></span></td>
                         </tr>
                         <tr>
-                            <td colspan="6" style="text-align: center; ">各项金额</td>
+                            <td colspan="6" style="text-align: center; font-weight: bold;">各项金额</td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">离退休金</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">各项补贴</td>
-                            <td  width="150px">1</td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付个人账户</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">离退休金</td>
+                            <td  width="150px"><span name="ltxj"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">各项补贴</td>
+                            <td  width="150px"><span name="gxbt"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">一次性支付个人账户</td>
+                            <td  width="150px"><span name="ycxzfgr"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">一次性支付补偿金</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">医疗费</td>
-                            <td  width="150px">1</td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">丧葬抚恤补助</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">一次性支付补偿金</td>
+                            <td  width="150px"><span name="ycxzfbc"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">医疗费</td>
+                            <td  width="150px"><span name="ylf"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">丧葬抚恤补助</td>
+                            <td  width="150px"><span name="szfxj"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">补支基础性养老金</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">补支过渡性养老金</td>
-                            <td  width="150px">1</td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">补支个人账户</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支基础性养老金</td>
+                            <td  width="150px"><span name="bzjcxylj"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支过渡性养老金</td>
+                            <td  width="150px"><span name="bzgdxylj"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支个人账户</td>
+                            <td  width="150px"><span name="bzgrzh"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">取暖补贴</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">护理费</td>
-                            <td  width="150px">1</td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">异地安置费</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">取暖补贴</td>
+                            <td  width="150px"><span name="qnbt"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">护理费</td>
+                            <td  width="150px"><span name="hlf"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">异地安置费</td>
+                            <td  width="150px"><span name="ydazf"></span></td>
                         </tr>
                         <tr>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">破产企业统筹外负担</td>
-                            <td  width="150px"></td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">救济金</td>
-                            <td  width="150px">1</td>
-                            <td style="text-align: right; width: 150px;padding-right:10px;">合计金额</td>
-                            <td  width="150px"></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">破产企业统筹外负担</td>
+                            <td  width="150px"><span name="pzqytcwfd"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">救济金</td>
+                            <td  width="150px"><span name="jjj"></span></td>
+                            <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">合计金额</td>
+                            <td  width="150px"><span name="hjje"></span></td>
                         </tr>
 
                         <tr style="right: auto;">
@@ -444,6 +442,29 @@
                 </form>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+<!--导出模态框-->
+<div class="modal fade" id="exportModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导出选择对话框</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    请选择【本页导出】、【全部导出】全部导出数据超过1万条时速度慢。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="currentExprot">【本页导出】</button>
+                <button type="button" class="btn btn-default" id="allExprot">【全部导出】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+            </div>
         </div>
     </div>
 </div>

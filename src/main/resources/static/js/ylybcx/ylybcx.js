@@ -83,14 +83,79 @@ $(function(){
 
     });
 
+    //解决modal第二个不无滚动条
+    $('#grDetailInfo').on('hidden.bs.modal', function() {
+        $('#ylybzfDetail').css({'overflow-y':'scroll'});
+    });
+
+    $('#ylybzfDetailCheck').on('hidden.bs.modal', function() {
+        $('#ylybzfDetail').css({'overflow-y':'scroll'});
+    });
+
+
+
+    //导出
+    $("#export-btn").on('click', function() {
+        //模态框
+        $("#exportModal").modal('show');
+    });
+    $("#currentExprot").click(function(){
+        var data = $("#mainform").serializeArray();
+        postExcelFile(data, "/ylybcx/download");
+        $("#exportModal").modal('hide');
+    });
+
+    //随机抽取
+    $("#random-btn").on('click',function () {
+        bootbox.prompt({
+            title: "请输入随机抽取的数量,范围应在1~XXX之间",
+            locale: 'custom',
+            callback: function (result) {
+                console.log('This was logged in the callback: ' + result);
+            }
+        });
+    })
+
+    //全部检查
+    $("#all-check-btn").on('click',function () {
+
+        bootbox.confirm({
+            title: "全部检查?",
+            message: "是否对本次查询结果中“未检查”的记录进行全部检查?",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> 取消'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> 确定'
+                }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback: ' + result);
+            }
+        });
+
+    })
+
 });
+
+
+var locale = {
+    OK: '确定',
+    CONFIRM: '确定',
+    CANCEL: '取消'
+};
+bootbox.addLocale('custom', locale);
+
 
 
 
 //总合计金额
-var totalAmount = 1800;
+var totalAmount     = 1800;
 //本页合计金额
-var currentAmount = 150;
+var currentAmount   = 150;
+
+
 // 查询检查项
 function getCheckResultTable(){
     $.ajax({
@@ -119,7 +184,44 @@ function grDetail(value , record , index) {
     return '<span id="hoverspan" onclick="_ylybcx.grDetailInfo('+index+')">' + value + '</span>';
 }
 
+$.fn.setForm = function(jsonValue){
+    var obj = this;
+    $.each(jsonValue,function(name,ival){
+        obj.find("[name="+name+"]").text(ival);
+    })
+}
 
+function postExcelFile(params, url) { //params是post请求需要的参数，url是请求url地址
+    var form            = document.createElement("form");
+    form.style.display  = 'none';
+    form.action         = url;
+    form.method         = "post";
+    document.body.appendChild(form);
+
+    var moreselet       = "";
+    $.each(params,function(i,item){
+        if(item.name == 'dbjg'){
+            if(!isNull(item.value)){
+                moreselet+=item.value+",";
+            }
+        }else {
+            var input   = document.createElement("input");
+            input.type  = "hidden";
+            input.name  = item.name;
+            input.value = item.value;
+            form.appendChild(input);
+        }
+
+    });
+    var input   = document.createElement("input");
+    input.type  = "hidden";
+    input.name  = "dbjg";
+    input.value = moreselet;
+
+    form.appendChild(input);
+    form.submit();
+    form.remove();
+}
 
 _ylybcx = {
     init: function () {
@@ -135,19 +237,17 @@ _ylybcx = {
     },
     //点击姓名，显示个人详细信息
     grDetailInfo:function (index) {
-        debugger
+        var grRecord =  $('#ylybzfDetailDataGrid').bootstrapTable("getData")[index];
+
         $.ajax({
             type: "post",
             url: "/ylybcx/grDetailInfo",
-            data: "",
+            data: {grid: grRecord.grid,dwid:grRecord.dwid},
             success: function(msg){
+                $("#grDetailInfo").setForm(msg.data);
                 $("#grDetailInfo").modal('show');
-                $("#grDetailInfo").load(data);
-                // $("#grDetailInfo").html(data);
             }
         });
-
-
     },
 
     mainDataGrid:function () {
@@ -163,6 +263,9 @@ _ylybcx = {
             pageList: [5, 25, 50, 100],
             showFooter:true,                        //合计
             queryParams: function(params) {
+                $("#mainoffset").val(params.offset);
+                $("#mainlimit").val(params.limit);
+
                 var formdata = $("#mainform").serialize();
                 var paging =formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 return paging;
@@ -185,27 +288,27 @@ _ylybcx = {
                         },footerFormatter: function (value) {
                             return '总合计金额';
                         }},
-                    {title: '统一社区信用代码', field: 'dwdm', align: 'center', valign: 'middle', sortable: true,  width: '500',footerFormatter: function (value) {
+                    {title: '统一社区信用代码', field: 'dwdm', align: 'center', valign: 'middle', sortable: true,  width: 500,footerFormatter: function (value) {
                         var count = totalAmount;
                         return count.toFixed(2);
                     }},
                     {title: '报表日期', field: 'bbrq', align: 'center', valign: 'middle', sortable: true, width: 100},
 
-                    {title: '经办人', field: 'jbr', align: 'center', valign: 'middle', sortable: true,  width: '100',footerFormatter: function (value) {
+                    {title: '经办人', field: 'jbr', align: 'center', valign: 'middle', sortable: true,  width: 100,footerFormatter: function (value) {
                             return '本页合计金额';
                         }},
-                    {title: '业务办理日期', field: 'blrq', align: 'center', valign: 'middle', sortable: true, width: '100',footerFormatter: function (value) {
+                    {title: '业务办理日期', field: 'blrq', align: 'center', valign: 'middle', sortable: true, width: 100,footerFormatter: function (value) {
                             var count = currentAmount;
                             return count.toFixed(2);
                         }},
-                    {title: '月报生成日期', field: 'scrq', align: 'center', valign: 'middle', sortable: true,  width: '100'},
-                    {title: '补支人数', field: 'bzrs', align: 'center', valign: 'middle', sortable: true,  width: '100'},
-                    {title: '检查人数', field: 'jcrs', align: 'center', valign: 'middle', sortable: true,  width: '100'},
-                    {title: '合计金额', field: 'hjje', align: 'center', valign: 'middle', sortable: true,  width: '100'},
-                    {title: '支付次数', field: 'zfcs', align: 'center', valign: 'middle'},
-                    {title: '附言', field: 'fuyan', align: 'center', valign: 'middle',  sortable: true, width: '100'},
-                    {title: '发放地点', field: 'fffs', align: 'center', valign: 'middle',  sortable: true,  width: '100'},
-                    {title: '经（代）办机构', field: 'dbjg', align: 'center', valign: 'middle', sortable: true,  width: '100'}
+                    {title: '月报生成日期'    ,field: 'scrq',     align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '补支人数'        ,field: 'bzrs',     align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '检查人数'        ,field: 'jcrs',     align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '合计金额'        ,field: 'hjje',     align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '支付次数'        ,field: 'zfcs',     align: 'center', valign: 'middle'},
+                    {title: '附言'            ,field: 'fuyan',    align: 'center', valign: 'middle',  sortable: true, width: 100},
+                    {title: '发放地点'        ,field: 'ffdd',     align: 'center', valign: 'middle',  sortable: true,  width: 100},
+                    {title: '经（代）办机构'  ,field: 'dbjg',     align: 'center', valign: 'middle', sortable: true,  width: 100}
                 ]
             ]
 
@@ -268,7 +371,7 @@ _ylybcx = {
                     {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
                     {title: '附言'				,field: 'fuyan', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '补发原因'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '发放地点'			,field: 'fffs', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '发放地点'			,field: 'ffdd', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
                     {title: '经办人'			,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '审核人'			,field: 'shr', 		align: 'center', valign: 'middle', sortable: true, 	width: 100},
                     {title: '检查日期'			,field: 'jcrq', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},

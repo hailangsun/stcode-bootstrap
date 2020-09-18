@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+
+    <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jgylybcx/jgylybcx.js}"></script>
+
+    <style>
+        label {
+            text-align: right;
+        }
+
+        #hoverspan:hover{
+            font-weight:bold;
+            color: red;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<form  id="mainform">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title accordion-toggle">监督检查/日常检查</h3>
+        </div>
+
+        <div class="panel-body" style="width: auto">
+
+            <div class="row">
+                <!-- r1 -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
+                        <div class="col-md-8">
+                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
+                                <option th:value="0">请选择</option>
+                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">单位名称</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="dwmc"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">统一社会信用代码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="xydm"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">姓名</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="jgname"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">公民身份证号</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzhm"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >附言</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="fuyan" id="fuyan"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label  class="col-md-4 control-label">报表日期</label>
+                            <div class="input-group col-md-8">
+                                <input class="form-control" type="date" name="dateFrom" />
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-md-4 control-label">至</label>
+                            <div class="input-group col-md-8">
+                                <input class="form-control" type="date" name="dateTo" />
+                            </div>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >经办人</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="jbr" id="jbr"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">补支金额大于</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzjgdy"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label">检查类型</label>
+                        <div class="col-md-8">
+                            <select class="selectpicker form-control" name="shlx" id="shlx" multiple>
+                                <option th:value="0">请选择</option>
+                                <option th:each="option : ${SHBZ_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >审核状态</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="shbz" id="shbz"></select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="query_btn" >查询</button>
+                <button type="reset" class="btn btn-default" id="clear_btn" >清空</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+<!--主页table-->
+<div class="panel-body" id="queryResult">
+    <table id="mainDataGrid" class="table table-hover"></table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="check-btn" >检查</button>
+        <button type="button" class="btn btn-default" id="restart-check-btn" >重新检查</button>
+        <button type="button" class="btn btn-default" id="examine-btn" >审核</button>
+        <button type="button" class="btn btn-default" id="print-btn" >打印</button>
+        <button type="button" class="btn btn-default" id="export-btn" >导出</button>
+        <button type="button" class="btn btn-default" id="close-btn" >返回</button>
+    </div>
+
+</div>
+
+
+<!-- 机关事业养老保险月报外支付明细  -->
+<div class="modal fade" id="jgylycxfDetail" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">机关事业养老保险月报外支付明细</h4>
+            </div>
+            <div class="modal-body">
+                <table id="jgylybzfDetailDataGrid" class="table table-hover"></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 机关事业养老保险月报外支付明细 检查表格 -->
+<div class="modal fade" id="jgylybzfDetailCheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查结果</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="jgresultDetailForm">
+                    <table class="table table-bordered table-hover" id="jgylybzfDetailCheckTable">
+                        <tbody></tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id = "check-enter-btn">【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【取消】</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

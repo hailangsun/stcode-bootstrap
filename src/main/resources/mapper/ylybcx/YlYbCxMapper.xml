@@ -19,6 +19,25 @@
   </select>
 
 
+    <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grxx" parameterType="com.stcode.bootstrap.model.Ylybcx">
+        SELECT
+            max(a.GRID) GRID,max(a.DWID) DWID,max(a.XM) GRNAME,max(a.BZHM) BZHM,max(a.BXH) BXH,max(a.GRSF) GRSF,max(b.FFDD) FFDD,max(c.DWMC) DWMC
+        FROM
+        GR_XX a
+        LEFT JOIN GR_YLZF_YMX 	b ON a.GRID = b.GRID
+        LEFT JOIN DW_XX				c ON a.DWID = c.DWID
+        WHERE
+        a.GRID = #{grid,jdbcType=VARCHAR}
+        AND b.JBR <![CDATA[ <> ]]> 'sys'
+        <if test="dwid != null and dwid != ''">
+            and a.DWID = #{dwid,jdbcType=VARCHAR}
+        </if>
+        GROUP BY
+        a.GRID,a.DWID,a.XM ,a.BZHM,a.BXH,a.GRSF,b.FFDD,c.DWMC
+
+
+    </select>
+
 
 
 
