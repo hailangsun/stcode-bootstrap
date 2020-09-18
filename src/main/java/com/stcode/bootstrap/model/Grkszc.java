@@ -9,27 +9,28 @@ import lombok.Data;
 @Data
 public class Grkszc {
 
+    //个人id
+    private String grid;
     //代办机构
     private String dbjg;
     //多选
     private String[] dbjgs;
     //统一社会信用代码 [组织机构代码]
     private String dwdm;
-    //单位ID
+    //单位ID -> GR_YLJF_ZYD
     private String dwid;
-    //单位名称
+    //单位名称 -> DW_XX
     private String dwmc;
 
-    //公民身份证号码 -> 社会保障号码
+    //公民身份证号码 -> 社会保障号码 ->GR_XX
     private String bzhm;
     //日期起
     private String dateFrom;
     //日期止
-
     private String dateTo;
-    //转入地行政区划代码 -> 转入地行政区划
+    //转入地行政区划代码 -> 转入地行政区划 -> GR_JFPZ_LXH
     private String zrxzqh;
-    //转出地行政区划代码 -> 转出地行政区划
+    //转出地行政区划代码 -> 转出地行政区划 -> GR_JFPZ_LXH
     private String zcxzqh;
     //姓名
     private String grname;

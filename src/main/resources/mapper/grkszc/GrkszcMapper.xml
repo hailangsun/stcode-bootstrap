@@ -3,9 +3,12 @@
 <mapper namespace="com.stcode.bootstrap.mapper.grkszc.GrkszcMapper">
 
   <select id="getGrkszc" resultType="com.stcode.bootstrap.model.Grkszc">
-      SELECT a.YWXH,a.DWID,b.DWMC,a.BBRQ,a.JBR,a.BLRQ,a.SCRQ,a.ZFJE,a.FUYAN,a.FFFS,b.SSQX FROM YL_ZFYB a
-      LEFT JOIN DW_XX b on a.DWID = b.DWID
-      WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+    SELECT a.DWID,a.GRID,b.DWDM,b.DWMC,c.BZHM,c.xm grname,c.xb,a.ZHLB,a.ZCSBMC,a.ZRSBMC,d.dyrq,d.jbr
+    FROM GR_YLJF_ZYD a
+    LEFT JOIN DW_XX 	b ON a.DWID = b.DWID
+    LEFT JOIN GR_XX 	c ON a.GRID = c.GRID
+    LEFT JOIN GR_JFPZ   d ON a.GRID = d.GRID
+      WHERE d.JBR <![CDATA[ <> ]]> 'sys'
   </select>
 
 
