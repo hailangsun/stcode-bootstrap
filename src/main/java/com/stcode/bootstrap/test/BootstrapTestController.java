@@ -1,24 +1,19 @@
-package com.stcode.bootstrap.controller.test;
+package com.stcode.bootstrap.test;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.fastjson.JSONObject;
 import com.stcode.bootstrap.domain.User;
 import com.stcode.bootstrap.dto.TestDto;
 import com.stcode.bootstrap.export.ComplexHeadData;
-import com.stcode.bootstrap.service.TestService;
 import com.stcode.bootstrap.utils.R;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -42,15 +37,6 @@ public class BootstrapTestController {
         return "index";
     }
 
-
-    @Resource
-    private TestService testService;
-
-    @RequestMapping("/test")
-    @ResponseBody
-    public List<User> test(){
-        return testService.list();
-    }
 
     @RequestMapping(value = "/search")
     @ResponseBody
