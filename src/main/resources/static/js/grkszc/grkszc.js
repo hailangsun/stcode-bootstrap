@@ -228,7 +228,7 @@ _grkszc = {
 
             columns: [
 
-                [{"title": "基本养老保险转出情况", "halign": "center", "align": "center", "colspan": 32}],
+                [{"title": "基本养老保险转出情况", "halign": "center", "align": "center", "colspan": 33}],
                 [{checkbox: true,colspan: 1, rowspan: 2},
                     {title: 'grid', field: 'grid', visible: false, colspan: 1, rowspan: 2},
                     {title: 'jcid', field: 'jcid', visible: false, colspan: 1, rowspan: 2},
