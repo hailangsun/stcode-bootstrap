@@ -3,12 +3,17 @@
 <mapper namespace="com.stcode.bootstrap.mapper.grkszc.GrkszcMapper">
 
   <select id="getGrkszc" resultType="com.stcode.bootstrap.model.Grkszc">
-    SELECT a.DWID,a.GRID,b.DWDM,b.DWMC,c.BZHM,c.xm grname,c.xb,a.ZHLB,a.ZCSBMC,a.ZRSBMC,d.dyrq,d.jbr
+    SELECT a.DWID,a.GRID,b.DWDM,b.DWMC,c.BZHM,c.xm grname,c.xb,a.ZHLB,a.ZCSBMC,a.ZRSBMC,d.dyrq,d.jbr,
+            e.JBR lxhjbr,e.blrq lxhblrq,f.JBR xxbjbr,f.BLRQ xxbscrq,f.ZT,g.JCR,TO_CHAR(g.JCRQ, 'yyyy-MM-dd HH24:mi:ss') JCRQ,
+            g.JC,g.CXJC,g.MEMO,g.jcid
     FROM GR_YLJF_ZYD a
-    LEFT JOIN DW_XX 	b ON a.DWID = b.DWID
-    LEFT JOIN GR_XX 	c ON a.GRID = c.GRID
-    LEFT JOIN GR_JFPZ   d ON a.GRID = d.GRID
-      WHERE d.JBR <![CDATA[ <> ]]> 'sys'
+    LEFT JOIN DW_XX 	    b ON a.DWID = b.DWID
+    LEFT JOIN GR_XX 	    c ON a.GRID = c.GRID
+    LEFT JOIN GR_JFPZ       d ON a.GRID = d.GRID
+    LEFT JOIN GR_JFPZ_LXH   e on a.GRID = e.GRID
+    LEFT JOIN GR_YLJF_ZYD   f on a.GRID = f.GRID
+    LEFT JOIN JC_JG         g on a.GRID = g.GRID and a.DWID = g.DWID and g.MKDM='grkszc'
+    WHERE d.JBR <![CDATA[ <> ]]> 'sys'
   </select>
 
 

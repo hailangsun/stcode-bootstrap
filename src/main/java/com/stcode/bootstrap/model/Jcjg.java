@@ -32,7 +32,17 @@ public class Jcjg {
     private String ywxh;
     //模块代码
     private String mkdm;
+    //模块名称
+    private String mkmc;
     //个人id
     private String grid;
 
+    //检查审核人
+    private String jcshr;
+    //检查审核日期
+    private Data jcshrq;
+    //检查审核
+    private String jcsh;
+    //检查审核结果
+    private String jcshjg;
 }

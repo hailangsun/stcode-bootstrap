@@ -1,14 +1,16 @@
 package com.stcode.bootstrap.controller.grkszc;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.stcode.bootstrap.domain.DmMx;
 import com.stcode.bootstrap.mapper.DmMxMapper;
 import com.stcode.bootstrap.model.Grkszc;
+import com.stcode.bootstrap.model.JcjgVo;
+import com.stcode.bootstrap.model.Ylybcx;
 import com.stcode.bootstrap.service.grkszc.GrkszcService;
 import com.stcode.bootstrap.utils.R;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -51,4 +53,39 @@ public class GrkszcController {
     public R search(Grkszc grkszc) {
         return grkszcService.search(grkszc);
     }
+
+    /**
+     * 查询信息表细单
+     */
+    @RequestMapping("/searchXxb")
+    @ResponseBody
+    public R  searchXxb(Grkszc xxb){
+        return R.ok();
+    }
+
+
+    /**
+     * 检查确定，生成检查结果
+     */
+    @RequestMapping(value = "insertJcjg", method = RequestMethod.POST)
+    @ResponseBody
+    public R insertJcjg(@RequestBody Grkszc grkszc) {
+       return grkszcService.insertJcjg(grkszc);
+    }
+
+
+    /**
+     * 检查确定，生成检查结果
+     */
+    @RequestMapping(value = "restartCheckJcjg", method = RequestMethod.POST)
+    @ResponseBody
+    public R restartCheckJcjg(@RequestBody Grkszc grkszc) {
+        return grkszcService.restartCheckJcjg(grkszc);
+    }
+
+
+
+
+
+
 }

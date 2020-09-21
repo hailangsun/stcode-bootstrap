@@ -4,10 +4,12 @@
 
     <insert id="insertJcjg" parameterType="com.stcode.bootstrap.model.Jcjg">
         insert
-        into JC_JG (JCID,DWID,JCR,JCRQ,JC,CXJC,JCJG,MEMO,XM,YWXH,GRID)
+        into JC_JG (JCID,DWID,JCR,JCRQ,JC,CXJC,JCJG,MEMO,XM,YWXH,GRID,MKDM,MKMC)
         values (#{jcid,jdbcType=VARCHAR},#{dwid,jdbcType=VARCHAR}
-        ,#{jcr,jdbcType=VARCHAR},#{jcrq,jdbcType=DATE},#{jc,jdbcType=VARCHAR},#{cxjc,jdbcType=VARCHAR}
-        ,#{jcjg,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{xm,jdbcType=VARCHAR},#{ywxh,jdbcType=VARCHAR},#{grid,jdbcType=VARCHAR})
+        ,#{jcr,jdbcType=VARCHAR},TO_TIMESTAMP(to_char(#{jcrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6')
+        ,#{jc,jdbcType=VARCHAR},#{cxjc,jdbcType=VARCHAR}
+        ,#{jcjg,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},#{xm,jdbcType=VARCHAR},#{ywxh,jdbcType=VARCHAR}
+        ,#{grid,jdbcType=VARCHAR},#{mkdm,jdbcType=VARCHAR},#{mkmc,jdbcType=VARCHAR})
 
     </insert>
 

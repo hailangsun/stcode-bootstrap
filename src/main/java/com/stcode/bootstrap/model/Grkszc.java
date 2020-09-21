@@ -2,6 +2,9 @@ package com.stcode.bootstrap.model;
 
 import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * 监督检查-日常检查-跨省转出人员信息查询
  * [grkszc -> 个人跨省转出]
@@ -62,7 +65,7 @@ public class Grkszc {
     //信息表 -> 生成日期 -> 信息表上传日期 -> GR_YLJF_ZYD
     private String xxbscrq;
     //信息表 -> 经办人 -> GR_YLJF_ZYD
-    private String zydjbr;
+    private String xxbjbr;
 
     //养老资金财务支付情况 -> 转移支出总额 没找到
     private String zyyyyy;
@@ -84,4 +87,32 @@ public class Grkszc {
      */
     private String offset;
     private String limit;
+
+    /**
+     * 检查结果jcjg
+     */
+    //检查结果ID
+    private String[] formIds;
+    //个人ID
+    private String[] grIds;
+    //公司id
+    private String[] dwids;
+    //备注
+    private String memo;
+    //接收个人ID和单位id
+    List<JcjgVo> jcjgs;
+
+    //检查人
+    private String jcr;
+    //检查日期
+    private String jcrq;
+    //检查
+    private String jc;
+    //重新检查
+    private String cxjc;
+    //检查结果
+    private String jcjg;
+    //检查 id
+    private String jcid;
+
 }

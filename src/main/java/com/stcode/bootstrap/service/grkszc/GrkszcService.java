@@ -17,4 +17,15 @@ public interface GrkszcService {
     R search(Grkszc grkszc);
 
 
+    /**
+     * 新增检查结果jcjg
+     */
+    R insertJcjg(Grkszc grkszc);
+
+    /**
+     * 新增检查结果jcjg
+     */
+    R restartCheckJcjg(Grkszc grkszc);
+
+
 }
