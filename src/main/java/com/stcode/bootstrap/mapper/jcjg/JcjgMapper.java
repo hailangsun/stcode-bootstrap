@@ -12,7 +12,7 @@ public interface JcjgMapper {
     /**
      * 检查确定，根据个人ID批量生成检查结果
      */
-    void updateJcjg(Map updateJcjgMap);
+    void updateJcjg(Jcjg jcjg);
 
     /**
      * 新增JCJG检查结果

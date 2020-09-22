@@ -20,7 +20,7 @@
         </foreach>
     </select>
 
-    <update id="updateJcjg" parameterType="java.util.Map">
+    <update id="updateJcjg" parameterType="com.stcode.bootstrap.model.Jcjg">
         update JC_JG
         <set>
             <if test="ywxh != null">
@@ -42,7 +42,43 @@
                 XM = #{xm,jdbcType=VARCHAR},
             </if>
             <if test="cxjc != null">
-                CXJC = #{cxjc,jdbcType=VARCHAR}
+                CXJC = #{cxjc,jdbcType=VARCHAR},
+            </if>
+            <if test="mkdm != null">
+                MKDM = #{mkdm,jdbcType=VARCHAR},
+            </if>
+            <if test="mkmc != null">
+                MKMC = #{mkmc,jdbcType=VARCHAR},
+            </if>
+            <if test="grid != null">
+                GRID = #{grid,jdbcType=VARCHAR},
+            </if>
+            <if test="jcshr != null">
+                JCSHR = #{jcshr,jdbcType=VARCHAR},
+            </if>
+            <if test="jcshrq != null">
+                JCSHRQ = TO_TIMESTAMP(to_char(#{jcshrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6'),
+            </if>
+            <if test="jcsh != null">
+                JCSH = #{jcsh,jdbcType=VARCHAR},
+            </if>
+            <if test="jcshjg != null">
+                JCSHJG = #{jcshjg,jdbcType=VARCHAR},
+            </if>
+            <if test="cxjcjg != null">
+                CXJCJG = #{cxjcjg,jdbcType=VARCHAR},
+            </if>
+            <if test="cxxm != null">
+                CXXM = #{cxxm,jdbcType=VARCHAR},
+            </if>
+            <if test="cxjcrq != null">
+                CXJCRQ = TO_TIMESTAMP(to_char(#{cxjcrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6'),
+            </if>
+            <if test="cxjcr != null">
+                CXJCR = #{cxjcr,jdbcType=VARCHAR},
+            </if>
+            <if test="cxmemo != null">
+                CXMEMO = #{cxmemo,jdbcType=VARCHAR}
             </if>
         </set>
         where JCID=#{jcid}

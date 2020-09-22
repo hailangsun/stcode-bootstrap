@@ -97,7 +97,6 @@ $(function(){
         var flag = false;
         //2、选有检查过的，按钮可用
         $.each(rows,function(index,item){
-            debugger
             if(item.jc == "false" || item.jc == null){
                 flag =true;
                 return;
@@ -109,12 +108,8 @@ $(function(){
             return;
         }
 
-        //清空form表单
-        $(":input","#grkszcDetailForm")
-            .not(":button",":reset","hidden","submit")
-            .val("")
-            .removeAttr("checked")
-            .removeAttr("checkbox");
+        // todo 清空form表单 按照以前方式写
+
         $("#grkszcDetailCheck").modal('show');
 
     });
@@ -182,31 +177,65 @@ function formatIsCXJC(value, row, index) {
     return value == 'true' ? "是" : "否";
 }
 
+//设置表单值
+$.fn.setForm = function(jsonValue){
+    var obj = this;
+    $.each(jsonValue,function(name,ival){
+        obj.find("input[name="+name+"]").val(ival)
+        obj.find("[name="+name+"]").text(ival);
+    })
+}
+
 
 _grkszc = {
     init: function () {
         this.mainDataGrid();
     },
 
-    //点击姓名，显示个人详细信息
+    //缴费凭证 显示个人信息
     grDetailInfo:function (index) {
-        $("#payDetail").modal('show');
         //获取行号
         var record =  $('#mainDataGrid').bootstrapTable("getData")[index];
+        $.ajax({
+            type: "post",
+            url: "/grkszc/grDetailInfo",
+            data: {grid: record.grid,dwid:record.dwid},
+            success: function(msg){
+                $("#payDetailForm").setForm(msg.data);
+                $("#payDetail").modal('show');
+            }
+        });
 
     },
     //点击姓名获取，联系函详情
     grlxhInfo:function (index) {
-        $("#ylbxzyh").modal('show');
         //获取行号
         var record =  $('#mainDataGrid').bootstrapTable("getData")[index];
+        $.ajax({
+            type: "post",
+            url: "/grkszc/grlxhInfo",
+            data: {grid: record.grid,dwid:record.dwid},
+            success: function(msg){
+                $("#lxhForm").setForm(msg.data);
+                $("#lxhModal").modal('show');
+            }
+        });
+
     },
     //点击信息表，姓名
     grxxbInfo:function (index) {
-        $("#xxbgrcx").modal('show');
         //获取行号
         var record =  $('#mainDataGrid').bootstrapTable("getData")[index];
-        _grkszc.xxbDataGrid(record);
+        $.ajax({
+            type: "post",
+            url: "/grkszc/grxxbInfo",
+            data: {grid: record.grid,dwid:record.dwid},
+            success: function(msg){
+                $("#xxbForm").setForm(msg.data);
+                $("#xxbgrcx").modal('show');
+                _grkszc.xxbDataGrid(record);
+            }
+        });
     },
 
     mainDataGrid:function () {
@@ -251,7 +280,7 @@ _grkszc = {
                     {title: '联系函',               field: 'lxh',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1, width: 100},
                     {title: '信息表',               field: 'xxb',         align: 'center',    valign: 'middle',  colspan: 3, rowspan: 1, width: 100},
                     {title: '养老资金财务支付情况',  field: 'ylzjzfqk',    align: 'center',    valign: 'middle',  colspan: 5, rowspan: 1, width: 100},
-                    {title: '检查人',               field: 'jcr',    align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查人',               field: 'jcr',          align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
                     {title: '检查日期',             field: 'jcrq',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
                     {title: '检查',                 field: 'jc',          align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100,formatter: formatIsJC},
                     {title: '重新检查',             field: 'cxjc',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100,formatter: formatIsCXJC},
@@ -265,7 +294,7 @@ _grkszc = {
                 [
                     {field: 'dyrq', title: '打印日期',            align: 'center', valign: 'middle',width: 100, sortable: true,formatter: grPayDetail},
                     {field: 'jbr',   title: '经办人',             align: 'center', valign: 'middle',width: 100, sortable: true},
-                    {field: 'lxhblrq',   title: '办理日期',          align: 'center', valign: 'middle',width: 100, sortable: true},
+                    {field: 'lxhblrq',   title: '办理日期',       align: 'center', valign: 'middle',width: 100, sortable: true},
                     {field: 'lxhjbr', title: '经办人',            align: 'center', valign: 'middle',width: 100, sortable: true,formatter: grlxhDetail},
                     {field: 'xxbscrq', title: '生成日期',         align: 'center', valign: 'middle',width: 100, sortable: true},
                     {field: 'xxbjbr', title: '经办人',            align: 'center', valign: 'middle',width: 100, sortable: true,formatter:grxxbDetail},

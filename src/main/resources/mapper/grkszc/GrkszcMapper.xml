@@ -17,4 +17,58 @@
   </select>
 
 
+  <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grkszc" parameterType="com.stcode.bootstrap.model.Grkszc">
+    SELECT a.GRID,a.XM grname,a.XB,a.HJSD,a.YZBM,a.BZHM,b.BXH,c.QRQ,
+	            d.BDJFYS,d.LXDH,d.YJDZ,d.DWID,e.DWMC FROM GR_XX a
+
+      LEFT JOIN GR_JFPZ_LXH     b on a.GRID = b.GRID
+      LEFT JOIN GR_JFPZ 		c on a.GRID = c.GRID
+      LEFT JOIN GR_YLJF_ZYD     d on a.GRID = d.GRID
+      LEFT JOIN DW_XX			e on d.DWID = e.DWID
+
+    WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+
+  </select>
+
+
+  <select id="getGrlxhInfo" resultType="com.stcode.bootstrap.model.Grkszc" parameterType="com.stcode.bootstrap.model.Grkszc">
+
+      SELECT a.GRID,a.XB,a.XM grname,b.BXH, b.GDBH,b.jbr,b.lxdh,a.bzhm,
+          b.JFQXMC,b.CBRYXM,b.khqc,b.khyh,b.yhzh,b.sbjgdz,b.sbjgdzyzbm,b.newjfqxname
+        FROM GR_XX a
+        LEFT JOIN GR_JFPZ_LXH b on a.GRID = b.GRID
+
+      WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+  </select>
+
+
+  <select id="getGrxxbInfo" resultType="com.stcode.bootstrap.model.Grkszc" parameterType="com.stcode.bootstrap.model.Grkszc">
+
+    SELECT b.GRID,b.DWID,c.dwmc,b.BXH,b.XM grname,b.XB,TO_CHAR(b.CSRQ, 'yyyy-MM-dd HH24:mi:ss')CSRQ,b.BZHM,b.HJSD,
+              TO_CHAR(a.gzrq, 'yyyy-MM-dd HH24:mi:ss')gzrq,
+              TO_CHAR(a.cbdgrjfrq, 'yyyy-MM-dd HH24:mi:ss')cbdgrjfrq,
+              TO_CHAR(a.scjfrq, 'yyyy-MM-dd HH24:mi:ss')scjfrq,
+              TO_CHAR(a.grzhrq, 'yyyy-MM-dd HH24:mi:ss')grzhrq,
+              TO_CHAR(a.bdjfqrq, 'yyyy-MM-dd HH24:mi:ss')bdjfqrq,
+              TO_CHAR(a.bdjfzrq, 'yyyy-MM-dd HH24:mi:ss')bdjfzrq,
+              a.bdjfys,
+              TO_CHAR(a.zyrq, 'yyyy-MM-dd HH24:mi:ss')zyrq,
+           to_Char(a.grjf_98q, 'fm999999999990.00') grjf_98q,
+           to_Char(a.grzh_98h, 'fm999999999990.00') grzh_98h,
+           to_Char(a.dngrzhbj, 'fm999999999990.00') dngrzhbj,
+           to_Char(a.grzhzyze, 'fm999999999990.00') grzhzyze,
+           to_Char(a.tcjjzyze, 'fm999999999990.00') tcjjzyze,
+           to_Char(a.zyjjze, 'fm999999999990.00') zyjjze
+    FROM gr_yljf_zyd a
+    LEFT JOIN GR_XX 			b on a.GRID = b.GRID
+    LEFT JOIN DW_XX			    c on a.DWID = c.DWID
+
+    WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+  </select>
+
+
+
 </mapper>

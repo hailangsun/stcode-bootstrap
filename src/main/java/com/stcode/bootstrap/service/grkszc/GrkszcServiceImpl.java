@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.stcode.bootstrap.mapper.grkszc.GrkszcMapper;
 import com.stcode.bootstrap.mapper.jcjg.JcjgMapper;
-import com.stcode.bootstrap.model.Grkszc;
-import com.stcode.bootstrap.model.Jcjg;
-import com.stcode.bootstrap.model.JcjgVo;
-import com.stcode.bootstrap.model.Ylybcx;
+import com.stcode.bootstrap.model.*;
 import com.stcode.bootstrap.utils.GenerateId;
 import com.stcode.bootstrap.utils.R;
 import org.springframework.stereotype.Service;
@@ -68,7 +65,7 @@ public class GrkszcServiceImpl implements GrkszcService{
             addJcjg.setJc("true");
             addJcjg.setCxjc("false");
             addJcjg.setDwid(grid.getDwid());
-            //显示位置
+            //前端页面显示位置[1-检查 2-检查结果]
             addJcjg.setXm("1");
             //个人跨省转出
             addJcjg.setMkdm("grkszc");
@@ -81,6 +78,7 @@ public class GrkszcServiceImpl implements GrkszcService{
     }
 
     @Override
+    @Transactional
     public R restartCheckJcjg(Grkszc grkszc) {
         //个人id
         List<JcjgVo> grids      = grkszc.getJcjgs();
@@ -95,10 +93,50 @@ public class GrkszcServiceImpl implements GrkszcService{
         //备注
         String memo = grkszc.getMemo();
         for (JcjgVo grid: grids) {
-
+            //todo 查询检查是否存
+            Jcjg addJcjg = new Jcjg();
+            addJcjg.setJcid(grid.getJcid());
+            addJcjg.setCxjc("true");
+            //前端页面显示位置[1-检查 2-检查结果]
+            addJcjg.setCxxm("2");
+            //个人跨省转出
+            addJcjg.setMkdm("grkszc");
+            addJcjg.setMkmc("个人跨省转出");
+            addJcjg.setCxjcr("重新当前登录人");
+            addJcjg.setCxjcrq(new Date());
+            addJcjg.setCxjcjg(jcjgName.toString());
+            addJcjg.setCxmemo(memo);
+            jcjgMapper.updateJcjg(addJcjg);
         }
 
-        return null;
+        return R.ok();
+    }
+
+    @Override
+    public R getGRDetailInfo(Grkszc grInfo) {
+        List<Grkszc> grDetailList = grkszcMapper.getGRDetailInfo(grInfo);
+        if(grDetailList.size() > 0){
+            return R.ok().put("data",grDetailList.get(0));
+        }
+        return R.ok();
+    }
+
+    @Override
+    public R getGrlxhInfo(Grkszc query) {
+        List<Grkszc> grDetailList = grkszcMapper.getGrlxhInfo(query);
+        if(grDetailList.size() > 0){
+            return R.ok().put("data",grDetailList.get(0));
+        }
+        return R.ok();
+    }
+
+    @Override
+    public R getGrxxbInfo(Grkszc query) {
+        List<Grkszc> grDetailList = grkszcMapper.getGrxxbInfo(query);
+        if(grDetailList.size() > 0){
+            return R.ok().put("data",grDetailList.get(0));
+        }
+        return R.ok();
     }
 
     /**
@@ -109,7 +147,7 @@ public class GrkszcServiceImpl implements GrkszcService{
      */
     private void getJCJGVO(StringBuilder jcjgName, String memo,Jcjg addJcjg) {
         addJcjg.setJcr("当前登录人");
-        addJcjg.setJcrq(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
+        addJcjg.setJcrq(new Date());
         addJcjg.setJcjg(jcjgName.toString());
         addJcjg.setMemo(memo);
     }

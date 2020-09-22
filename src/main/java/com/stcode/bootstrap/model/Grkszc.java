@@ -72,7 +72,7 @@ public class Grkszc {
 
     //养老资金财务支付情况 -> 统筹基金转移额 -> 统筹基金转移总额 ->GR_YLJF_ZYD
     private String tcjjzyze;
-    //养老资金财务支付情况 -> 个人账户转移额 ->个人账户转移总额 ->GR_YLJF_ZYD
+    //本地参保期间个人账户存储额(元) - >养老资金财务支付情况 -> 个人账户转移额 ->个人账户转移总额 ->GR_YLJF_ZYD
     private String grzhzyze;
 
     //养老资金财务支付情况 -> 财务付款日期 -> 没找到
@@ -115,4 +115,82 @@ public class Grkszc {
     //检查 id
     private String jcid;
 
+    // 细单 基本养老参保缴费凭证 后续有时间抽取公共类，改为继承方式
+    //姓名
+    private String xm;
+    // todo 个人编号 BXH原个人编号 ->Gr_jfpz_lxh
+    private String bxh;
+    //编号 Gr_jfpz_lxh
+    private String gdbh;
+    //户籍 户籍属地 GR_XX
+    private String hjsd;
+    //在本地参保起止时间 - 本地缴费起日期 GR_JFPZ
+    private String qrq;
+    //本地实际缴费月数 在本地实际缴费月数 GR_YLJF_ZYD
+    private String bdjfys;
+
+    //todo 行政区划代码 ->参保地行政区划代码 GR_YLJF_ZYD 字段无效
+    private String xzqh;
+
+    //电话 联系电话 ->GR_YLJF_ZYD
+    private String lxdh;
+    //地址 邮寄地址 ->GR_YLJF_ZYD
+    private String yjdz;
+    //邮编 居住地邮政编码 -> GR_XX
+    private String yzbm;
+
+    /**
+     * 细单 基本养老保险缴费账户转移联系函
+     */
+    //原参保地社保机构名称 参保地社保机构名称 ->GR_JFPZ_LXH
+    private String jfqxmc;
+
+    //原在你处的参保人员 -> 参保人员姓名 GR_JFPZ_LXH
+    private String cbryxm;
+    //新就业地社保机构开户全称 GR_JFPZ_LXH
+    private String khqc;
+    //新就业地社保机构开户银行 GR_JFPZ_LXH
+    private String khyh;
+    //新就业地社保机构银行账号 GR_JFPZ_LXH
+    private String yhzh;
+    //新就业地社保机构地址 GR_JFPZ_LXH
+    private String sbjgdz;
+    //新就业地社保机构邮政编码 GR_JFPZ_LXH
+    private String sbjgdzyzbm;
+    //新就业地社保机构	新就业的社保机构章  汉字 GR_JFPZ_LXH
+    private String newjfqxname;
+
+    /**
+     * 细单 参保人基本信息
+     */
+    //出生日期
+    private String csrq;
+    //参加工作时间 - >GR_YLJF_ZYD
+    private String gzrq;
+    //首次参保地实行个人缴费时间 ->  GR_YLJF_ZYD
+    private String cbdgrjfrq;
+    //本人首次缴费时间 ->GR_YLJF_ZYD
+    private String scjfrq;
+    //本人建立个人账户时间 GR_YLJF_ZYD
+    private String grzhrq;
+    //在本地缴费起始时间  GR_YLJF_ZYD
+    private String bdjfqrq;
+    //在本地缴费终止时间 GR_YLJF_ZYD
+    private String bdjfzrq;
+    //在本地实际缴费时间 - >在本地实际缴费月数 GR_YLJF_ZYD
+
+    //转移日期 GR_YLJF_ZYD
+    private String zyrq;
+    //1998年1月1日前账户中个人缴费累计存储额1 -> 1998年1月1日前个人缴费累计存储额 GR_YLJF_ZYD
+    private String grjf_98q;
+    //1998年1月1日至调转上年末个人账户累计存储存额2 -> 1998年1月1日后个人账户累计存储额 GR_YLJF_ZYD
+    private String grzh_98h;
+    //调转当年计入个人账户本金金额3
+    private String dngrzhbj;
+    //个人账户基金转移额4 - > 个人账户转移总额 GR_YLJF_ZYD
+    // private String grzhzyze;
+    //统筹基金转移额5 ->统筹基金转移总额 GR_YLJF_ZYD
+//    private String tcjjzyze;
+//    转移基金总额6 ->转移基金总额  GR_YLJF_ZYD
+    private String zyjjze;
 }

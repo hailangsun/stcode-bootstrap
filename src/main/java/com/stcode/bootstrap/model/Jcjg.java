@@ -45,4 +45,15 @@ public class Jcjg {
     private String jcsh;
     //检查审核结果
     private String jcshjg;
+    //重新检查结果
+    private String cxjcjg;
+    //重新检查前端页面使用
+    private String cxxm;
+    //重新检查日期
+    private Date cxjcrq;
+    //重新检查人
+    private String cxjcr;
+    //重新检查备注
+    private String cxmemo;
+
 }

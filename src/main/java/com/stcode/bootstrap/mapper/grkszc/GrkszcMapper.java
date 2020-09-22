@@ -16,4 +16,23 @@ public interface GrkszcMapper {
      */
     List<Grkszc> getGrkszc(Grkszc grkszc);
 
+    /**
+     * 查询 基本养老参保缴费凭证
+     */
+    List<Grkszc> getGRDetailInfo(Grkszc grkszc);
+
+
+    /**
+     * 查询 基本养老保险缴费账户转移联系函
+     * @param grkszc
+     * @return
+     */
+    List<Grkszc> getGrlxhInfo(Grkszc grkszc);
+
+
+    /**
+     * 信息表 参保人基本信息
+     */
+    List<Grkszc> getGrxxbInfo(Grkszc grkszc);
+
 }

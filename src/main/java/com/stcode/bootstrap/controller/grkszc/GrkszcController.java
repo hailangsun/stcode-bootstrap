@@ -50,8 +50,8 @@ public class GrkszcController {
 
     @RequestMapping("/search")
     @ResponseBody
-    public R search(Grkszc grkszc) {
-        return grkszcService.search(grkszc);
+    public R search(Grkszc query) {
+        return grkszcService.search(query);
     }
 
     /**
@@ -60,6 +60,7 @@ public class GrkszcController {
     @RequestMapping("/searchXxb")
     @ResponseBody
     public R  searchXxb(Grkszc xxb){
+
         return R.ok();
     }
 
@@ -69,8 +70,8 @@ public class GrkszcController {
      */
     @RequestMapping(value = "insertJcjg", method = RequestMethod.POST)
     @ResponseBody
-    public R insertJcjg(@RequestBody Grkszc grkszc) {
-       return grkszcService.insertJcjg(grkszc);
+    public R insertJcjg(@RequestBody Grkszc query) {
+       return grkszcService.insertJcjg(query);
     }
 
 
@@ -79,13 +80,39 @@ public class GrkszcController {
      */
     @RequestMapping(value = "restartCheckJcjg", method = RequestMethod.POST)
     @ResponseBody
-    public R restartCheckJcjg(@RequestBody Grkszc grkszc) {
-        return grkszcService.restartCheckJcjg(grkszc);
+    public R restartCheckJcjg(@RequestBody Grkszc query) {
+        return grkszcService.restartCheckJcjg(query);
     }
 
 
 
+    /**
+     * 查询缴费凭证 个人详情信息
+     */
+    @RequestMapping("/grDetailInfo")
+    @ResponseBody
+    public R grDetailInfo(Grkszc query){
+        return grkszcService.getGRDetailInfo(query);
+    }
 
+    /**
+     * 基本养老保险缴费账户转移联系函
+     */
+    @RequestMapping("/grlxhInfo")
+    @ResponseBody
+    public R grlxhInfo(Grkszc query){
+        return grkszcService.getGrlxhInfo(query);
+    }
+
+
+    /**
+     * 信息表 参保人基本信息
+     */
+    @RequestMapping("/grxxbInfo")
+    @ResponseBody
+    public R grxxbInfo(Grkszc query){
+        return grkszcService.getGrxxbInfo(query);
+    }
 
 
 }
