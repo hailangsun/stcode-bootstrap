@@ -112,6 +112,40 @@ public class GrkszcServiceImpl implements GrkszcService{
         return R.ok();
     }
 
+    //检查审核
+    @Override
+    public R examineCheckJcjg(Grkszc query) {
+        //个人id
+        List<JcjgVo> grids      = query.getJcjgs();
+        //检查结果id
+        String[] jcids          = query.getFormIds();
+        //查询检查结果中文
+        List<String> mxmcs      = jcjgMapper.queryMXMC(jcids);
+        StringBuilder jcjgName  = new StringBuilder();
+        for (String mxmc:mxmcs ) {
+            jcjgName.append(mxmc).append(",");
+        }
+        //备注
+        String memo = query.getMemo();
+        for (JcjgVo grid: grids) {
+            //todo 查询检查是否存
+            Jcjg addJcjg = new Jcjg();
+            addJcjg.setJcid(grid.getJcid());
+            addJcjg.setJcsh("true");
+            //个人跨省转出
+            addJcjg.setMkdm("grkszc");
+            addJcjg.setMkmc("个人跨省转出");
+            addJcjg.setJcshr("检查审核当前登录人");
+            addJcjg.setJcshrq(new Date());
+            addJcjg.setJcshjg(jcjgName.toString());
+            addJcjg.setJcshbz(memo);
+            jcjgMapper.updateJcjg(addJcjg);
+        }
+
+        return R.ok();
+
+    }
+
     @Override
     public R getGRDetailInfo(Grkszc grInfo) {
         List<Grkszc> grDetailList = grkszcMapper.getGRDetailInfo(grInfo);
@@ -137,6 +171,17 @@ public class GrkszcServiceImpl implements GrkszcService{
             return R.ok().put("data",grDetailList.get(0));
         }
         return R.ok();
+    }
+
+    @Override
+    public R searchXxb(Grkszc query) {
+        Integer page = query.getOffset() == null ? 1 : Integer.valueOf(query.getOffset());
+        Integer rows = query.getLimit() == null ? 10 : Integer.valueOf(query.getLimit());
+        PageHelper.offsetPage(page,rows);
+        List<Grkszc> grDetailList = grkszcMapper.getSearchXxb(query);
+        PageInfo<Grkszc> fxXxPageInfo = new PageInfo<>(grDetailList);
+        long total = fxXxPageInfo.getTotal();
+        return R.ok().put("rows",grDetailList).put("total",total);
     }
 
     /**

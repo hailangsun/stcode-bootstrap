@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,9 +60,8 @@ public class GrkszcController {
      */
     @RequestMapping("/searchXxb")
     @ResponseBody
-    public R  searchXxb(Grkszc xxb){
-
-        return R.ok();
+    public R  searchXxb(Grkszc query){
+        return grkszcService.searchXxb(query);
     }
 
 
@@ -82,6 +82,18 @@ public class GrkszcController {
     @ResponseBody
     public R restartCheckJcjg(@RequestBody Grkszc query) {
         return grkszcService.restartCheckJcjg(query);
+    }
+
+
+    /**
+     * 检查审核，生成检查审核结果
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "examineCheckJcjg", method = RequestMethod.POST)
+    @ResponseBody
+    public R examineCheckJcjg(@RequestBody Grkszc query) {
+        return grkszcService.examineCheckJcjg(query);
     }
 
 
@@ -114,5 +126,28 @@ public class GrkszcController {
         return grkszcService.getGrxxbInfo(query);
     }
 
+
+    /**
+     * 查询检查对话框
+     */
+    @RequestMapping("/getjcshTable")
+    @ResponseBody
+    public R checkResultTable(){
+        //存到redis中
+        List<DmMx> result = new ArrayList<>(4);
+        List<DmMx> dmmxList = dmMxMapper.getDmMxListByDmm("10101010");
+        for (DmMx dmMx:dmmxList) {
+            if(dmMx.getDmmxid().equals("01")){
+                result.add(dmMx);
+            }
+            if(dmMx.getDmmxid().equals("13")){
+                result.add(dmMx);
+            }
+            if(dmMx.getDmmxid().equals("09")){
+                result.add(dmMx);
+            }
+        }
+        return R.ok().put("data", result);
+    }
 
 }

@@ -114,6 +114,16 @@ public class Grkszc {
     private String jcjg;
     //检查 id
     private String jcid;
+    //检查审核人
+    private String jcshr;
+    //检查审核日期
+    private String jcshrq;
+    //检查审核
+    private String jcsh;
+    //检查审核结果
+    private String jcshjg;
+    //检查审核备注
+    private String jcshbz;
 
     // 细单 基本养老参保缴费凭证 后续有时间抽取公共类，改为继承方式
     //姓名
@@ -193,4 +203,32 @@ public class Grkszc {
 //    private String tcjjzyze;
 //    转移基金总额6 ->转移基金总额  GR_YLJF_ZYD
     private String zyjjze;
+    //行政区划名称
+    private String xzmc;
+    //年份 GR_YLJF_ZYD_JXMX
+    private String nian;
+    //缴费起止时间
+    //月缴费基数 GR_YLJF_ZYD_JXMX
+    private String yjfjs;
+    //缴费月数 GR_YLJF_ZYD_JXMX
+    private String ys;
+    //缴费比例 单位 GR_YLJF_ZYD_JXMX
+    private String dwjfbl;
+    //缴费比例 划入个人账户比例 GR_YLJF_ZYD_JXMX
+    private String dwhzbl;
+    //缴费比例 个人 GR_YLJF_ZYD_JXMX
+    private String grjfbl;
+    //当年记账金额 小计
+    private String dnjzje;
+    //当年记账金额 个人缴费
+    private String dngrjf;
+    //当年记账利息 小计
+    private String dnjzlx;
+    //当年记账利息 个人缴费
+    private String dngrlx;
+    //至本年末账户累计存储额 小计
+    private String zbnmljzhje;
+    //至本年末账户累计存储额 个人缴费
+    private String zbnmljgrjf;
+
 }

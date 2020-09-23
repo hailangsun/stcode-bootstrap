@@ -35,7 +35,7 @@ $(function(){
     $("#check-enter-btn").click(function () {
         //重新检查
         if(checkflag == '1'){
-            var params = checkCommon();
+            var params = checkCommon("grkszcDetailForm");
             $.ajax({
                 type: "post",
                 contentType:"application/json;charset=utf-8",
@@ -58,7 +58,7 @@ $(function(){
             });
 
         }else {//检查
-            var params = checkCommon();
+            var params = checkCommon("grkszcDetailForm");
             $.ajax({
                 type: "post",
                 contentType:"application/json;charset=utf-8",
@@ -88,42 +88,82 @@ $(function(){
     //重新检查restart-check-btn
     $("#restart-check-btn").click(function(){
         checkflag = 1;
-        //1、选择含有未检查的给予提示
-       var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
-        if(rows.length <= 0){
-            bootbox.alert("请选择已检查的记录");
-            return
+        // todo 清空form表单 按照以前方式写
+        //值区分重新检查和检查审核 1重新检查 2检查审核
+        if(checkAndExamine("1")) {
+            $("#grkszcDetailCheck").modal('show');
         }
-        var flag = false;
-        //2、选有检查过的，按钮可用
-        $.each(rows,function(index,item){
-            if(item.jc == "false" || item.jc == null){
-                flag =true;
-                return;
+    });
+
+    //检查审核
+    $("#examine-btn").click(function(){
+        if(checkAndExamine("2")){
+            getCheckResultTable("examine-modal","examineModalForm","/grkszc/getjcshTable");
+        }
+    });
+
+    //审核检查确定
+    $("#examine-enter-btn").click(function(){
+        var params = checkCommon("examineModalForm");
+        $.ajax({
+            type: "post",
+            contentType:"application/json;charset=utf-8",
+            dataType: "json",
+            url: "/grkszc/examineCheckJcjg",
+            data: params,
+            success: function(msg){
+                if (msg.code == 0) {
+                    bootbox.alert({
+                        message: "检查审核完成",
+                        size: 'small'
+                    });
+                    //todo 需要清空checkbox
+                    $("#examine-modal").modal('hide');
+                    $("#mainDataGrid").bootstrapTable('refresh');
+                }else {
+                    bootbox.alert(msg.error);
+                }
             }
         });
-        if(flag){
-            flag = false;
-            bootbox.alert("您选择的记录包含未检查的记录，不能重新对未检查记录进行检查！");
-            return;
-        }
-
-        // todo 清空form表单 按照以前方式写
-
-        $("#grkszcDetailCheck").modal('show');
-
     });
+
+
 });
 //检查和重新检查标记
 var checkflag = '0';
 
+//提取检查和检查审核通用效验
+function checkAndExamine(value) {
+    //1、选择含有未检查的给予提示
+    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择已检查的记录");
+        return false;
+    }
+    var flag = false;
+    //2、选有检查过的，按钮可用
+    $.each(rows,function(index,item){
+        if(item.jc == "false" || item.jc == null){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录包含未检查的记录，不能重新对未检查记录进行操作！");
+        return false;
+    }
+    return true;
+}
+
 //检查和重新检查共用
-function checkCommon() {
+function checkCommon(jqueryId) {
     var formIds         = new Array();
     var jcjgs           = new Array();
     var memo;
     //取提交的
-    var formdata    =  $("#grkszcDetailForm").serializeArray();
+    // var formdata    =  $("#grkszcDetailForm").serializeArray();
+    var formdata    =  $("#"+jqueryId).serializeArray();
     $.each(formdata,function(index,item){
         if(item.name == "memo"){
             memo = item.value;
@@ -177,6 +217,7 @@ function formatIsCXJC(value, row, index) {
     return value == 'true' ? "是" : "否";
 }
 
+
 //设置表单值
 $.fn.setForm = function(jsonValue){
     var obj = this;
@@ -184,6 +225,31 @@ $.fn.setForm = function(jsonValue){
         obj.find("input[name="+name+"]").val(ival)
         obj.find("[name="+name+"]").text(ival);
     })
+}
+
+
+
+// 查询检查项 modalID:模态框ID,formID表单id,
+function getCheckResultTable(modalID,formID,url){
+    $.ajax({
+        type: "post",
+        url: url,
+        data: "",
+        success: function(msg){
+            if (msg.code == 0) {
+                $("#"+formID).find("tbody").empty();
+                var datalist = msg.data;
+                $.each(datalist,function(index,item){
+                    $("#"+formID).find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+item.mxdm+"' value='"+item.dmmxid+"'/></div></td><td>"+item.mxmc+"</td></tr>");
+                });
+                $("#"+formID).find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><textarea style='resize: none' class=\"form-control\" type=\"text\" name=\"memo\"></textarea></td></tr>");
+            } else {
+                bootbox.alert(msg.error);
+            }
+            $("#"+modalID).modal('show');
+        }
+    });
+
 }
 
 
@@ -233,6 +299,7 @@ _grkszc = {
             success: function(msg){
                 $("#xxbForm").setForm(msg.data);
                 $("#xxbgrcx").modal('show');
+                $("#xxbDataGrid").bootstrapTable("destroy");
                 _grkszc.xxbDataGrid(record);
             }
         });
@@ -287,8 +354,8 @@ _grkszc = {
                     {title: '备注',                 field: 'memo',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核人',           field: 'jcshr',       align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核日期',         field: 'jcshrq',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核',             field: 'jcshrq',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核结果',         field: 'jcshrq',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核',             field: 'jcsh',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核结果',         field: 'jcshjg',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
 
                 ],
                 [
@@ -341,29 +408,29 @@ _grkszc = {
                     //         return pageSize * (pageNumber - 1) + index + 1;
                     //     }
                     // },
-                    {title: '参保地区',                field: 'cbdq',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
-                    {title: '年份',                    field: 'dwmc',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:60},
-                    {title: '缴费起止时间',            field: 'bzhm',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:100},
-                    {title: '缴费月数',                field: 'grname',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:50},
-                    {title: '月缴费基数',              field: 'xb',           align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:100},
-                    {title: '缴费比例',                field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 3, rowspan: 1,width:100},
-                    {title: '当年记账金额',            field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
-                    {title: '当年记账利息',            field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
-                    {title: '至本年末账户累计存储额',  field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
-                    {title: '备注',                   field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:50},
+                    {title: '参保地区',                field: 'cbdq',        align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
+                    {title: '年份',                    field: 'nian',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:60},
+                    {title: '缴费起止时间',            field: 'qrq',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:100},
+                    {title: '缴费月数',                field: 'ys',          align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:50},
+                    {title: '月缴费基数',              field: 'yjfjs',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2,width:100},
+                    {title: '缴费比例',                field: 'jfbl',        align: 'center',    valign: 'middle',  colspan: 3, rowspan: 1,width:100},
+                    {title: '当年记账金额',            field: 'dnjzje',      align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
+                    {title: '当年记账利息',            field: 'dnjzlx',      align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1,width:100},
+                    {title: '至本年末账户累计存储额',   field: 'zbnmzh',      align: 'center',   valign: 'middle',  colspan: 2, rowspan: 1,width:100},
+                    {title: '备注',                    field: 'memo',        align: 'center',   valign: 'middle',  colspan: 1, rowspan: 2,width:50},
                 ],
                 [
-                    {field: 'dyrq',         title: '行政区划代码',        align: 'center', valign: 'middle', formatter: grPayDetail},
-                    {field: 'jbr',          title: '名称',                align: 'center', valign: 'middle'},
-                    {field: 'lxhblrq',      title: '单位',                align: 'center', valign: 'middle'},
-                    {field: 'lxhjbr',       title: '划入个人账户比例',     align: 'center', valign: 'middle', formatter: grlxhDetail},
-                    {field: 'xxbscrq',      title: '个人',                align: 'center', valign: 'middle'},
-                    {field: 'xxbjbr',       title: '小计',                align: 'center', valign: 'middle', formatter:grxxbDetail},
-                    {field: 'zt',           title: '个人缴费',            align: 'center', valign: 'middle'},
-                    {field: 'zyyyyy',       title: '小计',                align: 'center', valign: 'middle'},
-                    {field: 'tcjjzyze',     title: '个人缴费',            align: 'center', valign: 'middle'},
-                    {field: 'grzhzyze',     title: '小计',                align: 'center', valign: 'middle'},
-                    {field: 'cwfkrq',       title: '个人缴费',            align: 'center', valign: 'middle'},
+                    {field: 'xzqh',         title: '行政区划代码',        align: 'center', valign: 'middle', formatter: grPayDetail,width:100},
+                    {field: 'xzmc',         title: '名称',                align: 'center', valign: 'middle',width:200},
+                    {field: 'dwjfbl',       title: '单位',                align: 'center', valign: 'middle',width:100},
+                    {field: 'dwhzbl',       title: '划入个人账户比例',     align: 'center', valign: 'middle', formatter: grlxhDetail,width:100},
+                    {field: 'grjfbl',       title: '个人',                align: 'center', valign: 'middle',width:100},
+                    {field: 'dnjzje',       title: '小计',                align: 'center', valign: 'middle', formatter:grxxbDetail,width:100},
+                    {field: 'dngrjf',       title: '个人缴费',            align: 'center', valign: 'middle',width:100},
+                    {field: 'dnjzlx',       title: '小计',                align: 'center', valign: 'middle',width:100},
+                    {field: 'dngrlx',       title: '个人缴费',            align: 'center', valign: 'middle',width:100},
+                    {field: 'zbnmljzhje',   title: '小计',                align: 'center', valign: 'middle',width:100},
+                    {field: 'zbnmljgrjf',   title: '个人缴费',            align: 'center', valign: 'middle',width:100},
                 ]
             ]
 

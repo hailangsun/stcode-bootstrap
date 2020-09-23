@@ -35,4 +35,11 @@ public interface GrkszcMapper {
      */
     List<Grkszc> getGrxxbInfo(Grkszc grkszc);
 
+    /**
+     * 信息表 查询 历年缴费及个人账户记账信息
+     * @param grkszc
+     * @return
+     */
+    List<Grkszc> getSearchXxb(Grkszc grkszc);
+
 }

@@ -40,11 +40,13 @@ public class Jcjg {
     //检查审核人
     private String jcshr;
     //检查审核日期
-    private Data jcshrq;
+    private Date jcshrq;
     //检查审核
     private String jcsh;
     //检查审核结果
     private String jcshjg;
+    //检查审核备注
+    private String jcshbz;
     //重新检查结果
     private String cxjcjg;
     //重新检查前端页面使用

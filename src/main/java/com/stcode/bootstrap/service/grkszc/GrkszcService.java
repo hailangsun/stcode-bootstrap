@@ -27,6 +27,13 @@ public interface GrkszcService {
      */
     R restartCheckJcjg(Grkszc query);
 
+    /**
+     * 检查审核，生成检查审核结果
+     * @param query
+     * @return
+     */
+    R examineCheckJcjg(Grkszc query);
+
 
 
     /**
@@ -50,6 +57,14 @@ public interface GrkszcService {
      * @return
      */
     R getGrxxbInfo(Grkszc query);
+
+
+    /**
+     * 信息表 查询 历年缴费及个人账户记账信息
+     * @param query
+     * @return
+     */
+    R searchXxb(Grkszc query);
 
 
 

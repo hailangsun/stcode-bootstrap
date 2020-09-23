@@ -465,7 +465,7 @@
     </div>
 </div>
 
-<!--检查页面-->
+<!--检查页面or动态 两种方式 需要后续确定是动态还是静态写死 -->
 <div class="modal fade" id="grkszcDetailCheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" style="height: 580px;overflow-x:hidden;overflow-y:auto">
         <div class="modal-content">
@@ -502,6 +502,37 @@
         </div>
     </div>
 </div>
+
+
+<!--检查审核模态框-->
+<div class="modal fade" id="examine-modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="height: 580px;overflow-x:hidden;overflow-y:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查审核结果</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="examineModalForm">
+                    <table class="table table-bordered table-hover" id="examine-modalTable">
+                        <tbody>
+<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="one"   value="01"/></div></td><td>通过</td></tr>-->
+<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="thirteen"   value="13" /></div></td><td>不通过</td></tr>-->
+<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="nine" value="09"/></div></td><td>其他</td></tr>-->
+<!--                        <tr><td><div style="text-align: center;margin:auto;">备注</div></td><td><textarea style='resize: none' class="form-control" type="text" name="memo"></textarea></td></tr>-->
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id = "examine-enter-btn">【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【取消】</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 </body>

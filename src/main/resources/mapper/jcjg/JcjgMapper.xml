@@ -65,6 +65,9 @@
             <if test="jcshjg != null">
                 JCSHJG = #{jcshjg,jdbcType=VARCHAR},
             </if>
+            <if test="jcshbz != null">
+                JCSHBZ = #{jcshbz,jdbcType=VARCHAR},
+            </if>
             <if test="cxjcjg != null">
                 CXJCJG = #{cxjcjg,jdbcType=VARCHAR},
             </if>

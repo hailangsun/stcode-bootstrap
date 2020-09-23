@@ -5,7 +5,8 @@
   <select id="getGrkszc" resultType="com.stcode.bootstrap.model.Grkszc">
     SELECT a.DWID,a.GRID,b.DWDM,b.DWMC,c.BZHM,c.xm grname,c.xb,a.ZHLB,a.ZCSBMC,a.ZRSBMC,d.dyrq,d.jbr,
             e.JBR lxhjbr,e.blrq lxhblrq,f.JBR xxbjbr,f.BLRQ xxbscrq,f.ZT,g.JCR,TO_CHAR(g.JCRQ, 'yyyy-MM-dd HH24:mi:ss') JCRQ,
-            g.JC,g.CXJC,g.MEMO,g.jcid
+            g.JC,g.CXJC,g.MEMO,g.jcid,g.jcshr,TO_CHAR(g.jcshrq, 'yyyy-MM-dd HH24:mi:ss')jcshrq,
+            g.jcsh,g.jcshjg,g.jcshbz
     FROM GR_YLJF_ZYD a
     LEFT JOIN DW_XX 	    b ON a.DWID = b.DWID
     LEFT JOIN GR_XX 	    c ON a.GRID = c.GRID
@@ -69,6 +70,16 @@
 
   </select>
 
+
+
+    <select id="getSearchXxb" resultType="com.stcode.bootstrap.model.Grkszc" parameterType="com.stcode.bootstrap.model.Grkszc">
+        SELECT a.GRID,a.xzqh,b.MXMC xzmc,a.NIAN, to_Char(a.QRQ, 'YYYY-MM-DD')QRQ,a.YS,a.YJFJS,
+                a.DWJFBL,a.dwhzbl,a.grjfbl,a.dnjzje,
+                a.dngrjf,a.dnjzlx,a.dngrlx,a.zbnmljzhje,a.zbnmljgrjf
+        FROM GR_YLJF_ZYD_JXMX a
+        LEFT JOIN DM_MX b on a.xzqh = b.DMMXID and b.DMLBID = '0115'
+        WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+  </select>
 
 
 </mapper>
