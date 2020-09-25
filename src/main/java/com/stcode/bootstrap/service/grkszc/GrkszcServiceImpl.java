@@ -36,8 +36,8 @@ public class GrkszcServiceImpl implements GrkszcService{
         Integer rows = grkszc.getLimit() == null ? 10 : Integer.valueOf(grkszc.getLimit());
         PageHelper.offsetPage(page,rows);
         List<Grkszc> grkszcList = grkszcMapper.getGrkszc(grkszc);
-        PageInfo<Grkszc> fxXxPageInfo = new PageInfo<>(grkszcList);
-        long total = fxXxPageInfo.getTotal();
+        PageInfo<Grkszc> pageInfo = new PageInfo<>(grkszcList);
+        long total = pageInfo.getTotal();
         return R.ok().put("rows",grkszcList).put("total",total);
     }
 

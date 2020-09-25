@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.grjgzc.GrjgzcMapper">
+
+    <select id="search" resultType="com.stcode.bootstrap.model.Grjgzc">
+       SELECT
+            a.GRID,
+            a.DWID,
+            b.DWDM,
+            b.DWMC,
+            c.BZHM,
+            c.xm grname,
+            c.xb,
+            a.XZLX,
+            a.ZCSBMC,
+            a.ZRSBMC,
+            TO_CHAR(e.dyrq,'yyyy-MM-dd HH24:mi:ss') dyrq,
+            e.jbr jfjbr,
+            TO_CHAR(d.blrq, 'yyyy-MM-dd HH24:mi:ss') lxhblrq,
+            d.jbr lxhjbr,
+            TO_CHAR(d.scrq,'yyyy-MM-dd HH24:mi:ss')xxbscrq,
+            d.jbr xxbjbr,
+            d.zt,
+            a.zcje,
+            a.tcjjzyze,
+            a.GRZHZYZE,
+            f.sqyzfje,
+            g.scrq bpscrq,
+            i.BLRQ hpblrq
+        FROM GR_YLJF_ZYD a
+        LEFT JOIN DW_XX b 						on a.DWID = b.DWID
+        LEFT JOIN GR_XX c 						on a.GRID = c.GRID
+        LEFT JOIN GR_JGSY_JFPZ_LXH 	d           on a.GRID = d.GRID
+        LEFT JOIN GR_JFPZ e 					on a.GRID = e.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_BPMX f 	        on a.GRID = f.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_BP 	 	g       on f.BPID = g.ID
+        LEFT JOIN GR_ZYNJ_ZYD_DPMX  h           on a.GRID = h.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_DP  	i	        on h.NJID = i.id
+
+        WHERE
+        1=1
+        <if test="bzhm != null and bzhm != ''">
+            AND c.bzhm = #{bzhm,jdbcType=VARCHAR}
+        </if>
+
+
+    </select>
+
+
+    <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+          SELECT
+                a.GRID,
+                a.DWID,
+                b.DWMC,
+                c.BZHM,
+                c.xm grname,
+                c.xb,
+                d.BXH,
+                c.HJSD,
+                TO_CHAR(f.QRQ,'yyyy-MM-dd')bdqrq,
+                f.JFYS,
+                f.JGYLZHJE,
+                f.ZYNJZHJE,
+                f.XZQH,
+                f.JBJGMC,
+                f.JBJGDH,
+                f.JBJGDZ,
+                f.JBJGYB
+                FROM GR_YLJF_ZYD a
+                LEFT JOIN DW_XX b 						on a.DWID = b.DWID
+                LEFT JOIN GR_XX c 						on a.GRID = c.GRID
+                LEFT JOIN GR_JGSY_JFPZ_LXH 	d           on a.GRID = d.GRID
+                LEFT JOIN GR_JFPZ e 					on a.GRID = e.GRID
+                LEFT JOIN GR_JGSY_JFPZ	f 		        on a.GRID = f.GRID
+            WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+
+  </select>
+
+    <select id="getGrlxhInfo" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+
+        SELECT
+            a.GRID,
+            a.BH,
+            a.JFQXMC,
+            a.CBRYXM,
+            a.BXH,
+            a.XM grname,
+            a.XB,
+            a.BZHM,
+            a.KHQC,
+            a.KHYH,
+            a.YHZH,
+            a.XZLX,
+            a.SBJGDZ,
+            a.SBJGDZYZBM,
+            a.JBR,
+            a.NEWJFQXNAME,
+            a.LXDH
+        FROM GR_JGSY_JFPZ_LXH a
+
+      WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="getGrlxhnjInfo" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+        SELECT
+            a.GRID,
+            a.BH,
+            a.JFQXMC,
+            a.CBRYXM,
+            a.BXH,
+            a.XM grname,
+            a.XB,
+            a.BZHM,
+            a.NEWJFQXNAME,
+            a.SBJGDZ,
+            a.SBJGDZYZBM,
+            a.JBRNAME,
+            a.LXDH,
+            a.KHQC,
+            a.KHYH,
+            a.KHHH,
+            a.YHZH
+            FROM GR_JGSY_JFPZ_LXH a
+      WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+    </select>
+
+
+    <select id="getGrxxbInfo" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+
+    SELECT
+        a.GRID,
+        a.DWID,
+        a.GDBH,
+        b.XM,
+        b.XB,
+        b.CSRQ,
+        b.BZHM,
+        b.HJSD,
+        c.DWMC,
+        TO_CHAR(a.gzrq, 'yyyy-MM-dd')gzrq,
+        TO_CHAR(a.cbdgrjfrq, 'yyyy-MM-dd')cbdgrjfrq,
+        TO_CHAR(a.scjfrq, 'yyyy-MM-dd')scjfrq,
+        TO_CHAR(a.grzhrq, 'yyyy-MM-dd')grzhrq,
+        TO_CHAR(a.bdjfqrq, 'yyyy-MM-dd')bdjfqrq,
+        TO_CHAR(a.bdjfzrq, 'yyyy-MM-dd')bdjfzrq,
+        a.bdjfys,
+        TO_CHAR(a.zyrq, 'yyyy-MM-dd')zyrq,
+        to_Char(a.grjf_98q, 'fm999999999990.00') grjf_98q,
+        to_Char(a.grzh_98h, 'fm999999999990.00') grzh_98h,
+        to_Char(a.dngrzhbj, 'fm999999999990.00') dngrzhbj,
+        to_Char(a.grzhzyze, 'fm999999999990.00') grzhzyze,
+        to_Char(a.tcjjzyze, 'fm999999999990.00') tcjjzyze,
+        to_Char(a.zyjjze, 'fm999999999990.00') zyjjze
+        FROM GR_YLJF_ZYD a
+        LEFT JOIN GR_XX 				b 	on a.GRID = b.GRID
+        LEFT JOIN DW_XX			    c 		on a.DWID = c.DWID
+
+    WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+  </select>
+
+
+    <select id="getSearchXxb" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+       SELECT
+            a.GRID,
+            a.xzqh,
+            b.MXMC xzmc,
+            a.NIAN,
+            to_Char( a.QRQ, 'YYYY-MM-DD' ) QRQ,
+            a.YS,
+            a.YJFJS,
+            a.DWJFBL,
+            a.dwhzbl,
+            a.grjfbl,
+            a.dnjzje,
+            a.dngrjf,
+            a.dnjzlx,
+            a.dngrlx,
+            a.zbnmljzhje,
+            a.zbnmljgrjf,
+            a.BZ memo
+        FROM
+            GR_YLJF_ZYD_JXMX a
+            LEFT JOIN DM_MX b ON a.xzqh = b.DMMXID AND b.DMLBID = '0115'
+        WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+  </select>
+
+
+    <select id="grxxbnjInfo" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+        SELECT
+            a.GRID,
+            a.BLRQ,
+            a.BH,
+            a.GRBH,
+            a.xm grname,
+            a.XB,
+            TO_CHAR(a.CSRQ,'yyyy-MM-dd')CSRQ,
+            a.BZHM,
+            a.HJSD,
+            a.ZCDWMC,
+            to_Char(a.ZYNJBZZE, 'fm999999999990.00')ZYNJBZZE,
+            to_Char(a.JZJE,'fm999999999990.00')	JZJE,
+            to_Char(a.SZJE,'fm999999999990.00')	SZJE,
+            to_Char(a.BJJE,'fm999999999990.00') BJJE,
+            to_Char(a.GGQHZJE,'fm999999999990.00') GGQHZJE,
+            to_Char(a.QYNJJE,'fm999999999990.00')QYNJJE
+            FROM GR_ZYNJ_ZYD a
+        WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+  </select>
+
+
+
+
+</mapper>

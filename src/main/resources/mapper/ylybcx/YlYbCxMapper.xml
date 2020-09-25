@@ -27,8 +27,8 @@
         LEFT JOIN GR_YLZF_YMX 	b ON a.GRID = b.GRID
         LEFT JOIN DW_XX				c ON a.DWID = c.DWID
         WHERE
+        b.JBR <![CDATA[ <> ]]> 'sys' AND
         a.GRID = #{grid,jdbcType=VARCHAR}
-        AND b.JBR <![CDATA[ <> ]]> 'sys'
         <if test="dwid != null and dwid != ''">
             and a.DWID = #{dwid,jdbcType=VARCHAR}
         </if>

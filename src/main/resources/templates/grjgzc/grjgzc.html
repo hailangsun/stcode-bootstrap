@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+
+    <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+    <script type="application/javascript" th:src="@{/js/grjgzc/grjgzc.js}"></script>
+
+    <style>
+        label {
+            text-align: right;
+        }
+
+        #hoverspan:hover{
+            font-weight:bold;
+            color: red;
+        }
+        .myfieldClass{
+            text-align: right;
+            width: 150px;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<form  id="mainform">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title accordion-toggle">监督检查/日常检查</h3>
+        </div>
+
+        <div class="panel-body" style="width: auto">
+
+            <div class="row">
+                <!-- r1 -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
+                        <div class="col-md-8">
+                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
+                                <option th:value="0">请选择</option>
+                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">统一社会信用代码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="dwdm"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">单位名称</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="dwmc"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">社会保障号码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzhm"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期起</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">转入地行政区划</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="zrxzqh"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">姓名</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="grname"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期止</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">转出地行政区划</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzjgdy"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >检查类型</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="jclx" id="jclx"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >转出险种</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="xzlx" id="xzlx"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="query_btn" >查询</button>
+                <button type="reset" class="btn btn-default"  id="clear_btn" >清空</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+<!--主页table-->
+<div class="panel-body" id="queryResult">
+    <table id="mainDataGrid" class="table table-hover"></table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="check-btn" >检查</button>
+        <button type="button" class="btn btn-default" id="restart-check-btn" >重新检查</button>
+        <button type="button" class="btn btn-default" id="examine-btn" >检查审核</button>
+        <button type="button" class="btn btn-default" id="export-btn" >导出</button>
+        <button type="button" class="btn btn-default" id="close-btn" >返回</button>
+    </div>
+
+</div>
+
+
+<!--基本养老参保缴费凭证-->
+<div class="modal fade" id="payDetail" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1030px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">基本养老参保缴费凭证</h4>
+            </div>
+            <div class="modal-body">
+                <form id="payDetailForm">
+                    <p>险种类别:机关事业单位基本养老保险+职业年金【<span>是</span>】 企业职工养老保险【<span>否</span>】</p>
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr height="30">
+                            <td colspan="7" style="text-align: center;font-weight: bold;font-size: large">参保人员基本信息</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">姓名</td>
+                            <td width="150px"><span name="grname"></span></td>
+                            <td class="myfieldClass">性别</td>
+                            <td width="150px"><span name="xb"></span></td>
+                            <td class="myfieldClass">个人编号</td>
+                            <td width="150px"><span name="bxh"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">公民身份号码</td>
+                            <td  colspan="2" width="150px" ><span name="bzhm"></span></td>
+                            <td class="myfieldClass">户籍地地址</td>
+                            <td  colspan="2" width="150px"><span name="hjsd"></span></td>
+                        </tr>
+
+                        <tr >
+                            <td class="myfieldClass" rowspan="2">在本地参保起止时间</td>
+                            <td width="150px" rowspan="2"><span name="bdqrq"></span></td>
+                            <td class="myfieldClass" rowspan="2">本地实际缴费月数</td>
+                            <td width="150px" rowspan="2"><span name="jfys"></span></td>
+                            <td class="myfieldClass">本地参保期间个人账户存储额(元)</td>
+                            <td width="150px" ><span name="jgylzhje"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">职业年金个人账户份额或个人账户存储额</td>
+                            <td width="150px" ><span name="zynjzhje"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" style="text-align: center; font-weight: bold;">社会保险经办机构信息</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">行政区划代码</td>
+                            <td  colspan="2" width="150px" ><span name="xzqh"></span></td>
+                            <td class="myfieldClass">单位名称</td>
+                            <td  colspan="2" width="150px"><span name="dwmc"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">电话</td>
+                            <td width="150px"><span name="jbjgdh"></span></td>
+                            <td class="myfieldClass">地址</td>
+                            <td width="150px"><span name="jbjgdz"></span></td>
+                            <td class="myfieldClass">邮政编码</td>
+                            <td width="150px"><span name="jbjgyb"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                <p style="padding: 10px;display: inline-block;">经办人(签章):</p>
+
+                                <p style="padding: 10px;display: inline-block;float: right;width: 300px;">社会保险经办机构(章):</p>
+
+                                <p style="text-align: right;margin-right: 160px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</p>
+                                <p style="margin-left: 20px;">(本凭证一式两联,填发本凭证的社保机构和参保人员本人各一份)</p>
+
+                                <p style="margin-left: 10px;">
+                                    1、本凭证是您参加基本养老保险的权益记录，是申请办理基本养老保险关系转移接续手续的重要凭证，
+                                    请妥善保管。
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    2、当您跨省(自治区、直辖市)流动就业时,基本养老保险关系在原参保地社会保险经办机构保留,
+                                    个人账户存储额按规定计息计算利息。到新就业地参保时，请向当地社会保险经办机构出示本凭证,
+                                    办理基本养老保险关系接续手续。
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    3、本凭证如果不慎遗失，请于填发此凭证的社会保险经办机构联系,申请补办。联系方式可到任何一个
+                                    社会保险经办机构查询。
+                                </p>
+                                <p style="margin-left: 10px;">
+                                    4、职业年金个人账户存储额是根据上一个定价日的单位净值计算，仅供参考。
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--点击联系函 基本养老转移接续联系函-->
+<div class="modal fade" id="lxhModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1050px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">基本养老转移接续联系函</h4>
+            </div>
+            <div class="modal-body">
+                <form id="lxhForm">
+                    <h5 class="modal-title" style="text-align: right;margin-right: 150px;">编号:<span name="bh"></span></h5>
+                    <h4 class="modal-title" style="text-align: center; font-weight: bold;">基本养老转移接续联系函</h4>
+                    <div class="row">
+                        <span class="help-block"></span>
+                        <label class="col-md-2 control-label" style="text-align: left;">原参保地社保机构名称:</label>
+                        <input type="text" name="jfqxmc" style="width: 260px;"/>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-2 control-label" style="text-align: left;">原在你处的参保人员:</label>
+                        <input type="text" name="cbryxm"/>
+                        <span>现申请将其基本养老保险关系转至我处，如无不妥请按相关规定办理转移手续。</span>
+                        <span class="help-block"></span>
+                    </div>
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr>
+                            <td class="myfieldClass">原个人编号</td>
+                            <td width="150px"><span name="bxh"></span></td>
+                            <td class="myfieldClass">姓名</td>
+                            <td width="150px"><span name="grname"></span></td>
+                            <td class="myfieldClass">性别</td>
+                            <td width="150px"><span name="xb"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">公民身份号码</td>
+                            <td  colspan="2" width="150px" ><span name="bzhm"></span></td>
+                            <td class="myfieldClass">新就业地社保机构开户全称</td>
+                            <td  colspan="2" width="150px"><span name="khqc"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">新就业地社保机构开户银行</td>
+                            <td  colspan="2" width="150px" ><span name="khyh"></span></td>
+                            <td class="myfieldClass">新就业地社保机构银行账号</td>
+                            <td  colspan="2" width="150px"><span name="yhzh"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass">新参保险种类型</td>
+                            <td  colspan="6" width="150px" style="text-align: center">
+                                机关事业单位养老保险[&nbsp;&nbsp;<span name="jgxzlx"></span>&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;企业职工养老保险[&nbsp;&nbsp;<span name="qyxzlx"></span>&nbsp;&nbsp;]
+                                <span name="khyh"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass">新就业地社保机构地址</td>
+                            <td  colspan="2" width="150px" ><span name="sbjgdz"></span></td>
+                            <td class="myfieldClass">新就业地社保机构邮政编码</td>
+                            <td  colspan="2" width="150px"><span name="sbjgdzyzbm"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass">经办人</td>
+                            <td  colspan="2" width="150px" ><span name="jbr"></span></td>
+                            <td class="myfieldClass">新就业地社保机构</td>
+                            <td  colspan="2" width="150px"><span name="newjfqxname"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">新就业地社保电话</td>
+                            <td  colspan="2" width="150px" ><span name="lxdh"></span></td>
+                            <td  colspan="3" width="150px" style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+                        </tr>
+                    </table>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--点击联系函 职业年金(企业年金)关系转移接续联系函-->
+<div class="modal fade" id="lxhqynjModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1050px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">职业年金(企业年金)关系转移接续联系函</h4>
+            </div>
+            <div class="modal-body">
+                <form id="lxhqynjForm">
+                    <h5 class="modal-title" style="text-align: right;margin-right: 150px;">编号:<span name="bh"></span></h5>
+                    <h4 class="modal-title" style="text-align: center; font-weight: bold;">职业年金(企业年金)关系转移接续联系函</h4>
+                    <div class="row">
+                        <span class="help-block"></span>
+                        <label class="control-label" style="text-align: left; padding-left: 15px;">原参保地年金管理机构名称:</label>
+                        <input type="text" name="jfqxmc" style="width: 260px;"/>
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="row">
+                        <label class="control-label" style="text-align: left; padding-left: 15px;">原在你处参保人员:</label>
+                        <input type="text" name="cbryxm"/>
+                        <span>现申请将其职业年会(企业年金)关系转至我处,如无不妥请按相关规定办理转移手续。</span>
+                        <span class="help-block"></span>
+                    </div>
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr>
+                            <td class="myfieldClass"colspan="2">原个人编号</td>
+                            <td width="150px"><span name="bxh"></span></td>
+                            <td class="myfieldClass">姓名</td>
+                            <td width="150px"><span name="grname"></span></td>
+                            <td class="myfieldClass">性别</td>
+                            <td width="150px" ><span name="xb"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass" colspan="2">公民身份号码</td>
+                            <td  colspan="2" width="150px" ><span name="bzhm"></span></td>
+                            <td class="myfieldClass">新就业地职业(企业)年金管理机构全称</td>
+                            <td  colspan="2" width="150px"><span name="newjfqxname"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass" colspan="2">新就业地职业(企业)年金管理机构地址</td>
+                            <td  colspan="2" width="150px" ><span name="sbjgdz"></span></td>
+                            <td class="myfieldClass">新就业地职业(企业)年金管理机构邮政编码</td>
+                            <td  colspan="2" width="150px"><span name="sbjgdzyzbm"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass" colspan="2">新就业地职业(企业)年金管理机构联系人</td>
+                            <td  colspan="2" width="150px" ><span name="jbrname"></span></td>
+                            <td class="myfieldClass">新就业地职业(企业)年金管理机构联系电话</td>
+                            <td  colspan="2" width="150px"><span name="lxdh"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass" rowspan="2">职业年金</td>
+                            <td class="myfieldClass">新就业地社保机构职业年金开户全称</td>
+                            <td  colspan="2" width="150px"><span name="khqc"></span></td>
+                            <td class="myfieldClass">新就业地社保机构职业年金银行</td>
+                            <td  colspan="2" width="150px"><span name="khyh"></span></td>
+
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">新就业地社保机构职业年金银行12位交换号</td>
+                            <td  colspan="2" width="150px"><span name="khhh"></span></td>
+                            <td class="myfieldClass">新就业地社保机构职业年金银行账号</td>
+                            <td  colspan="2" width="150px"><span name="yhzh"></span></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="myfieldClass" rowspan="2">企业年金</td>
+                            <td class="myfieldClass">新就业地单位企业年金开户全称-没有此字段</td>
+                            <td  colspan="2" width="150px"><span name="sbjgdzyzbm"></span></td>
+                            <td class="myfieldClass">新就业地单位企业年金银行及账号-没有此字段</td>
+                            <td  colspan="2" width="150px"><span name="sbjgdzyzbm"></span></td>
+                        </tr>
+                    </table>
+                    <div class="row" >
+
+                        <span class="help-block"></span>
+
+                        <label class="control-label" style="text-align: left; padding-left: 15px; ">新就业地社保机构银行行号:没有此字段</label>
+                        <input type="text" name="cbryxm" />
+                        <div style="float:right;padding-right: 50px;">
+                            <input type="text" name="year" style="width: 50px; " />
+                            <label class="control-label" style="text-align: right; ">年</label>
+                            <input type="text" name="month" style="width: 50px; " />
+                            <label class="control-label" style="text-align: right; ">月</label>
+                            <input type="text" name="day" style="width: 50px; " />
+                            <label class="control-label" style="text-align: right; ">日</label>
+
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--点击信息表-->
+<div class="modal fade" id="xxbgrcx" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">参保人基本信息</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- 导航 -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">养老信息</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">说明</a></li>
+                </ul>
+                <!-- 内部体 -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="home">
+                        <span class="help-block"></span>
+                        <form id="xxbForm">
+                            <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="860px">
+                                <tr height="30">
+                                    <td colspan="8" style="text-align: center; font-weight: bold;">参保人基本信息</td>
+                                </tr>
+                                <tr>
+                                    <td class="myfieldClass">个人编号</td>
+                                    <td width="150px"><span name="bxh"></span></td>
+                                    <td class="myfieldClass">姓名</td>
+                                    <td width="150px"><span name="grname"></span></td>
+                                    <td class="myfieldClass">性别</td>
+                                    <td width="150px"><span name="xb"></span></td>
+                                    <td class="myfieldClass">出生日期</td>
+                                    <td width="150px"><span name="csrq"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="myfieldClass">公民身份号码</td>
+                                    <td  colspan="2" width="150px" ><span name="bzhm"></span></td>
+                                    <td class="myfieldClass">户籍地地址</td>
+                                    <td  colspan="2" width="150px"><span name="hjsd"></span></td>
+                                    <td class="myfieldClass">转出单位名称</td>
+                                    <td  colspan="2" width="150px"><span name="dwmc"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="myfieldClass">参加工作时间</td>
+                                    <td width="150px"><span name="gzrq"></span></td>
+                                    <td class="myfieldClass">首次参保地实行个人缴费时间</td>
+                                    <td width="150px"><span name="cbdgrjfrq"></span></td>
+                                    <td class="myfieldClass">本人首次缴费时间</td>
+                                    <td width="150px"><span name="scjfrq"></span></td>
+                                    <td class="myfieldClass">本人建立个人账户时间</td>
+                                    <td width="150px"><span name="grzhrq"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="myfieldClass">在本地缴费起始时间</td>
+                                    <td width="150px"><span name="bdjfqrq"></span></td>
+                                    <td class="myfieldClass">在本地缴费终止时间</td>
+                                    <td width="150px"><span name="bdjfzrq"></span></td>
+                                    <td class="myfieldClass">在本地实际缴费时间</td>
+                                    <td width="150px"><span name="bdjfys"></span></td>
+                                    <td class="myfieldClass">转移日期</td>
+                                    <td width="150px"><span name="zyrq"></span></td>
+                                </tr>
+                                <tr height="30">
+                                    <td colspan="8" style="text-align: center; font-weight: bold;">养老保险基金转移信息</td>
+                                </tr>
+                                <tr>
+                                    <td class="myfieldClass" colspan="2">1998年1月1日前账户中个人缴费累计存储额1</td>
+                                    <td class="myfieldClass" colspan="2">1998年1月1日至调转上年末个人账户累计存储存额2</td>
+                                    <td class="myfieldClass">调转当年计入个人账户本金金额3</td>
+                                    <td class="myfieldClass">个人账户基金转移额4</td>
+                                    <td class="myfieldClass">统筹基金转移额5</td>
+                                    <td class="myfieldClass">转移基金总额6</td>
+                                </tr>
+                                <tr>
+                                    <td width="150px" colspan="2"><span name="grjf_98q"></span></td>
+                                    <td width="150px" colspan="2"><span name="grzh_98h"></span></td>
+                                    <td width="150px"><span name="dngrzhbj"></span></td>
+                                    <td width="150px"><span name="grzhzyze"></span></td>
+                                    <td width="150px"><span name="tcjjzyze"></span></td>
+                                    <td width="150px"><span name="zyjjze"></span></td>
+                                </tr>
+                                <tr height="30">
+                                    <td colspan="8" style="text-align: center; font-weight: bold;">历年缴费及个人账户记账信息</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <div style="width: 860px">
+                                            <table id="xxbDataGrid" class="table table-hover"></table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="profile">2</div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--职业年金(企业年金)关系转移接续信息表-->
+<div class="modal fade" id="xxbnjDetail" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1030px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">职业年金(企业年金)关系转移接续信息表</h4>
+            </div>
+            <div class="modal-body">
+                <form id="xxbnjForm">
+                    <p style="display: inline-block;">单位: 元
+                    <p style="padding-left: 150px; display: inline-block;">办理转移日期:<span name="blrq"></span></p>
+                    <p style="padding-left: 450px; display: inline-block;">编号:<span name="bh"></span></p>
+                    </p>
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr height="30">
+                            <td colspan="8" style="text-align: center;font-weight: bold;font-size: large">参保人员基本信息</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">个人编号</td>
+                            <td width="150px"><span name="grbh"></span></td>
+                            <td class="myfieldClass">姓名</td>
+                            <td width="150px"><span name="grname"></span></td>
+                            <td class="myfieldClass">性别</td>
+                            <td width="150px"><span name="xb"></span></td>
+                            <td class="myfieldClass">出生日期</td>
+                            <td width="150px"><span name="csrq"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass">公民身份号码</td>
+                            <td  colspan="2" width="150px" ><span name="bzhm"></span></td>
+                            <td class="myfieldClass">户籍地地址</td>
+                            <td  colspan="2" width="150px"><span name="hjsd"></span></td>
+                            <td class="myfieldClass">转出单位名称</td>
+                            <td  width="150px"><span name="zcdwmc"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center; font-weight: bold;font-size: large;">职业年金(企业年金)基金转移信息</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center;">职业年金(企业年金)个人账户</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass" rowspan="2">职业年金总额</td>
+                            <td class="myfieldClass" colspan="2" style="height: 20px;"></td>
+                            <td class="myfieldClass" rowspan="2" colspan="2">补记的职业年会金额</td>
+                            <td class="myfieldClass" rowspan="2" colspan="2">改革前试点划转金额</td>
+                            <td class="myfieldClass" rowspan="2">企业年金金额</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass" >记账金额</td>
+                            <td class="myfieldClass" >实账金额</td>
+                        </tr>
+                        <tr>
+                            <td   width="150px" ><span name="zynjbzze"></span></td>
+                            <td   width="150px" ><span name="jzje"></span></td>
+                            <td   width="150px" ><span name="szje"></span></td>
+                            <td  width="150px" colspan="2"><span name="bjje"></span></td>
+                            <td   width="150px" colspan="2"><span name="ggqhzje"></span></td>
+                            <td  width="150px" ><span name="qynjje"></span></td>
+                        </tr>
+
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

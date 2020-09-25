@@ -10,7 +10,7 @@ import java.util.Map;
 public interface GrkszcMapper {
 
     /**
-     * 预留后续删除
+     * 查询
      * @param grkszc
      * @return
      */
