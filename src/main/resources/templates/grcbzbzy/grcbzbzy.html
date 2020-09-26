@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+
+    <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-table/bootstrap-table-zh-CN.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrapselect/bootstrap-select.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
+    <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+    <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+    <script type="application/javascript" th:src="@{/js/grcbzbzy/grcbzbzy.js}"></script>
+
+    <style>
+        label {
+            text-align: right;
+        }
+
+        #hoverspan:hover{
+            font-weight:bold;
+            color: red;
+        }
+        .myfieldClass{
+            text-align: right;
+            width: 150px;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<form  id="mainform">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title accordion-toggle">监督检查/日常检查</h3>
+        </div>
+
+        <div class="panel-body" style="width: auto">
+
+            <div class="row">
+                <!-- r1 -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
+                        <div class="col-md-8">
+                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
+                                <option th:value="0">请选择</option>
+                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">社会保障号码</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="bzhm"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">姓名</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" name="grname"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期起</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateFrom" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label  class="col-md-4 control-label">办理日期止</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="date" name="dateTo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >检查类型</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="jclx" id="jclx"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label  required-label" >转移方向</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="xzlx" id="xzlx"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="query_btn" >查询</button>
+                <button type="reset" class="btn btn-default"  id="clear_btn" >清空</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+<!--主页table-->
+<div class="panel-body" id="queryResult">
+    <table id="mainDataGrid" class="table table-hover"></table>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="check-btn" >检查</button>
+        <button type="button" class="btn btn-default" id="restart-check-btn" >重新检查</button>
+        <button type="button" class="btn btn-default" id="examine-btn" >检查审核</button>
+        <button type="button" class="btn btn-default" id="export-btn" >导出</button>
+        <button type="button" class="btn btn-default" id="close-btn" >返回</button>
+    </div>
+
+</div>
+
+<!--明天-->
+<div class="modal fade" id="lxhqynjModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1050px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">居保职保间转移详细信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id="lxhqynjForm">
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="1000">
+                        <tr >
+                            <td colspan="5">
+                                根据参保信息显示：您于2009年9月参加城乡居民基本养老保险，将于2020年8月达到待遇领取年龄。具体情况如下：
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="7" width="20px" style="font-weight: bold;text-align: center;padding: 15px;">职工养老保险个人账户情况</td>
+                            <td style="font-weight: bold;">职工缴费年限</td>
+                            <td colspan="4"><span name="xb">1111</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="font-weight: bold;">至上年末个人账户存储额</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="3" style="width: 200px;" class="myfieldClass1">合计</td>
+                            <td   style="width: 200px;" class="myfieldClass1">个人缴费</td>
+                            <td   style="width: 200px;" class="myfieldClass1">单位划转</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"  ><span name="bzhm">1</span></td>
+                            <td   ><span name="bzhm">1</span></td>
+                            <td   ><span name="bzhm">1</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="myfieldClass1">当年个人账户</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="myfieldClass1">合计</td>
+                            <td  class="myfieldClass1">个人缴费</td>
+                            <td  class="myfieldClass1">单位划转</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="7" width="20px" style="font-weight: bold;text-align: center;padding: 15px;">职工养老保险个人账户情况</td>
+                            <td  style="font-weight: bold;" >应缴费年限</td>
+                            <td  ><span name="xb">1111</span></td>
+                            <td  style="font-weight: bold;" >已缴费年限</td>
+                            <td  ><span name="xb">1111</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="font-weight: bold;">至上年末个人账户存储额</td>
+                        </tr>
+                        <tr>
+                            <td  class="myfieldClass1">合计</td>
+                            <td  class="myfieldClass1">个人缴费</td>
+                            <td  class="myfieldClass1">集体补助</td>
+                            <td  class="myfieldClass1">财政补贴</td>
+                        </tr>
+                        <tr>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" class="myfieldClass1">当年个人账户</td>
+                        </tr>
+                        <tr>
+                            <td class="myfieldClass1">合计</td>
+                            <td class="myfieldClass1">个人缴费</td>
+                            <td class="myfieldClass1">集体补助</td>
+                            <td class="myfieldClass1">财政补贴</td>
+                        </tr>
+                        <tr>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                            <td  ><span name="bzhm">1</span></td>
+                        </tr>
+
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
