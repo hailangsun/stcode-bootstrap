@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.grcbzbzy.GrcbzbzyMapper">
+
+    <select id="search" resultType="com.stcode.bootstrap.model.Grcbzbzy">
+        SELECT
+
+            a.GRID,
+            a.BZHM,
+            a.XM grname,
+            a.XB,
+            a.LXDH,
+            b.AAC009,
+
+
+            c.ZSNX,
+
+
+            c.BXHJ,
+            d.JBR,
+            d.BLRQ,
+
+            b.CNV005,
+
+
+            b.AIC083,
+            b.AAE011,
+            b.AAE035,
+
+            e.JCR,
+            e.jcrq,
+            e.jc,
+            e.cxjc,
+            e.memo,
+            e.jcshr,
+            e.jcshrq,
+            e.jcsh,
+            e.jcshjg
+
+        FROM GR_XX a
+        LEFT JOIN ANV23 b 			on  a.GRID = b.ANV01ID
+        LEFT JOIN NBZCB_ZYXX c 		on  a.BZHM = c.BZHM
+        LEFT JOIN NBZCB_ZYD d  		on 	a.GRID = d.GRID
+        LEFT JOIN JC_JG e 			on 	a.GRID = e.GRID AND e.MKDM ='grcbzbzy'
+
+
+    </select>
+
+
+    <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grcbzbzy" parameterType="com.stcode.bootstrap.model.Grcbzbzy">
+
+
+            WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
+
+  </select>
+
+
+
+</mapper>
