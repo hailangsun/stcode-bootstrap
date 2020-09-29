@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * 监督检查-日常检查-职工养老月报外支付查询 model
+ * [Ylybcx -> 养老月报查询 ]
  */
 @Data
 public class Ylybcx {

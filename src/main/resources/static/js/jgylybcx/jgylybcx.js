@@ -191,9 +191,8 @@ _jgylybcx = {
                     {title: '报表日期'          ,field: 'bbrq',       align: 'center', valign: 'middle', sortable: true, width: 100},
                     {title: '姓名'				,field: 'grname', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,formatter: grDetail},
                     {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '附言'				,field: 'fuyan', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '补支原因'          ,field: 'bzyy',       align: 'center', valign: 'middle', sortable: true,     width: 100},
-                    {title: '补发原因'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '补支月数'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
 
 
                     {title: '支付金额'			,field: 'zfje', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
@@ -205,7 +204,6 @@ _jgylybcx = {
                     {title: '调整机制'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '护理费'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '统筹负担'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '发放方式'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '发放方式'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
 
 
