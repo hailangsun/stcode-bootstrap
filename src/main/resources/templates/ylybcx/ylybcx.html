@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrapselect/bootstrap-select.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-table/bootstrap-table.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-date/bootstrap-datetimepicker.css}"/>
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/plugins/layui/css/layui.css}"/>-->
 
     <script type="application/javascript" th:src="@{/js/jquery.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap/js/bootstrap.js}"></script>
@@ -14,20 +15,38 @@
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
+<!--    <script type="application/javascript" th:src="@{/plugins/layui/layui.js}"></script>-->
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
     <script type="application/javascript" th:src="@{/js/ylybcx/ylybcx.js}"></script>
 
     <style>
-        label {
-            text-align: right;
-        }
 
         #hoverspan:hover{
             font-weight:bold;
             color: red;
         }
+        .datecss{
+            border-radius: 4px;
+            width: 250px !important;
+        }
+        .mylabelcss{
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+        }
+
+        .myinputcss{
+            width: 250px !important;
+        }
+
 
     </style>
+
+    <script>
+        .html()
+    </script>
+
+
 
 </head>
 <body>
@@ -40,193 +59,154 @@
         </div>
 
         <div class="panel-body" style="width: auto">
-            <div class="row">
-                <!-- r1 -->
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
-                        <div class="col-md-8">
-                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
-                                <option th:value="0">请选择</option>
+
+<!--            <div class="container">-->
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+
+                            <label class="control-label mylabelcss">经(代)办机构</label>
+                            <select class="selectpicker" name="dbjg" id="dbjg" multiple>
+<!--                                <option th:value="0">请选择</option>-->
                                 <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
                             </select>
+
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">统一社会信用代码</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="xydm"/>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss" >统一社会信用代码</label>
+                            <input class="form-control" type="text" name="xydm" style="width: 250px;"/>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >汇总人</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="hzr" id="hzr"></select>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss" >汇总人</label>
+                            <select class="form-control" name="hzr" id="hzr" style="width: 250px;"></select>
                             <span class="help-block"></span>
                         </div>
                     </div>
                 </div>
+                <div class="row clearfix">
+                    <div class="col-md-8 column">
+                        <div class="row clearfix">
+                            <div class="form-inline row">
+                                <label class="control-label" style="display:inline-block;width:135px; text-align: right;">汇总日期</label>
+                                <input class="form-control" type="date" name="dateFrom" style="border-radius:4px;width: 250px;"/>
 
-            </div>
-
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <label  class="col-md-4 control-label">汇总日期</label>
-                            <div class="input-group col-md-8">
-                                <input class="form-control" type="date" name="dateFrom" />
-                            </div>
-                            <span class="help-block"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="col-md-4 control-label">至</label>
-                            <div class="input-group col-md-8">
-                                <input class="form-control" type="date" name="dateTo" />
-                            </div>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label  class="col-md-4 control-label">报表日期</label>
-                        <div class="input-group col-md-8">
-                            <input class="form-control" type="date" name="reportdate" />
-                        </div>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >支付原因</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="zfyy" id="zfyy"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >业务转财务标志</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="ywzcwbz" id="ywzcwbz"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >业务标志</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="ywbz" id="ywbz"></select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >财务标志</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="cwbz" id="cwbz"></select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">支付金额大于</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="zfje"/>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">支付次数大于</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="zfcs"/>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >附言</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="fy" id="fy"></select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >发放地点</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="fhdd" id="fhdd"></select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >检查类型</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="jclx" id="jclx"></select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <label  class="col-md-4 control-label">月报生成日期起</label>
-                            <div class="input-group col-md-8">
-                                <input class="form-control" type="date" name="ybdateFrom" />
+                                <label class="control-label">至</label>
+                                <input class="form-control" type="date" name="dateTo" style="border-radius:4px;width: 250px;"/>
+                                <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="col-md-4 control-label">月报生成日期止</label>
-                            <div class="input-group col-md-8">
-                                <input class="form-control" type="date" name="ybdateTo" />
-                            </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row" >
+                            <label  class="control-label mylabelcss">报表日期</label>
+                            <input class="form-control" type="date" name="reportdate" style="width: 250px;"/>
                             <span class="help-block"></span>
                         </div>
-                        <input  type="hidden" name="mainoffset" id="mainoffset"/>
-                        <input  type="hidden" name="mainlimit"  id="mainlimit"/>
                     </div>
                 </div>
-            </div>
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss" >支付原因</label>
+                            <select class="form-control" name="zfyy" id="zfyy" style="width: 250px;"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss">业务转财务标志</label>
+                            <select class="form-control myinputcss" name="ywzcwbz" id="ywzcwbz"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label  mylabelcss" >业务标志</label>
+                            <select class="form-control  myinputcss" name="ywbz" id="ywbz"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label  mylabelcss" >财务标志</label>
+                            <select class="form-control  myinputcss" name="cwbz" id="cwbz"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss">支付金额大于</label>
+                            <input class="form-control myinputcss" type="text" name="zfje"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss">支付次数大于</label>
+                            <input class="form-control myinputcss" type="text" name="zfcs"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label  mylabelcss" >附言</label>
+                            <select class="form-control myinputcss" name="fy" id="fy"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label  mylabelcss" >发放地点</label>
+                            <select class="form-control myinputcss" name="fhdd" id="fhdd"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+
+                            <label class="control-label  mylabelcss" >检查类型</label>
+                            <select class="form-control myinputcss" name="jclx" id="jclx"></select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label  class="control-label mylabelcss">月报生成日期起</label>
+                            <input class="form-control myinputcss" type="date" name="ybdateFrom" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
+                            <label class="control-label mylabelcss">月报生成日期止</label>
+                            <input class="form-control myinputcss" type="date" name="ybdateTo" />
+                            <input  type="hidden" name="mainoffset" id="mainoffset"/>
+                            <input  type="hidden" name="mainlimit"  id="mainlimit"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row">
 
 
+                        </div>
+                    </div>
+                </div>
+
+<!--            </div>-->
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="query_btn" >查询</button>
                 <button type="reset" class="btn btn-default" id="clear_btn" >清空</button>
             </div>
         </div>
-
-
     </div>
 
 </form>
@@ -234,7 +214,9 @@
 
 <!--主页table-->
 <div class="panel-body" id="queryResult">
-    <table id="mainDataGrid" class="table table-hover"></table>
+    <div class="table-responsive">
+        <table id="mainDataGrid" class="table text-nowrap"></table>
+    </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" id="all-check-btn" >全部检查</button>
@@ -311,7 +293,9 @@
                         <button type="button" class="btn btn-default" id="query-ylybzfDetail-btn">查询</button>
                     </div>
 
-                    <table id="ylybzfDetailDataGrid" class="table table-hover"></table>
+                    <div class="table-responsive">
+                        <table id="ylybzfDetailDataGrid" class="table text-nowrap"></table>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

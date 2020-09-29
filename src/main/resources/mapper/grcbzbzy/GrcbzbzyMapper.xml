@@ -46,15 +46,20 @@
 
     </select>
 
-
     <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grcbzbzy" parameterType="com.stcode.bootstrap.model.Grcbzbzy">
+        select (nvl(dngrjf, 0) + nvl(dngrlx, 0) + nvl(zsngrjf, 0) + nvl(zsngrlx, 0) +
+                   nvl(gcgrlx, 0) + nvl(dngrjfb, 0) + nvl(dngrlxb, 0)) nmgrjf,
 
+                         (nvl(dndwhz, 0) + nvl(dnhzlx, 0) + nvl(zsndwhz, 0) + nvl(zsnhzlx, 0) +
+                   nvl(gchzlx, 0) + nvl(dndwhzb, 0) + nvl(dnhzlxb, 0)) nmdwhz
 
-            WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+        from gr_yljf_jsd
+        where grid = #{grid,jdbcType=VARCHAR}
+        and nian = (select max(nian) from gr_yljf_jsd where grid = #{grid,jdbcType=VARCHAR})
+    </select>
 
-
-  </select>
-
-
+    <select id="getGRDetailInfoJoint" resultType="com.stcode.bootstrap.model.Grcbzbzy" parameterType="com.stcode.bootstrap.model.Grcbzbzy">
+            select nvl(sum(grjf),0) grjf, nvl(sum(dwhz),0) dwhz  from gr_yljf_yzh where grid = #{grid,jdbcType=VARCHAR} and to_char(jsrq,'yyyy') ='2020'
+    </select>
 
 </mapper>

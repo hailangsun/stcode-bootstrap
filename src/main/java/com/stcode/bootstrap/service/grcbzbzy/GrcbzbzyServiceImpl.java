@@ -2,16 +2,16 @@ package com.stcode.bootstrap.service.grcbzbzy;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.stcode.bootstrap.common.BigDecimalUtils;
 import com.stcode.bootstrap.mapper.grcbzbzy.GrcbzbzyMapper;
 import com.stcode.bootstrap.model.Grcbzbzy;
-import com.stcode.bootstrap.model.Grjgzc;
 import com.stcode.bootstrap.utils.R;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service("grcbzbzyService")
@@ -39,11 +39,24 @@ public class GrcbzbzyServiceImpl implements GrcbzbzyService{
 
     @Override
     public R getGRDetailInfo(Grcbzbzy query) {
+        Grcbzbzy result = new Grcbzbzy();
         List<Grcbzbzy> grDetailList = grcbzbzyMapper.getGRDetailInfo(query);
+        List<Grcbzbzy> grDetailJointList = grcbzbzyMapper.getGRDetailInfoJoint(query);
         if(grDetailList.size() > 0){
-            return R.ok().put("data",grDetailList.get(0));
+            BeanUtils.copyProperties(grDetailList.get(0),result);
+            BigDecimal nmgrjf = new BigDecimal(grDetailList.get(0).getNmgrjf());
+            BigDecimal nmdwhz = new BigDecimal(grDetailList.get(0).getNmdwhz());
+            result.setNmhj(BigDecimalUtils.add(nmgrjf,nmdwhz).toString());
         }
-        return R.ok();
+        if(grDetailJointList.size() > 0){
+            result.setGrjf(grDetailJointList.get(0).getGrjf());
+            result.setDwhz(grDetailJointList.get(0).getDwhz());
+            result.setDnhj(BigDecimalUtils.add( new BigDecimal(grDetailJointList.get(0).getGrjf()), new BigDecimal(grDetailJointList.get(0).getDwhz())).toString());
+        }
+
+
+        return R.ok().put("data",result);
+
     }
 
 

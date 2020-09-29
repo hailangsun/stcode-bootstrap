@@ -1,13 +1,18 @@
 // var fxkzBasePath = '/vspn30-fxkz/';
 var fxkzBasePath = '/';
-var dm_qx = '0301';     // 所属区县代码
-var dm_fxzt = '0401'; // 风险状态编码
+var dm_qx = '9007';     // 所属区县代码
+var dm_fxshzt = '0601'; // 风险状态编码
 var dm_fxly = '0101'; // 风险来源编码
 var dm_ssbm = '0201'; // 所属部门编码
-
+var dm_ywhj = '0602'; // 所属部门编码
+var dm_pgzt = '0602'; // 所属部门编码
+var dm_fxzt = '0603'; // 所属部门编码
+var dm_yzzt = '0604'; // 阈值状态
+var dm_fxpgzt = '1105'; //风险评估状态
+var dm_fxdj = '1106'; //风险等级
 var _common = {
     init: function () {
-      this.bindEvent();
+        this.bindEvent();
     },
     data: {
 
@@ -24,7 +29,11 @@ var _common = {
         $('.tt-flex-card-title').on('click',function(){
             _this.expend($(this));
         });
-
+        $('#accordion').on('click',".panel-title",function(){
+            $(this).parents(".panel-heading")
+                .children(".panel-title-icon")
+                .addClass("down");
+        });
     },
     refreshClick: function() {
         var _this = this;
@@ -75,7 +84,7 @@ var _common = {
     },
     renderHtml: function (html,el) {
         $(el).empty();
-        $(el).append(html);
+        $(el).html(html);
     },
     /**
      * 模板渲染
@@ -93,6 +102,7 @@ var _common = {
      */
     success: function (data) {
         alert(data);
+
     },
     /**
      * 失败提示
@@ -113,7 +123,7 @@ var _common = {
      * _common.renderDmmxSel()
      * 获取代码
      * @param el   对应select的id属性，如 '#test'
-     * @param dmm  获取dm_mx表里的dmlbid
+     * 0@param dmm  获取dm_mx表里的dmlbid
      */
     renderDmmxSel: function (el,dmm) {
         // 获取对应el的select标签的data-dmm里的值
@@ -124,7 +134,47 @@ var _common = {
         },function (errMsg) {
             _this.fail(errMsg);
         });
+    },
+    /**
+     * _common.renderDmmxSel()
+     * 获取代码
+     * @param el   对应select的id属性，如 '#test'
+     * 0@param dmm  获取dm_mx表里的dmlbid
+     * 0@param def  默认选项
+     */
+    renderDmmxSelDef: function (el,dmm,def) {
+        // 获取对应el的select标签的data-dmm里的值
+        dmm = dmm == null ? $(el).data("dmm") : dmm;
+        var _this = this;
+        _commonService.getDmmxList(dmm,function (res) {
+            for (var i = 0; i < res.length; i++) {
+                var temp = res[i];
+                if (temp.dmmxid==def) {
+                    res[i].status=false;
+                }else{
+                    res[i].status=true;
+                }
+            }
+            _this.renderTemp(_temp.dmmOptDef,{list:res},el);
+        },function (errMsg) {
+            _this.fail(errMsg);
+        });
+    },
+    isNull: function (a) {
+        if (a == null || a == undefined || (typeof a == 'string' && a == '')) {
+            return true;
+        }
+        return false;
+    },
+    sleep: function (callback, time) {
+        if (typeof callback == "function") {
+            setTimeout(callback, time);
+        }
+    },
+    confirm: function (msg) {
+        return confirm(msg)
     }
+
 }
 
 $(function(){

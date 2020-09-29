@@ -14,11 +14,11 @@
             a.XZLX,
             a.ZCSBMC,
             a.ZRSBMC,
-            TO_CHAR(e.dyrq,'yyyy-MM-dd HH24:mi:ss') dyrq,
+            TO_CHAR(e.dyrq,'yyyy-MM-dd') dyrq,
             e.jbr jfjbr,
-            TO_CHAR(d.blrq, 'yyyy-MM-dd HH24:mi:ss') lxhblrq,
+            TO_CHAR(d.blrq, 'yyyy-MM-dd') lxhblrq,
             d.jbr lxhjbr,
-            TO_CHAR(d.scrq,'yyyy-MM-dd HH24:mi:ss')xxbscrq,
+            TO_CHAR(d.scrq,'yyyy-MM-dd')xxbscrq,
             d.jbr xxbjbr,
             d.zt,
             a.zcje,
@@ -134,7 +134,7 @@
         a.GRID,
         a.DWID,
         a.GDBH,
-        b.XM,
+        b.XM grname,
         b.XB,
         b.CSRQ,
         b.BZHM,
@@ -211,6 +211,11 @@
         WHERE a.GRID = #{grid,jdbcType=VARCHAR}
   </select>
 
+
+    <select id="xxbyl" resultType="com.stcode.bootstrap.model.Grjgzc" parameterType="com.stcode.bootstrap.model.Grjgzc">
+        select a.NIAN,a.ZGYJGZ,a.YJFJS from GR_YLJF_ZYD_XXFB a
+        WHERE a.FLAG = '2' AND a.GRID = #{grid,jdbcType=VARCHAR}
+  </select>
 
 
 

@@ -211,6 +211,10 @@ public class Grjgzc extends Jcjg {
     //企业年金金额 -> 企业年金
     private String qynjje;
 
+    //标签页 养老信息表
+    //上年度在离职工月平均工资
+    private String zgyjgz;
+
     /**
      * 分页
      */

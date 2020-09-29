@@ -1,6 +1,7 @@
 $(function(){
     _ylybcx.init();
 
+
     //主页面查询表格
     $("#query_btn").click(function(){
         $("#mainDataGrid").bootstrapTable("destroy");
@@ -136,6 +137,12 @@ $(function(){
         });
 
     })
+
+    //设置下拉框宽度
+    $("#dbjg").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
 
 });
 

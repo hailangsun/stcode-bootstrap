@@ -61,6 +61,20 @@ public class Grcbzbzy extends Jcjg{
     private String aae035;
     //清退个人账户金额 [没有此字段]
 
+    //详细页面
+    //至上年末个人账户存储额 合计
+    private String nmhj;
+    //至上年末个人账户存储额 个人缴费
+    private String nmgrjf;
+    //至上年末个人账户存储额 单位划转
+    private String nmdwhz;
+    //当年个人账户 合计
+    private String dnhj;
+    //当年个人账户 个人缴费
+    private String grjf;
+    //当年个人账户 单位划转
+    private String dwhz;
+
 
 
 

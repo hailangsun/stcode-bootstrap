@@ -15,7 +15,16 @@
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+
+    <!-- 是否抽出公共方法   -->
+    <script type="application/javascript" th:src="@{/js/hogan/hogan.js}"></script>
+    <script type="application/javascript" th:src="@{/js/common/common.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/mm.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/temp.js}"></script>
+    <script type="application/javascript" th:src="@{/js/service/common/commonService.js}"></script>
+    <!--  公共方法  -->
     <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+
     <script type="application/javascript" th:src="@{/js/grjgzc/grjgzc.js}"></script>
 
     <style>
@@ -32,6 +41,9 @@
             width: 150px;
             padding-right: 10px;
             font-weight: bold;
+        }
+        .alignCSS{
+            text-align: center;
         }
 
     </style>
@@ -173,7 +185,9 @@
 
 <!--主页table-->
 <div class="panel-body" id="queryResult">
-    <table id="mainDataGrid" class="table table-hover"></table>
+    <div class="table-responsive">
+        <table id="mainDataGrid" class="table text-nowrap"></table>
+    </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" id="check-btn" >检查</button>
@@ -492,8 +506,8 @@
             <div class="modal-body">
                 <!-- 导航 -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">养老信息</a></li>
-                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">说明</a></li>
+                    <li role="presentation"><a href="#xxbyldetail"         aria-controls="xxbyldetail"  role="tab"   data-toggle="tab">养老信息信</a></li>
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"  data-toggle="tab">息表附表</a></li>
                 </ul>
                 <!-- 内部体 -->
                 <div class="tab-content">
@@ -506,7 +520,7 @@
                                 </tr>
                                 <tr>
                                     <td class="myfieldClass">个人编号</td>
-                                    <td width="150px"><span name="bxh"></span></td>
+                                    <td width="150px"><span name="gdbh"></span></td>
                                     <td class="myfieldClass">姓名</td>
                                     <td width="150px"><span name="grname"></span></td>
                                     <td class="myfieldClass">性别</td>
@@ -546,28 +560,30 @@
                                     <td colspan="8" style="text-align: center; font-weight: bold;">养老保险基金转移信息</td>
                                 </tr>
                                 <tr>
-                                    <td class="myfieldClass" colspan="2">1998年1月1日前账户中个人缴费累计存储额1</td>
-                                    <td class="myfieldClass" colspan="2">1998年1月1日至调转上年末个人账户累计存储存额2</td>
-                                    <td class="myfieldClass">调转当年计入个人账户本金金额3</td>
-                                    <td class="myfieldClass">个人账户基金转移额4</td>
-                                    <td class="myfieldClass">统筹基金转移额5</td>
-                                    <td class="myfieldClass">转移基金总额6</td>
+                                    <td class="myfieldClass alignCSS" colspan="2">
+                                        1998年1月1日前账户中个人缴费累计存储额</br>1
+                                    </td>
+                                    <td class="myfieldClass alignCSS" colspan="2">1998年1月1日至调转上年末个人账户累计存储存额</br>2</td>
+                                    <td class="myfieldClass alignCSS">调转当年计入个人账户本金金额</br>3</td>
+                                    <td class="myfieldClass alignCSS">个人账户基金转移额</br>4</td>
+                                    <td class="myfieldClass alignCSS">统筹基金转移额</br>5</td>
+                                    <td class="myfieldClass alignCSS">转移基金总额</br>6</td>
                                 </tr>
                                 <tr>
-                                    <td width="150px" colspan="2"><span name="grjf_98q"></span></td>
-                                    <td width="150px" colspan="2"><span name="grzh_98h"></span></td>
-                                    <td width="150px"><span name="dngrzhbj"></span></td>
-                                    <td width="150px"><span name="grzhzyze"></span></td>
-                                    <td width="150px"><span name="tcjjzyze"></span></td>
-                                    <td width="150px"><span name="zyjjze"></span></td>
+                                    <td width="150px" colspan="2" class="alignCSS"><span name="grjf_98q"></span></td>
+                                    <td width="150px" colspan="2" class="alignCSS"><span name="grzh_98h"></span></td>
+                                    <td width="150px" class="alignCSS"><span name="dngrzhbj"></span></td>
+                                    <td width="150px" class="alignCSS"><span name="grzhzyze"></span></td>
+                                    <td width="150px" class="alignCSS"><span name="tcjjzyze"></span></td>
+                                    <td width="150px" class="alignCSS"><span name="zyjjze"></span></td>
                                 </tr>
                                 <tr height="30">
                                     <td colspan="8" style="text-align: center; font-weight: bold;">历年缴费及个人账户记账信息</td>
                                 </tr>
                                 <tr>
                                     <td colspan="8">
-                                        <div style="width: 860px">
-                                            <table id="xxbDataGrid" class="table table-hover"></table>
+                                        <div class="table-responsive" style="width: 860px">
+                                            <table id="xxbDataGrid" class="table text-nowrap"></table>
                                         </div>
                                     </td>
                                 </tr>
@@ -575,7 +591,11 @@
 
                         </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="profile">2</div>
+                    <div role="tabpanel" class="tab-pane fade" id="xxbyldetail">
+                        <div class="table-responsive">
+                            <table id="xxbylDataGrid" class="table text-nowrap"></table>
+                        </div>
+                    </div>
 
                 </div>
 

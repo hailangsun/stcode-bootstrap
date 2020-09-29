@@ -33,7 +33,15 @@
             padding-right: 10px;
             font-weight: bold;
         }
-
+        .myfieldClass1{
+            font-weight: bold;
+            text-align: center;
+        }
+        .myfieldClass2{
+            text-align: center;
+            width: 200px;
+            height: 40px;
+        }
     </style>
 
 </head>
@@ -139,7 +147,9 @@
 
 <!--主页table-->
 <div class="panel-body" id="queryResult">
-    <table id="mainDataGrid" class="table table-hover"></table>
+    <div class="table-responsive">
+        <table id="mainDataGrid" class="table text-nowrap"></table>
+    </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" id="check-btn" >检查</button>
@@ -181,9 +191,9 @@
                             <td colspan="2" class="myfieldClass1" style="width: 200px;">单位划转</td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="nmhj">1</span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="nmgrjf"></span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="nmdwhz"></span></td>
                         </tr>
                         <tr>
                             <td colspan="7" class="myfieldClass1">当年个人账户</td>
@@ -194,9 +204,9 @@
                             <td  colspan="2" class="myfieldClass1" style="width: 200px;">单位划转</td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
-                            <td colspan="2" style="width: 200px;"><span name="bzhm">1</span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="dnhj">1</span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="grjf"></span></td>
+                            <td colspan="2" class="myfieldClass2"><span name="dwhz"></span></td>
                         </tr>
 
                     </table>
@@ -220,7 +230,7 @@
                             <td  colspan="2" class="myfieldClass1">财政补贴</td>
                         </tr>
                         <tr>
-                            <td colspan="2" ><span name="bzhm">1</span></td>
+                            <td colspan="2" style="height: 40px;"><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
@@ -235,7 +245,7 @@
                             <td colspan="2" class="myfieldClass1">财政补贴</td>
                         </tr>
                         <tr>
-                            <td colspan="2" ><span name="bzhm">1</span></td>
+                            <td colspan="2" style="height: 40px;"><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
                             <td colspan="2" ><span name="bzhm">1</span></td>
@@ -258,10 +268,10 @@
                             <td style="width: 200px;"  class="myfieldClass1">个人账户存储额</td>
                         </tr>
                         <tr>
-                            <td style="width: 200px;" ><span name="bzhm">1</span></td>
-                            <td style="width: 200px;" ><span name="bzhm">1</span></td>
-                            <td style="width: 200px;" ><span name="bzhm">1</span></td>
-                            <td style="width: 200px;" ><span name="bzhm">1</span></td>
+                            <td class="myfieldClass2" ><span name="bzhm">1</span></td>
+                            <td class="myfieldClass2" ><span name="bzhm">1</span></td>
+                            <td class="myfieldClass2" ><span name="bzhm">1</span></td>
+                            <td class="myfieldClass2" ><span name="bzhm">1</span></td>
                         </tr>
                         <tr>
                             <td rowspan="3" class="myfieldClass1" width="90px" height="150px">
@@ -275,10 +285,10 @@
                             <td style="width: 200px;"  class="myfieldClass1">个人账户存储额</td>
                         </tr>
                         <tr>
-                            <td  style="width: 200px;"  ><span name="bzhm">1</span></td>
-                            <td  style="width: 200px;"  ><span name="bzhm">1</span></td>
-                            <td  style="width: 200px;"  ><span name="bzhm">1</span></td>
-                            <td  style="width: 200px;"  ><span name="bzhm">1</span></td>
+                            <td  class="myfieldClass2"  ><span name="bzhm">1</span></td>
+                            <td  class="myfieldClass2"  ><span name="bzhm">1</span></td>
+                            <td  class="myfieldClass2"  ><span name="bzhm">1</span></td>
+                            <td  class="myfieldClass2"  ><span name="bzhm">1</span></td>
                         </tr>
                         <tr>
                             <td class="myfieldClass1">转移后是否可申领居民养老保险待遇</td>
@@ -293,11 +303,17 @@
                             <td colspan="8">
                                 <div class="checkbox" style="padding-left: 10px;">
                                     <label>
-                                        <input type="checkbox"> 您符合(含转移后符合)待遇领取条件,预估个人账户权益为26.3元/月
-                                        (预估权益不代表最终权益,请以最终核定结果为准),请通过互联网渠道或线下渠道办理待遇领取手续。</br>
-                                        您符合多缴条件，是否多缴: 是/否 多缴金额范围<span></span>元 ~ <span></span>元,选择多缴金额:<span></span>元
+                                        <input type="checkbox">
+
+                                            您符合(含转移后符合)待遇领取条件,预估个人账户权益为26.3元/月
+                                            (预估权益不代表最终权益,请以最终核定结果为准),请通过互联网渠道或线下渠道办理待遇领取手续。
+
+
 
                                     </label>
+                                    <p style="padding-left: 30px">
+                                        您符合多缴条件，是否多缴: 是/否 多缴金额范围<span></span>元 ~ <span></span>元,选择多缴金额:<span></span>元
+                                    </p>
                                 </div>
                             </td>
                         </tr>

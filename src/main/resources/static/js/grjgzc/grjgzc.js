@@ -1,6 +1,9 @@
 $(function(){
     _grjgzc.init();
 
+    //转出险种
+    _common.renderDmmxSel("#xzlx","0122");
+
     //主页面查询表格
     $("#query_btn").click(function(){
         $("#mainDataGrid").bootstrapTable("destroy");
@@ -99,6 +102,9 @@ _grjgzc = {
                     $("#xxbgrcx").modal('show');
                     $("#xxbDataGrid").bootstrapTable("destroy");
                     _grjgzc.xxbDataGrid(record);
+                    //查询标签页，点击时候就加载出来
+                    $("#xxbylDataGrid").bootstrapTable("destroy");
+                    _grjgzc.xxbylDataGrid(record);
                 }
             });
         }else {
@@ -254,6 +260,35 @@ _grjgzc = {
                 ]
             ]
 
+        });
+    },
+
+    //点击信息表 标签页养老信息表
+    xxbylDataGrid:function (data) {
+        $('#xxbylDataGrid').bootstrapTable({
+            method: 'post',
+            url: "/grjgzc/xxbyl",
+            pagination: false,
+            sidePagination: 'server',
+            pageSize: 5,
+            contentType:"application/x-www-form-urlencoded",
+            cache: false,
+            pageList: [5, 25, 50, 100],
+            queryParams: function(params) {
+                var paging = {
+                    grid:data.grid,
+                }
+                return paging;
+            },
+
+            columns: [
+                [
+                    {title: 'grid', field: 'grid', visible: false},
+                    {title: '年份',                    field: 'nian',        align: 'center',    valign: 'middle', },
+                    {title: '上年度在离职工月平均工资', field: 'zgyjgz',      align: 'center',    valign: 'middle', },
+                    {title: '月缴费基数',              field: 'yjfjs',       align: 'center',    valign: 'middle', },
+                ]
+            ]
         });
     },
 }

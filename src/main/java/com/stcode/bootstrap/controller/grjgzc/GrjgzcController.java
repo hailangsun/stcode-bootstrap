@@ -100,6 +100,17 @@ public class GrjgzcController {
         return grjgzcService.searchXxb(query);
     }
 
+
+    /**
+     * 查询信息表 标签页 养老信息表
+     */
+    @RequestMapping("/xxbyl")
+    @ResponseBody
+    public R  xxbyl(Grjgzc query){
+        return grjgzcService.xxbyl(query);
+    }
+
+
     /**
      * 信息表 职业年金(企业年金)关系转移接续信息表
      */

@@ -82,6 +82,12 @@ public class GrjgzcServiceImpl implements GrjgzcService{
     }
 
     @Override
+    public R xxbyl(Grjgzc query) {
+        List<Grjgzc> grDetailList = grjgzcMapper.xxbyl(query);
+        return R.ok().put("rows",grDetailList).put("total",grDetailList.size());
+    }
+
+    @Override
     public R grxxbnjInfo(Grjgzc query) {
         List<Grjgzc> grDetailList = grjgzcMapper.grxxbnjInfo(query);
         if(grDetailList.size() > 0){

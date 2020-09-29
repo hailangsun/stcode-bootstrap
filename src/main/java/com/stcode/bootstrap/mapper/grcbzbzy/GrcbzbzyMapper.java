@@ -21,4 +21,11 @@ public interface GrcbzbzyMapper {
      * @return
      */
     List<Grcbzbzy> getGRDetailInfo(Grcbzbzy query);
+
+    /**
+     * 点击姓名 弹出显示居保职保间转移详细信息 拼接数据
+     * @param query
+     * @return
+     */
+    List<Grcbzbzy> getGRDetailInfoJoint(Grcbzbzy query);
 }
