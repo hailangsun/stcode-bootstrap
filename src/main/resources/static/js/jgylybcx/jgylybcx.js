@@ -34,7 +34,16 @@ $(function(){
         $("#examineModal").modal('show');
     });
 
-
+    //设置下拉框宽度
+    $("#dbjg").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
+    //设置下拉框宽度
+    $("#shlx").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
 });
 
 //个人信息详情
@@ -77,10 +86,11 @@ _jgylybcx = {
 
     //点击姓名，显示个人详细信息
     grDetailInfo:function (index) {
-        $("#jgylycxfDetail").modal('show');
+        $("#jgylybzfDetailDataGrid").bootstrapTable("destroy");
         //获取行号
         var record =  $('#mainDataGrid').bootstrapTable("getData")[index];
         _jgylybcx.jgylybzfDetailDataGrid(record);
+        $("#jgylycxfDetail").modal('show');
     },
 
     mainDataGrid:function () {
@@ -193,24 +203,20 @@ _jgylybcx = {
                     {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
                     {title: '补支原因'          ,field: 'bzyy',       align: 'center', valign: 'middle', sortable: true,     width: 100},
                     {title: '补支月数'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-
-
                     {title: '支付金额'			,field: 'zfje', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '基础养老金'		,field: 'jcylj', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '个人账户'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '过渡养老金'		,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '基础补贴'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '建国前补贴'		,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '调整机制'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '护理费'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '统筹负担'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '发放方式'		    ,field: 'grzh', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-
-
+                    {title: '基础养老金'		,field: 'zfjc', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '个人账户'		    ,field: 'zfzh1', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '过渡养老金'		,field: 'zfgd', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '基础补贴'		    ,field: 'ylj3', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '建国前补贴'		,field: 'ylj4', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '调整机制'		    ,field: 'ylj5', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '护理费'		    ,field: 'hlf', 	    align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '统筹负担'		    ,field: 'tcfd', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
+                    {title: '发放方式'		    ,field: 'fffs', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
                     {title: '发放地点'			,field: 'ffdd', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
                     {title: '经办人'		    ,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '经（代）办机构'    ,field: 'dbjg',     align: 'center', valign: 'middle', sortable: true,  width: 100},
-                    {title: '办理日期'          ,field: 'blrq',       align: 'center', valign: 'middle', sortable: true,     width: 100}
+                    {title: '经（代）办机构'    ,field: 'zfqx',      align: 'center', valign: 'middle', sortable: true,  width: 100},
+                    {title: '办理日期'          ,field: 'blrq',     align: 'center', valign: 'middle', sortable: true,     width: 100}
                 ]
             ]
 

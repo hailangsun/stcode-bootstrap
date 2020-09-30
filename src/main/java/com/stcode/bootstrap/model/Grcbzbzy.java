@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * 1.2.28监督检查-日常检查-城保和职保转移人员信息查询
+ * [Grcbzbzy -> 个人城保职保]
  */
 @Data
 public class Grcbzbzy extends Jcjg{

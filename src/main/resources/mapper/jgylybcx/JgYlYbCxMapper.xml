@@ -3,24 +3,81 @@
 <mapper namespace="com.stcode.bootstrap.mapper.jgylybcx.JgYlYbCxMapper">
 
   <select id="getJgYlybcx" resultType="com.stcode.bootstrap.model.Ylybcx">
-     SELECT a.GRID,a.YWXH,a.DWID,c.DWMC,a.BBRQ,a.JBR,a.BLRQ,b.SCRQ,
-        b.ZFJE,a.FUYAN,b.FFFS,c.SSQX,d.XM GRNAME
-        FROM GR_YLZF_YMX a
-        LEFT JOIN YL_ZFYB b on a.YWXH = b.YWXH
-        LEFT JOIN DW_XX	  c on a.DWID = c.DWID
-        LEFT JOIN GR_XX   d on a.GRID = d.GRID
+          SELECT
+              a.GRID,
+              a.DWID,
+              c.DWMC,
+              c.DWDM,
+              d.XM grname,
+              d.BZHM,
+              TO_CHAR(a.BBRQ, 'yyyy-MM-dd')BBRQ,
+              a.FUYAN,
+              a.bzyy,
+              a.ZFQX,
+              a.JBR,
+              TO_CHAR(a.BLRQ, 'yyyy-MM-dd')BLRQ,
+              e.jcr,
+              e.jcrq,
+              e.jc,
+              e.cxjc,
+              e.jcjg,
+              e.memo,
+              e.jcshr,
+              e.jcshrq,
+              e.jcsh,
+              e.jcshjg
+        FROM GR_YLZF_YMX_JG a
+        LEFT JOIN YL_ZFYB_JG b 	ON a.bbid = b.bbid and a.hzbz='1'
+        LEFT JOIN DW_XX c 		ON a.DWID = c.DWID
+        LEFT JOIN GR_XX d 		ON a.GRID = d.GRID
+        LEFT JOIN JC_JG e 		ON e.GRID = a.GRID and e.mkdm = 'jgylybcx'
         WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+
+        <if test="dwdm != null and dwdm != ''">
+            and c.DWDM = #{dwdm,jdbcType=VARCHAR}
+        </if>
+        <if test="fuyan != null and fuyan != ''">
+            and c.FUYAN = #{fuyan,jdbcType=VARCHAR}
+        </if>
+
+
   </select>
 
 
     <select id="getJgYlybzfDetail" resultType="com.stcode.bootstrap.model.Ylybcx" parameterType="java.util.Map">
-        SELECT a.GRID,a.YWXH,a.DWID,c.DWMC,a.BBRQ,a.JBR,a.BLRQ,b.SCRQ,
-        b.ZFJE,a.FUYAN,b.FFFS,c.SSQX,d.XM GRNAME
-        FROM GR_YLZF_YMX a
-        LEFT JOIN YL_ZFYB b on a.YWXH = b.YWXH
-        LEFT JOIN DW_XX	  c on a.DWID = c.DWID
-        LEFT JOIN GR_XX   d on a.GRID = d.GRID
-        WHERE a.JBR <![CDATA[ <> ]]> 'sys'  and a.DWID = #{dwid}
+        SELECT
+
+            a.GRID,
+            a.DWID,
+            c.DWMC,
+            c.DWDM,
+            d.XM grname,
+            d.BZHM,
+            a.BZYY,
+
+            a.ZFJE,
+            a.ZFJC,
+            a.ZFZH1,
+            a.ZFGD,
+            e.YLJ3,
+            e.YLJ4,
+            e.YLJ5,
+            e.HLF,
+            e.TCFD,
+            a.FFFS,
+            a.FFDD,
+            a.JBR,
+            a.ZFQX,
+            a.BLRQ
+
+        FROM GR_YLZF_BZMX_JG a
+
+        LEFT JOIN YL_ZFYB_JG b 			ON a.bbid = b.bbid and a.hzbz='1'
+        LEFT JOIN DW_XX c 				ON a.DWID = c.DWID
+        LEFT JOIN GR_XX d 				ON a.GRID = d.GRID
+        LEFT JOIN GR_YLZF_YMX_JG e 		ON a.GRID = e.GRID
+        WHERE a.GRID = #{grid,jdbcType=VARCHAR}
+
   </select>
 
 

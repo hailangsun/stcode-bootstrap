@@ -42,11 +42,6 @@
 
     </style>
 
-    <script>
-        .html()
-    </script>
-
-
 
 </head>
 <body>
@@ -60,14 +55,12 @@
 
         <div class="panel-body" style="width: auto">
 
-<!--            <div class="container">-->
                 <div class="row clearfix">
                     <div class="col-md-4 column">
                         <div class="form-inline row">
 
                             <label class="control-label mylabelcss">经(代)办机构</label>
                             <select class="selectpicker" name="dbjg" id="dbjg" multiple>
-<!--                                <option th:value="0">请选择</option>-->
                                 <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
                             </select>
 
@@ -76,13 +69,13 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss" >统一社会信用代码</label>
-                            <input class="form-control" type="text" name="xydm" style="width: 250px;"/>
+                            <input class="form-control myinputcss" type="text" name="xydm"/>
                         </div>
                     </div>
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss" >汇总人</label>
-                            <select class="form-control" name="hzr" id="hzr" style="width: 250px;"></select>
+                            <select class="form-control myinputcss" name="hzr" id="hzr"></select>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -103,7 +96,7 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row" >
                             <label  class="control-label mylabelcss">报表日期</label>
-                            <input class="form-control" type="date" name="reportdate" style="width: 250px;"/>
+                            <input class="form-control myinputcss" type="date" name="reportdate"/>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -112,7 +105,7 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss" >支付原因</label>
-                            <select class="form-control" name="zfyy" id="zfyy" style="width: 250px;"></select>
+                            <select class="form-control myinputcss" name="zfyy" id="zfyy"></select>
                         </div>
                     </div>
                     <div class="col-md-4 column">
@@ -199,8 +192,6 @@
                         </div>
                     </div>
                 </div>
-
-<!--            </div>-->
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="query_btn" >查询</button>
