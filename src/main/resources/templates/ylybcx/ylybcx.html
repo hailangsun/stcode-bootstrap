@@ -17,6 +17,31 @@
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
 <!--    <script type="application/javascript" th:src="@{/plugins/layui/layui.js}"></script>-->
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+
+    <!-- 是否抽出公共方法   -->
+    <script type="application/javascript" th:src="@{/js/hogan/hogan.js}"></script>
+    <script type="application/javascript" th:src="@{/js/common/common.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/mm.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/temp.js}"></script>
+    <script type="application/javascript" th:src="@{/js/service/common/commonService.js}"></script>
+    <!--  公共方法  -->
+    <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        //设置下拉框默认值
+        $(function(){
+            var query = [[${commonquery.query}]];
+            $("#dbjg").val([query.dmmxid]);
+            //汇总日期默认值
+            $('#hzdatefrom').val(query.hzdatefrom);
+            $('#hzdateto').val(query.hzdateto);
+            //月报生成日期
+            $('#ybdatefrom').val(query.ybdatefrom);
+            $('#ybdateto').val(query.ybdateto);
+        });
+        /*]]>*/
+    </script>
     <script type="application/javascript" th:src="@{/js/ylybcx/ylybcx.js}"></script>
 
     <style>
@@ -69,7 +94,7 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss" >统一社会信用代码</label>
-                            <input class="form-control myinputcss" type="text" name="xydm"/>
+                            <input class="form-control myinputcss" type="text" name="dwdm"/>
                         </div>
                     </div>
                     <div class="col-md-4 column">
@@ -81,22 +106,25 @@
                     </div>
                 </div>
                 <div class="row clearfix">
-                    <div class="col-md-8 column">
+                    <div class="col-md-4 column">
                         <div class="row clearfix">
                             <div class="form-inline row">
-                                <label class="control-label" style="display:inline-block;width:135px; text-align: right;">汇总日期</label>
-                                <input class="form-control" type="date" name="dateFrom" style="border-radius:4px;width: 250px;"/>
-
-                                <label class="control-label">至</label>
-                                <input class="form-control" type="date" name="dateTo" style="border-radius:4px;width: 250px;"/>
-                                <span class="help-block"></span>
+                                <label class="control-label" style="display:inline-block;width:135px; text-align: right;">汇总日期起</label>
+                                <input class="form-control" type="date" name="hzdatefrom" id="hzdatefrom" style="border-radius:4px;width: 250px;"/>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 column">
                         <div class="form-inline row" >
+                            <label class="control-label mylabelcss">汇总日期止</label>
+                            <input class="form-control myinputcss" type="date" name="hzdateto" id="hzdateto" style="border-radius:4px;width: 250px;"/>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column">
+                        <div class="form-inline row" >
                             <label  class="control-label mylabelcss">报表日期</label>
-                            <input class="form-control myinputcss" type="date" name="reportdate"/>
+                            <input class="form-control myinputcss" type="date" name="bbrq" id="bbrq"/>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -105,7 +133,7 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss" >支付原因</label>
-                            <select class="form-control myinputcss" name="zfyy" id="zfyy"></select>
+                            <select class="form-control myinputcss" name="bzyy" id="bzyy"></select>
                         </div>
                     </div>
                     <div class="col-md-4 column">
@@ -150,7 +178,7 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label  mylabelcss" >附言</label>
-                            <select class="form-control myinputcss" name="fy" id="fy"></select>
+                            <select class="form-control myinputcss" name="fuyan" id="fuyan"></select>
                         </div>
                     </div>
                     <div class="col-md-4 column">
@@ -163,7 +191,11 @@
                         <div class="form-inline row">
 
                             <label class="control-label  mylabelcss" >检查类型</label>
-                            <select class="form-control myinputcss" name="jclx" id="jclx"></select>
+                            <select class="form-control myinputcss" name="jclx" id="jclx">
+                                <option value="0">请选择</option>
+                                <option value="1">已检查</option>
+                                <option value="2">未检查</option>
+                            </select>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -173,13 +205,13 @@
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label  class="control-label mylabelcss">月报生成日期起</label>
-                            <input class="form-control myinputcss" type="date" name="ybdateFrom" />
+                            <input class="form-control myinputcss" type="date" name="ybdatefrom" id="ybdatefrom"/>
                         </div>
                     </div>
                     <div class="col-md-4 column">
                         <div class="form-inline row">
                             <label class="control-label mylabelcss">月报生成日期止</label>
-                            <input class="form-control myinputcss" type="date" name="ybdateTo" />
+                            <input class="form-control myinputcss" type="date" name="ybdateto" id="ybdateto"/>
                             <input  type="hidden" name="mainoffset" id="mainoffset"/>
                             <input  type="hidden" name="mainlimit"  id="mainlimit"/>
                             <span class="help-block"></span>
@@ -210,7 +242,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="all-check-btn" >全部检查</button>
+        <button type="button" class="btn btn-default" id="all-check-btn" disabled>全部检查</button>
         <button type="button" class="btn btn-default" id="random-btn" >随机抽取</button>
         <button type="button" class="btn btn-default" id="print-btn" >打印</button>
         <button type="button" class="btn btn-default" id="export-btn" >导出</button>
@@ -230,57 +262,49 @@
             </div>
             <div class="modal-body">
                 <form id="ylybzfDetailForm">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">身份证号码</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" type="text" name="bzhm" id="bzhm"/>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label  class="col-md-4 control-label">办理日期</label>
-                                <div class="input-group col-md-8">
-                                    <input class="form-control" type="date" name="blrq" id="blrqDetail" />
-                                </div>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                            <div class="form-inline row">
+                                <label class="control-label" style="width: 100px;text-align: right;">身份证号码</label>
+                                <input class="form-control" type="text" name="bzhm" id="bzhm" style="width: 200px"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">组织机构代码</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" type="text" name="dbjg" id="dbjgDetail"/>
-                                </div>
+                        <div class="col-md-4 column">
+                            <div class="form-inline row">
+                                <label class="control-label" style="width: 100px;text-align: right;">办理日期</label>
+                                <input class="form-control" type="date" name="blrq" id="blrqDetail" style="width: 200px" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-md-4 column">
+                            <div class="form-inline row">
+                                <label class="control-label" style="width: 100px;text-align: right;">组织机构代码</label>
+                                <input class="form-control" type="text" name="zfqx" id="zfqxDetail" style="width: 200px" readonly/>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label  class="col-md-4 control-label">报表日期</label>
-                                <div class="input-group col-md-8">
-                                    <input class="form-control" type="date" name="bbrq" id="bbrqDetail" />
-                                </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                            <div class="form-inline row">
+                                <label  class="control-label " style="width: 100px;text-align: right;">报表日期</label>
+                                <input class="form-control " type="date" name="bbrq" id="bbrqDetail" style="width: 200px" readonly/>
+                            </div>
+                        </div>
+                        <div class="col-md-4 column">
+                            <div class="form-inline row">
+                                <label class="control-label " style="width: 100px;text-align: right;">单位名称</label>
+                                <input class="form-control " type="text" name="dwmc" id="dwmcDetail" style="width: 200px" readonly/>
+
+                                <input class="form-control" type="hidden" name="ywxh" id="ywxhDetail"/>
+                                <input class="form-control" type="hidden" name="dwid" id="dwidDetail"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">单位名称</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" type="text" name="dwmc" id="dwmcDetail"/>
-                                </div>
-                            </div>
-                        </div>
-                        <input class="form-control" type="hidden" name="ywxh" id="ywxhDetail"/>
-                        <input class="form-control" type="hidden" name="dwid" id="dwidDetail"/>
                     </div>
-                    <div class="modal-footer">
+
+                    <div class="modal-footer" style="padding: 5px">
                         <button type="button" class="btn btn-default" id="query-ylybzfDetail-btn">查询</button>
                     </div>
 
@@ -292,6 +316,29 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="check-btn">检查</button>
                 <button type="button" class="btn btn-default" >重新检查</button>
+                <button type="button" class="btn btn-default" >打印</button>
+                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--随机抽查页面-->
+<div class="modal fade" id="randomcheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">随机抽取</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="randomDataGrid" class="table text-nowrap"></table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="random-all-check">全部检查</button>
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" >导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
@@ -443,6 +490,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 </body>
 </html>

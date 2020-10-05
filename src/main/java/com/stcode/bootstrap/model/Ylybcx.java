@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 监督检查-日常检查-职工养老月报外支付查询 model
@@ -22,9 +23,13 @@ public class Ylybcx {
     //统一社会信用代码 [组织机构代码]
     private String dwdm;
     //汇总日期起
-    private String hzDateFrom;
+    private String hzdatefrom;
     //汇总日期止
-    private String hzDateTo;
+    private String hzdateto;
+    //月报生成日期起
+    private String ybdatefrom;
+    //月报生成日期止
+    private String ybdateto;
     //汇总人
     private String hzr;
     //报表日期
@@ -72,7 +77,11 @@ public class Ylybcx {
     //检查人数
     private String jcrs;
     //合计金额
-    private String hjje;
+    private String tcfd;
+    //经（代）办机构 '支付区县  (dmm=9007)',
+    private String zfqx;
+
+
 
     /**
      * 分页
@@ -118,10 +127,46 @@ public class Ylybcx {
     //明细名称
     private String mxmc;
 
+
     /**
      * 检查结果jcjg
      */
     private String[] formIds;
     private String[] grIds;
+
+    /**
+     * 排序
+     */
+    private String sortOrder;
+    private String sortName;
+
+    /**
+     * 一级页面总数 总合计金额
+     */
+    private String mainTotal;
+
+    //随机数
+    private String randomnum;
+    //随机检查单位id
+    private String randomdwids;
+    //放sql注入
+    private String[] randomids;
+    //是否分页导出
+    private String isAllExprot;
+
+    /**
+     * 二级页面合计
+     */
+    //总合计
+    private String detailTotal;
+    //本页合计
+    private String currentDetailTotal;
+    //检查id
+    private String jcid;
+
+    //接收前台检查信息
+    List<JcjgVo> jcjgs;
+    //是否全部检查，用于判断是本页检查还是全部检查
+    private String checkFlag;
 
 }

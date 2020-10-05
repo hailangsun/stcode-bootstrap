@@ -10,6 +10,8 @@ import java.util.Date;
 @Data
 public class Jcjg {
 
+    //个人id
+    private String grid;
     //检查ID
     private String jcid;
     //单位ID
@@ -34,8 +36,7 @@ public class Jcjg {
     private String mkdm;
     //模块名称
     private String mkmc;
-    //个人id
-    private String grid;
+
 
     //检查审核人
     private String jcshr;

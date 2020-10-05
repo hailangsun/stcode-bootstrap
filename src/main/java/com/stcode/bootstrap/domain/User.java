@@ -7,7 +7,7 @@ import lombok.Data;
 public class User {
     @Dict(dictCode = "sex")
     private String sex;
-
     private Integer id;
     private String name;
+
 }

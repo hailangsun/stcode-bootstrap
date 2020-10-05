@@ -3,19 +3,109 @@
 <mapper namespace="com.stcode.bootstrap.mapper.ylybcx.YlYbCxMapper">
 
   <select id="getYlybcx" resultType="com.stcode.bootstrap.model.Ylybcx">
-      SELECT a.YWXH,a.DWID,b.DWMC,a.BBRQ,a.JBR,a.BLRQ,a.SCRQ,a.ZFJE,a.FUYAN,a.FFFS,b.SSQX FROM YL_ZFYB a
-      LEFT JOIN DW_XX b on a.DWID = b.DWID
+     SELECT * FROM (
+      SELECT
+          a.YWXH,
+          a.DWID,
+          c.DWMC,
+          c.dwdm,
+      TO_CHAR(a.BBRQ, 'yyyy-MM-dd')BBRQ,
+          a.JBR,
+      TO_CHAR(a.BLRQ, 'yyyy-MM-dd HH24:mi:ss')BLRQ,
+      TO_CHAR(b.SCRQ, 'yyyy-MM-dd')SCRQ,
+          b.ZFRS,
+
+          a.tcfd,
+
+          a.FUYAN,
+          a.FFDD,
+          a.ZFQX
+
+        FROM
+      GR_YLZF_YMX a
+      LEFT JOIN YL_ZFYB b   ON a.bbid = b.bbid and a.hzbz='1'
+      LEFT JOIN DW_XX c 	ON a.DWID = c.DWID
       WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+
+      <if test="dwdm != null and dwdm != ''">
+          and c.DWDM = #{dwdm,jdbcType=VARCHAR}
+      </if>
+      <if test="dbjg != null and dbjg != ''">
+          and a.ZFQX in
+          <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+              #{temp}
+          </foreach>
+      </if>
+      <if test="hzdatefrom != null and hzdatefrom != null and hzdateto != '' and hzdateto != ''">
+          and a.BBRQ BETWEEN TO_DATE(#{hzdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{hzdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+      </if>
+      <if test="bbrq != null and bbrq != ''">
+          and a.BBRQ = TO_DATE(#{bbrq,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+      </if>
+      <if test="bzyy != null and bzyy != ''">
+          and a.bzyy = #{bzyy,jdbcType=VARCHAR}
+      </if>
+      <if test="ywbz != null and ywbz != ''">
+          and a.HZBZ = #{ywbz,jdbcType=VARCHAR}
+      </if>
+      <if test="cwbz != null and cwbz != ''">
+          and b.CWBZ = #{cwbz,jdbcType=VARCHAR}
+      </if>
+      <if test="zfje != null and zfje != ''">
+          and b.ZFJE &gt; #{zfje,jdbcType=VARCHAR}
+      </if>
+      <if test="fuyan != null and fuyan != ''">
+          and a.FUYAN = #{fuyan,jdbcType=VARCHAR}
+      </if>
+      <if test="ffdd != null and ffdd != ''">
+          and a.FFDD = #{ffdd,jdbcType=VARCHAR}
+      </if>
+      <if test="ybdatefrom != null and ybdatefrom != null and ybdateto != '' and ybdateto != ''">
+          and b.SCRQ BETWEEN TO_DATE(#{ybdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{ybdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+      </if>
+        )
+      <choose>
+          <when test="sortName != null">
+                order by ${sortName} ${sortOrder}
+          </when>
+          <otherwise>
+              order by SCRQ desc
+          </otherwise>
+      </choose>
+
+
+
   </select>
 
-  <select id="getYlybzfDetail" resultType="com.stcode.bootstrap.model.Ylybcx" parameterType="java.util.Map">
-        SELECT a.GRID,a.YWXH,a.DWID,c.DWMC,a.BBRQ,a.JBR,a.BLRQ,b.SCRQ,
-        b.ZFJE,a.FUYAN,b.FFFS,c.SSQX,d.XM GRNAME
-        FROM GR_YLZF_YMX a
-        LEFT JOIN YL_ZFYB b on a.YWXH = b.YWXH
-        LEFT JOIN DW_XX	  c on a.DWID = c.DWID
-        LEFT JOIN GR_XX   d on a.GRID = d.GRID
-        WHERE a.JBR <![CDATA[ <> ]]> 'sys'  and a.DWID = #{dwid}
+  <select id="getYlybzfDetail" resultType="com.stcode.bootstrap.model.Ylybcx">
+    SELECT
+        a.GRID,
+        a.DWID,
+        e.jcid,
+        c.DWMC,
+        c.DWDM,
+        d.xm grname,
+        d.BZHM,
+        a.FUYAN,
+        a.bzyy,
+        a.FFDD,
+        a.JBR,
+
+        a.zfje,
+        e.jcr,
+        e.jcrq,
+        e.jc,
+        e.cxjc,
+        e.jcjg,
+        e.memo
+
+    FROM GR_YLZF_BZMX a
+    LEFT JOIN YL_ZFYB b 	ON a.bbid = b.bbid and a.hzbz='1'
+    LEFT JOIN DW_XX c		ON a.DWID = c.DWID
+    LEFT JOIN GR_XX d	    ON a.GRID = d.GRID
+    LEFT JOIN JC_JG e	    ON a.GRID = e.GRID and e.mkdm = '1'
+    WHERE a.JBR <![CDATA[ <> ]]> 'sys' and a.DWID = #{dwid,jdbcType=VARCHAR}
+
   </select>
 
 
@@ -39,7 +129,147 @@
     </select>
 
 
+    <select id="getQuery" resultType="com.stcode.bootstrap.commonquery.ylybcx.YlybcxQuery">
+       SELECT
+            TO_CHAR(TRUNC(MAX(SCRQ), 'MM'),'YYYY-MM-DD') ybdatefrom,
+            TO_CHAR(LAST_DAY(MAX(SCRQ)),'YYYY-MM-DD') ybdateto
+	    FROM YL_ZFYB
+    </select>
+
+    <select id="getTotal" resultType="java.lang.String">
+        SELECT
+         sum(a.tcfd) tcfd
+        FROM
+        GR_YLZF_YMX a
+        LEFT JOIN YL_ZFYB b   ON a.bbid = b.bbid and a.hzbz='1'
+        LEFT JOIN DW_XX c 	ON a.DWID = c.DWID
+        WHERE a.JBR <![CDATA[ <> ]]> 'sys'
+
+        <if test="dwdm != null and dwdm != ''">
+            and c.DWDM = #{dwdm,jdbcType=VARCHAR}
+        </if>
+        <if test="dbjg != null and dbjg != ''">
+            and a.ZFQX in
+            <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+                #{temp}
+            </foreach>
+        </if>
+        <if test="hzdatefrom != null and hzdatefrom != null and hzdateto != '' and hzdateto != ''">
+            and a.BBRQ BETWEEN TO_DATE(#{hzdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{hzdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+        </if>
+        <if test="bbrq != null and bbrq != ''">
+            and a.BBRQ = TO_DATE(#{bbrq,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+        </if>
+        <if test="bzyy != null and bzyy != ''">
+            and a.bzyy = #{bzyy,jdbcType=VARCHAR}
+        </if>
+        <if test="ywbz != null and ywbz != ''">
+            and a.HZBZ = #{ywbz,jdbcType=VARCHAR}
+        </if>
+        <if test="cwbz != null and cwbz != ''">
+            and b.CWBZ = #{cwbz,jdbcType=VARCHAR}
+        </if>
+        <if test="zfje != null and zfje != ''">
+            and b.ZFJE &gt; #{zfje,jdbcType=VARCHAR}
+        </if>
+        <if test="fuyan != null and fuyan != ''">
+            and a.FUYAN = #{fuyan,jdbcType=VARCHAR}
+        </if>
+        <if test="ffdd != null and ffdd != ''">
+            and a.FFDD = #{ffdd,jdbcType=VARCHAR}
+        </if>
+        <if test="ybdatefrom != null and ybdatefrom != null and ybdateto != '' and ybdateto != ''">
+            and b.SCRQ BETWEEN TO_DATE(#{ybdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{ybdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+        </if>
+    </select>
 
 
+    <select id="getNoAllcheck" resultType="com.stcode.bootstrap.model.Ylybcx">
+        SELECT DWID,GRID
+        FROM(
+            SELECT
+                a.DWID,
+                a.GRID
+                FROM
+                GR_YLZF_YMX a
+                LEFT JOIN YL_ZFYB b ON a.bbid = b.bbid and a.hzbz='1'
+                LEFT JOIN DW_XX c 	ON a.DWID = c.DWID
+            WHERE
+            a.JBR <![CDATA[ <> ]]> 'sys'
+            and  NOT EXISTS (SELECT * FROM JC_JG WHERE a.GRID=GRID AND MKDM='1')
+            <if test="dwdm != null and dwdm != ''">
+                and c.DWDM = #{dwdm,jdbcType=VARCHAR}
+            </if>
+            <if test="dbjg != null and dbjg != ''">
+                and a.ZFQX in
+                <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+                    #{temp}
+                </foreach>
+            </if>
+            <if test="hzdatefrom != null and hzdatefrom != null and hzdateto != '' and hzdateto != ''">
+                and a.BBRQ BETWEEN TO_DATE(#{hzdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{hzdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+            </if>
+            <if test="bbrq != null and bbrq != ''">
+                and a.BBRQ = #{bbrq,jdbcType=VARCHAR}
+            </if>
+            <if test="bzyy != null and bzyy != ''">
+                and a.bzyy = #{bzyy,jdbcType=VARCHAR}
+            </if>
+            <if test="ywbz != null and ywbz != ''">
+                and a.HZBZ = #{ywbz,jdbcType=VARCHAR}
+            </if>
+            <if test="cwbz != null and cwbz != ''">
+                and b.CWBZ = #{cwbz,jdbcType=VARCHAR}
+            </if>
+            <if test="zfje != null and zfje != ''">
+                and b.ZFJE &gt; #{zfje,jdbcType=VARCHAR}
+            </if>
+<!--            <if test="fuyan != null and fuyan != ''">-->
+<!--                and a.FUYAN = #{fuyan,jdbcType=VARCHAR}-->
+<!--            </if>-->
+            <if test="ffdd != null and ffdd != ''">
+                and a.FFDD = #{ffdd,jdbcType=VARCHAR}
+            </if>
+            <if test="ybdatefrom != null and ybdatefrom != null and ybdateto != '' and ybdateto != ''">
+                and b.SCRQ BETWEEN TO_DATE(#{ybdatefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{ybdateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+            </if>
+            <if test="randomdwids != null and randomdwids != ''">
+                and c.dwid in
+                <foreach item="id" collection="randomids"  open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        )
+        GROUP BY GRID,DWID
+    </select>
+
+
+    <select id="getDetailTotal" resultType="java.lang.String">
+        SELECT
+         sum(a.zfje)detailTotal
+        FROM GR_YLZF_BZMX a
+        LEFT JOIN YL_ZFYB b 	ON a.bbid = b.bbid and a.hzbz='1'
+        LEFT JOIN DW_XX c		ON a.DWID = c.DWID
+        LEFT JOIN GR_XX d	    ON a.GRID = d.GRID
+        WHERE a.JBR <![CDATA[ <> ]]> 'sys' and a.DWID = #{dwid,jdbcType=VARCHAR}
+
+  </select>
+
+
+
+    <select id="getDetailNoCheck" resultType="com.stcode.bootstrap.model.Ylybcx">
+        SELECT DWID,GRID FROM(
+            SELECT
+            a.GRID,
+            a.DWID
+            FROM GR_YLZF_BZMX a
+            LEFT JOIN YL_ZFYB b 	ON a.bbid = b.bbid and a.hzbz='1'
+            LEFT JOIN DW_XX c		ON a.DWID = c.DWID
+            LEFT JOIN GR_XX d		ON a.GRID = d.GRID
+            WHERE a.JBR <![CDATA[ <> ]]> 'sys' and a.DWID = #{dwid,jdbcType=VARCHAR}
+            and  NOT EXISTS (SELECT * FROM JC_JG WHERE a.GRID=GRID AND MKDM='1')
+            )
+        GROUP BY GRID,DWID
+    </select>
 
 </mapper>

@@ -87,4 +87,30 @@
         where JCID=#{jcid}
     </update>
 
+    <insert id="addJcjgBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO JC_JG
+        (
+            JCID, DWID, JCR, JCRQ, JC, CXJC, JCJG, MEMO, XM, YWXH, GRID, MKDM, MKMC
+        )
+        <foreach item="item" index="index" collection="list" separator="union all">
+        (
+            SELECT
+                #{item.jcid,jdbcType=VARCHAR},
+                #{item.dwid,jdbcType=VARCHAR},
+                #{item.jcr,jdbcType=VARCHAR},
+                TO_TIMESTAMP(to_char(#{item.jcrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6'),
+                #{item.jc,jdbcType=VARCHAR},
+                #{item.cxjc,jdbcType=VARCHAR},
+                #{item.jcjg,jdbcType=VARCHAR},
+                #{item.memo,jdbcType=VARCHAR},
+                #{item.xm,jdbcType=VARCHAR},
+                #{item.ywxh,jdbcType=VARCHAR},
+                #{item.grid,jdbcType=VARCHAR},
+                #{item.mkdm,jdbcType=VARCHAR},
+                #{item.mkmc,jdbcType=VARCHAR}
+            FROM DUAL
+        )
+        </foreach>
+    </insert>
+
 </mapper>

@@ -25,4 +25,12 @@ public interface JcjgMapper {
      * @return
      */
     List<String> queryMXMC(@Param("jcids")String[] jcids);
+
+
+    /**
+     * 批量插入
+     * @param addBatch
+     * @return
+     */
+    int addJcjgBatch(List<Jcjg> addBatch);
 }

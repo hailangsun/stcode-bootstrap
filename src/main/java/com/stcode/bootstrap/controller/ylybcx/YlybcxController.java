@@ -6,10 +6,11 @@ import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.fastjson.JSON;
+import com.stcode.bootstrap.common.BigDecimalUtils;
+import com.stcode.bootstrap.commonquery.ylybcx.YlybcxQuery;
 import com.stcode.bootstrap.domain.DmMx;
 import com.stcode.bootstrap.export.ylybcx.YlybcxExport;
 import com.stcode.bootstrap.mapper.DmMxMapper;
-import com.stcode.bootstrap.mapper.ylybcx.YlYbCxMapper;
 import com.stcode.bootstrap.model.Ylybcx;
 import com.stcode.bootstrap.service.ylybcx.YlybcxService;
 import com.stcode.bootstrap.utils.R;
@@ -18,19 +19,14 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -59,6 +55,19 @@ public class YlybcxController  {
         return map;
     }
 
+    //绑定当前登录人
+    @ModelAttribute(value = "commonquery")
+    public Map<String,Object> getCommon(){
+        Map<String,Object> result = new HashMap<>();
+        //存储到redis中
+        YlybcxQuery query = ylybcxService.getQuery();
+//        query.setDmmxid("1010");
+        result.put("query",query);
+
+        return result;
+    }
+
+
     @RequestMapping("index")
     public String index() {
         return "ylybcx/ylybcx";
@@ -73,13 +82,13 @@ public class YlybcxController  {
 
     /**
      * 查询 职工养老月报外支付人员明细
-     * @param ylybzfMap
+     * @param query
      * @return
      */
     @RequestMapping("/ylybzfDetail")
     @ResponseBody
-    public R ylybzfDetail(@RequestBody Map<String,Object> ylybzfMap){
-        return ylybcxService.getYlybzfDetail(ylybzfMap);
+    public R ylybzfDetail(Ylybcx query){
+        return ylybcxService.getYlybzfDetail(query);
     }
 
 
@@ -96,10 +105,22 @@ public class YlybcxController  {
     /**
      * 检查确定，生成检查结果
      */
-    @RequestMapping(value = "/insertJcjg")
+    @RequestMapping(value = "insertJcjg", method = RequestMethod.POST)
     @ResponseBody
-    public R insertCheckResult(Ylybcx insertJcjg) {
+    public R insertCheckResult(@RequestBody Ylybcx insertJcjg) {
         return ylybcxService.insertJcjg(insertJcjg);
+    }
+
+
+    /**
+     * 全部检查
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/allcheck")
+    @ResponseBody
+    public R allcheck(Ylybcx query) {
+        return ylybcxService.allcheck(query);
     }
 
 
@@ -110,6 +131,29 @@ public class YlybcxController  {
     @ResponseBody
     public R grDetailInfo(Ylybcx grDetailQuery){
         return ylybcxService.getGRDetailInfo(grDetailQuery);
+    }
+
+
+    /**
+     * 随机抽取
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/randomCheck")
+    @ResponseBody
+    public R randomCheck(Ylybcx query) {
+        return ylybcxService.randomCheck(query);
+    }
+
+    /**
+     * 获取可随机抽取的数量
+     * @param query
+     * @return
+     */
+    @RequestMapping(value = "/getRandomNum")
+    @ResponseBody
+    public R getRandomNum(Ylybcx query) {
+        return ylybcxService.getRandomNum(query);
     }
 
 
@@ -126,8 +170,13 @@ public class YlybcxController  {
             parmMap.put(name, value);
         }
         Ylybcx ylybcx = JSON.parseObject(JSON.toJSONString(parmMap),Ylybcx.class);
-        ylybcx.setLimit(ylybcx.getMainlimit());
-        ylybcx.setOffset(ylybcx.getMainoffset());
+        if("2".equals(ylybcx.getIsAllExprot())){
+            ylybcx.setLimit(String.valueOf(Integer.MAX_VALUE));
+            ylybcx.setOffset("0");
+        }else {
+            ylybcx.setLimit(ylybcx.getMainlimit());
+            ylybcx.setOffset(ylybcx.getMainoffset());
+        }
         HorizontalCellStyleStrategy horizontalCellStyleStrategy = getExportCommon(response,"职工养老月报外支付查询");
         EasyExcel.write(response.getOutputStream(), YlybcxExport.class).registerWriteHandler(horizontalCellStyleStrategy).sheet("职工养老月报外支付查询").doWrite(data(ylybcx));
     }
@@ -165,10 +214,25 @@ public class YlybcxController  {
     private List<YlybcxExport> data(Ylybcx data) {
         List<YlybcxExport> list = new ArrayList<YlybcxExport>();
         List<Ylybcx> cbdwxx = (List<Ylybcx>) ylybcxService.getYlybcx(data).get("rows");
+        BigDecimal tempTotal = BigDecimal.ZERO;
         for (Ylybcx ylybcx: cbdwxx) {
             YlybcxExport yl = new YlybcxExport();
             BeanUtils.copyProperties(ylybcx, yl);
             list.add(yl);
+            if(!"2".equals(data.getIsAllExprot())){
+                tempTotal = BigDecimalUtils.add(tempTotal,new BigDecimal(ylybcx.getTcfd()));
+            }
+        }
+        if(cbdwxx.size() > 0){
+            YlybcxExport mainTotal = new YlybcxExport();
+            mainTotal.setJcrs("总合计金额");
+            if(!"2".equals(data.getIsAllExprot())){
+                mainTotal.setTcfd(tempTotal.toString());
+            }else {
+                mainTotal.setTcfd(cbdwxx.get(0).getMainTotal());
+            }
+
+            list.add(mainTotal);
         }
         return list;
     }

@@ -28,18 +28,18 @@ public class YlybcxExport {
     @ExcelProperty({"职工养老月报外支付", "月报生成日期"})
     private String scrq;
     @ExcelProperty({"职工养老月报外支付", "补支人数"})
-    private String bzrs;
+    private String zfrs;
     @ExcelProperty({"职工养老月报外支付", "检查人数"})
     private String jcrs;
     @ExcelProperty({"职工养老月报外支付", "合计金额"})
-    private String hjje;
-    @ExcelProperty({"职工养老月报外支付", "支付次数大于"})
+    private String tcfd;
+    @ExcelProperty({"职工养老月报外支付", "支付次数"})
     private String zfcs;
     @ExcelProperty({"职工养老月报外支付", "附言"})
     private String fuyan;
     @ExcelProperty({"职工养老月报外支付", "发放地点"})
     private String ffdd;
     @ExcelProperty({"职工养老月报外支付", "经代办机构"})
-    private String ssqx;
+    private String zfqx;
 
 }
