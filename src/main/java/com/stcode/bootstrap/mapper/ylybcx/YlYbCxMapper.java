@@ -31,7 +31,7 @@ public interface YlYbCxMapper {
     /**
      * 查询 个人信息 - 养老月报外支付人员详细情况
      */
-    List<Grxx>getGRDetailInfo(Ylybcx grDetailInfo);
+    List<Ylybcx>getGRDetailInfo(Ylybcx grDetailInfo);
 
     /**
      * 获取默认页面回显值

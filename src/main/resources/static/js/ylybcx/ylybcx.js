@@ -47,6 +47,12 @@ $(function(){
             getCheckResultTable(2);
         }
     });
+    //单位全称细单查询按钮 - 重新检查
+    $("#restart-check-btn").click(function(){
+        if(cxcheck()){
+            getCheckResultTable(3);
+        }
+    });
 
     //检查确定
     $("#check-enter-btn").click(function () {
@@ -141,6 +147,39 @@ $(function(){
                 }
             });
 
+        }else if(checkFlag == 3){//二级页面 重新检查
+            var jcjgs           = new Array();
+            var rows =  $("#ylybzfDetailDataGrid").bootstrapTable('getSelections');
+
+            for(var i=0;i<rows.length;i++){
+                var jcjg = {};
+                jcjg.grid = rows[i].grid;
+                jcjg.dwid = rows[i].dwid;
+                jcjg.jcid = rows[i].jcid;
+                jcjgs.push(jcjg);
+            }
+
+            var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgs,dwid:$("#dwidDetail").val(),checkFlag:checkFlag});
+            $.ajax({
+                type: "post",
+                url: "/ylybcx/updateJcjg",
+                contentType:"application/json;charset=utf-8",
+                dataType: "json",
+                data: params,
+                success: function(msg){
+                    if (msg.code == 0) {
+                        bootbox.alert({
+                            message: "重新检查完成!",
+                            size: 'small'
+                        });
+                        $("#ylybzfDetailCheck").modal('hide');
+                        $("#ylybzfDetailDataGrid").bootstrapTable('refresh');
+                    }else {
+                        bootbox.alert(msg.error);
+                    }
+                }
+            });
+
         }
 
 
@@ -158,23 +197,50 @@ $(function(){
         $('#ylybzfDetail').css({'overflow-y':'scroll'});
     });
 
-
-
-    //导出
-    $("#export-btn").on('click', function() {
+    //二级页面导出
+    $("#detail-export").on('click', function() {
+        exportflag = 2;
         //模态框
         $("#exportModal").modal('show');
     });
+
+    //导出
+    $("#export-btn").on('click', function() {
+        exportflag = 1;
+        //模态框
+        $("#exportModal").modal('show');
+    });
+
+    //三级页面导出
+    $("#export-gr-btn").on('click', function() {
+        window.location.href="/ylybcx/grdetaildownload?grid="+$("#grDetailExportGrid").val();
+    });
+
     //本页导出
     $("#currentExprot").click(function(){
-        var data = $("#mainform").serializeArray();
-        postExcelFile(data, "/ylybcx/download","1");
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/ylybcx/download","1");
+
+        }else if(exportflag == 2){//二级页面导出
+            var formdata = $("#ylybzfDetailForm").serializeArray();
+            postExcelFile(formdata, "/ylybcx/detaildownload","1");
+        }else {//三级页面
+
+        }
         $("#exportModal").modal('hide');
     });
     //全部导出
     $("#allExprot").click(function(){
-        var data = $("#mainform").serializeArray();
-        postExcelFile(data, "/ylybcx/download","2");
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/ylybcx/download","2");
+        }else if(exportflag == 2){//二级页面导出
+            var formdata = $("#ylybzfDetailForm").serializeArray();
+            postExcelFile(formdata, "/ylybcx/detaildownload","2");
+        }else {//三级页面
+
+        }
         $("#exportModal").modal('hide');
     });
 
@@ -193,7 +259,6 @@ $(function(){
 
     //全部检查
     $("#all-check-btn").on('click',function () {
-
         bootbox.confirm({
             title: "全部检查?",
             message: "<p style='text-align: center;font-weight:bold;'>是否对本次查询结果中【未检查】的记录进行全部检查?</p>",
@@ -316,7 +381,9 @@ var checkFlag     = 0;
 //随机抽查
 var randomTotal   = 0;
 //随机抽取单位id
-var randomdwids  = null;
+var randomdwids   = null;
+//导出标记 1:一级页面导出，2：二级页面导出，3：三级页面导出
+var exportflag    = 0
 
 //获取选择检查结果
 function getOptionCheckResult(){
@@ -383,26 +450,41 @@ function postExcelFile(params, url,isAllExprot) { //params是post请求需要的
     form.method         = "post";
     document.body.appendChild(form);
 
-    var moreselet       = "";
-    $.each(params,function(i,item){
-        if(item.name == 'dbjg'){
-            if(!isNull(item.value)){
-                moreselet+=item.value+",";
+    if(exportflag == 1){//一级页面导出
+        var moreselet       = "";
+        $.each(params,function(i,item){
+            if(item.name == 'dbjg'){
+                if(!isNull(item.value)){
+                    moreselet+=item.value+",";
+                }
+            }else {
+                var input   = document.createElement("input");
+                input.type  = "hidden";
+                input.name  = item.name;
+                input.value = item.value;
+                form.appendChild(input);
             }
-        }else {
+
+        });
+        var input   = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = "dbjg";
+        input.value = moreselet;
+        form.appendChild(input);
+    }else if(exportflag == 2){//二级页面导出
+        $.each(params,function(i,item){
             var input   = document.createElement("input");
             input.type  = "hidden";
             input.name  = item.name;
             input.value = item.value;
             form.appendChild(input);
-        }
+        });
+    }else {//三级页面导出
 
-    });
-    var input   = document.createElement("input");
-    input.type  = "hidden";
-    input.name  = "dbjg";
-    input.value = moreselet;
-    form.appendChild(input);
+    }
+
+
+    //是本页导出还是全部导出
     if(isAllExprot == "2"){
         var input   = document.createElement("input");
         input.type  = "hidden";
@@ -413,6 +495,30 @@ function postExcelFile(params, url,isAllExprot) { //params是post请求需要的
 
     form.submit();
     form.remove();
+}
+
+//重新检查验证
+function cxcheck() {
+    //1、选择含有未检查的给予提示
+    var rows =  $("#ylybzfDetailDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择已检查的记录");
+        return false;
+    }
+    var flag = false;
+    //2、选有检查过的，按钮可用
+    $.each(rows,function(index,item){
+        if(item.jc == "false" || item.jc == null){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录包含未检查的记录，不能重新对未检查记录进行操作！");
+        return false;
+    }
+    return true;
 }
 
 _ylybcx = {
@@ -430,7 +536,8 @@ _ylybcx = {
     //点击姓名，显示个人详细信息
     grDetailInfo:function (index) {
         var grRecord =  $('#ylybzfDetailDataGrid').bootstrapTable("getData")[index];
-
+        //三级页面导出
+        $("#grDetailExportGrid").val(grRecord.grid);
         $.ajax({
             type: "post",
             url: "/ylybcx/grDetailInfo",
@@ -555,6 +662,10 @@ _ylybcx = {
                 //     limit: params.limit,
                 //     grid:record.grid
                 // }
+                //细单导出用
+                $("#detaillimit").val(params.limit);
+                $("#detailoffset").val(params.offset);
+
                 var formdata = $("#ylybzfDetailForm").serialize();
                 var paging =formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 if(!isNull(this.sortName)){
@@ -569,45 +680,45 @@ _ylybcx = {
                     {title: 'ywxh', field: 'ywxh', visible: false},
                     {title: 'grid', field: 'grid', visible: false},
                     {title: 'jcid', field: 'jcid', visible: false},
-                    {title: '序号', align: 'center', valign: 'middle', width: 100, sortable: true,
+                    {title: '序号', align: 'center', valign: 'middle', width: 100,
                         formatter: function(value, row, index) {
                             var pageSize    = $('#ylybzfDetailDataGrid').bootstrapTable('getOptions').pageSize;
                             var pageNumber  = $('#ylybzfDetailDataGrid').bootstrapTable('getOptions').pageNumber;
                             return pageSize * (pageNumber - 1) + index + 1;
                         }
                     },
-                    {title: '单位全称'			,field: 'dwmc', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,footerFormatter: function (value) {
+                    {title: '单位全称'			,field: 'dwmc', 	align: 'center', valign: 'middle',  width: 100,footerFormatter: function (value) {
                             return '总合计金额';
                         }},
-                    {title: '统一社区信用代码'	,field: 'dwdm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,footerFormatter: function (value) {
+                    {title: '统一社区信用代码'	,field: 'dwdm', 	align: 'center', valign: 'middle', 	width: 100,footerFormatter: function (value) {
                            if(value.length > 0){
                                 return value[0].detailTotal;
                             }else {
                                return "0.00";
                            }
                         }},
-                    {title: '姓名'				,field: 'grname', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,formatter: grDetail},
-                    {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle', sortable: true, 	width: 100,footerFormatter: function (value) {
+                    {title: '姓名'				,field: 'grname', 	align: 'center', valign: 'middle',  width: 100,formatter: grDetail},
+                    {title: '公民身份证号码'	    ,field: 'bzhm', 	align: 'center', valign: 'middle',  width: 100,footerFormatter: function (value) {
                             return '本页合计金额';
                         }},
-                    {title: '附言'				,field: 'fuyan', 	align: 'center', valign: 'middle', sortable: true,	width: 150,footerFormatter: function (value) {
+                    {title: '附言'				,field: 'fuyan', 	align: 'center', valign: 'middle', 	width: 150,footerFormatter: function (value) {
                             if(value.length > 0){
                                 return value[0].currentDetailTotal;
                             }else {
                                 return "0.00";
                             }
                         }},
-                    {title: '补发原因'			,field: 'bfyy', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '发放地点'			,field: 'ffdd', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '经办人'			    ,field: 'jbr', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '审核人'			    ,field: 'shr', 		align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '合计金额'			,field: 'zfje', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '检查人'			    ,field: 'jcr', 		align: 'center', valign: 'middle', sortable: true, 	width: 100},
+                    {title: '补发原因'			,field: 'bfyy', 	align: 'center', valign: 'middle', 	width: 100},
+                    {title: '发放地点'			,field: 'ffdd', 	align: 'center', valign: 'middle',  width: 100},
+                    {title: '经办人'			    ,field: 'jbr', 		align: 'center', valign: 'middle', 	width: 100},
+                    {title: '审核人'			    ,field: 'shr', 		align: 'center', valign: 'middle',  width: 100},
+                    {title: '合计金额'			,field: 'zfje', 	align: 'center', valign: 'middle',  width: 100},
+                    {title: '检查人'			    ,field: 'jcr', 		align: 'center', valign: 'middle',  width: 100},
                     {title: '检查日期'			,field: 'jcrq', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '检查'				,field: 'jc', 		align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '重新检查'			,field: 'cxjc', 	align: 'center', valign: 'middle', sortable: true, 	width: 100},
-                    {title: '检查结果'			,field: 'jcjg', 	align: 'center', valign: 'middle', sortable: true,	width: 100},
-                    {title: '备注'				,field: 'memo', 	align: 'center', valign: 'middle', sortable: true,	width: 100}
+                    {title: '检查'				,field: 'jc', 		align: 'center', valign: 'middle', 	width: 100},
+                    {title: '重新检查'			,field: 'cxjc', 	align: 'center', valign: 'middle',  width: 100},
+                    {title: '检查结果'			,field: 'jcjg', 	align: 'center', valign: 'middle', 	width: 100},
+                    {title: '备注'				,field: 'memo', 	align: 'center', valign: 'middle', 	width: 100}
                 ]
             ]
 

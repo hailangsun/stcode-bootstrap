@@ -299,6 +299,9 @@
 
                                 <input class="form-control" type="hidden" name="ywxh" id="ywxhDetail"/>
                                 <input class="form-control" type="hidden" name="dwid" id="dwidDetail"/>
+                                <input class="form-control" type="hidden" name="detailoffset" id="detailoffset"/>
+                                <input class="form-control" type="hidden" name="detaillimit" id="detaillimit"/>
+                                <input class="form-control" type="hidden" name="grid" id="grDetailExportGrid"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -315,9 +318,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="check-btn">检查</button>
-                <button type="button" class="btn btn-default" >重新检查</button>
+                <button type="button" class="btn btn-default" id="restart-check-btn">重新检查</button>
                 <button type="button" class="btn btn-default" >打印</button>
-                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" id="detail-export">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
         </div>
@@ -412,41 +415,41 @@
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">离退休金</td>
-                            <td  width="150px"><span name="ltxj"></span></td>
+                            <td  width="150px"><span name="ylj1"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">各项补贴</td>
                             <td  width="150px"><span name="gxbt"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">一次性支付个人账户</td>
-                            <td  width="150px"><span name="ycxzfgr"></span></td>
+                            <td  width="150px"><span name="zfzh"></span></td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">一次性支付补偿金</td>
-                            <td  width="150px"><span name="ycxzfbc"></span></td>
+                            <td  width="150px"><span name="zfbc"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">医疗费</td>
                             <td  width="150px"><span name="ylf"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">丧葬抚恤补助</td>
-                            <td  width="150px"><span name="szfxj"></span></td>
+                            <td  width="150px"><span name="zfje"></span></td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支基础性养老金</td>
-                            <td  width="150px"><span name="bzjcxylj"></span></td>
+                            <td  width="150px"><span name="ylj1"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支过渡性养老金</td>
-                            <td  width="150px"><span name="bzgdxylj"></span></td>
+                            <td  width="150px"><span name="ylj3"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">补支个人账户</td>
-                            <td  width="150px"><span name="bzgrzh"></span></td>
+                            <td  width="150px"><span name="ylj2"></span></td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">取暖补贴</td>
-                            <td  width="150px"><span name="qnbt"></span></td>
+                            <td  width="150px"><span name="zfqn"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">护理费</td>
-                            <td  width="150px"><span name="hlf"></span></td>
+                            <td  width="150px"><span name="zfhl"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">异地安置费</td>
-                            <td  width="150px"><span name="ydazf"></span></td>
+                            <td  width="150px"><span name="zfaz"></span></td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">破产企业统筹外负担</td>
-                            <td  width="150px"><span name="pzqytcwfd"></span></td>
+                            <td  width="150px"><span name="zfpc"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">救济金</td>
-                            <td  width="150px"><span name="jjj"></span></td>
+                            <td  width="150px"><span name="zfjj"></span></td>
                             <td style="text-align: right; width: 150px;padding-right:10px;font-weight: bold;">合计金额</td>
                             <td  width="150px"><span name="hjje"></span></td>
                         </tr>

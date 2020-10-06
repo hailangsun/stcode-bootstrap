@@ -33,4 +33,11 @@ public interface JcjgMapper {
      * @return
      */
     int addJcjgBatch(List<Jcjg> addBatch);
+
+    /**
+     * 批量更新
+     * @param addBatch
+     * @return
+     */
+    int updateJcjgBatch(List<Jcjg> addBatch);
 }

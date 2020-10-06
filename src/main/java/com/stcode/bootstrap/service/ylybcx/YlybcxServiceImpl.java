@@ -43,11 +43,11 @@ public class YlybcxServiceImpl implements YlybcxService {
         List<Ylybcx> ylybcxList = ylYbCxMapper.getYlybcx(ylybcx);
         PageInfo<Ylybcx> fxXxPageInfo = new PageInfo<>(ylybcxList);
         long total = fxXxPageInfo.getTotal();
-        String mainTotal = ylYbCxMapper.getTotal(ylybcx);
-        if("".equals(mainTotal) || mainTotal == null){
-            mainTotal = "0.00";
-        }
         if(ylybcxList.size() > 0){
+            String mainTotal = ylYbCxMapper.getTotal(ylybcx);
+            if("".equals(mainTotal) || mainTotal == null){
+                mainTotal = "0.00";
+            }
             ylybcxList.get(0).setMainTotal(mainTotal);
         }
         return R.ok().put("rows",ylybcxList).put("total",total);
@@ -61,12 +61,12 @@ public class YlybcxServiceImpl implements YlybcxService {
         List<Ylybcx> ylybcxList = ylYbCxMapper.getYlybzfDetail(query);
         PageInfo<Ylybcx> fxXxPageInfo = new PageInfo<>(ylybcxList);
         long total = fxXxPageInfo.getTotal();
-        String detailTotal = ylYbCxMapper.getDetailTotal(query);
-        BigDecimal currentDetailTotal = BigDecimal.ZERO;
-        for (Ylybcx yl:ylybcxList) {
-            currentDetailTotal = BigDecimalUtils.add(currentDetailTotal,new BigDecimal(yl.getZfje()));
-        }
         if(ylybcxList.size() > 0){
+            String detailTotal = ylYbCxMapper.getDetailTotal(query);
+            BigDecimal currentDetailTotal = BigDecimal.ZERO;
+            for (Ylybcx yl:ylybcxList) {
+                currentDetailTotal = BigDecimalUtils.add(currentDetailTotal,new BigDecimal(yl.getZfje()));
+            }
             ylybcxList.get(0).setCurrentDetailTotal(currentDetailTotal.toString());
             ylybcxList.get(0).setDetailTotal(detailTotal);
         }
@@ -88,6 +88,7 @@ public class YlybcxServiceImpl implements YlybcxService {
         }
         //备注
         String memo = ylybcx.getMemo();
+
         List<Jcjg> addBatch = new ArrayList<>();
 
         if("5".equals(ylybcx.getCheckFlag())){//没有选择，默认全部检查
@@ -118,6 +119,48 @@ public class YlybcxServiceImpl implements YlybcxService {
         }
 
         return R.ok().put("num",num);
+    }
+
+    @Override
+    @Transactional
+    public R updateJcjg(Ylybcx ylybcx) {
+
+        //个人id
+        List<JcjgVo>  grids = ylybcx.getJcjgs();
+        //检查结果id
+        String[] jcids = ylybcx.getFormIds();
+        //查询检查结果中文
+        List<String> mxmcs = jcjgMapper.queryMXMC(jcids);
+        StringBuilder jcjgName = new StringBuilder();
+        for (String mxmc:mxmcs ) {
+            jcjgName.append(mxmc).append(",");
+        }
+        //备注
+        String memo = ylybcx.getMemo();
+
+        List<Jcjg> addBatch = new ArrayList<>();
+
+        for (JcjgVo jcjg:grids) {
+            Jcjg addJcjg = new Jcjg();
+            addJcjg.setJcid(jcjg.getJcid());
+            addJcjg.setCxjc("true");
+            //重新检查前端页面使用
+            addJcjg.setCxxm("2");
+            addJcjg.setCxjcr("重新当前登录人");
+            addJcjg.setCxjcrq(new Date());
+            addJcjg.setCxjcjg(jcjgName.toString());
+            addJcjg.setCxmemo(memo);
+            addBatch.add(addJcjg);
+        }
+
+//        int num = 0;
+//        if(addBatch.size() > 0){
+//            num = jcjgMapper.updateJcjgBatch(addBatch);
+//        }
+        if(addBatch.size() > 0){
+           jcjgMapper.updateJcjgBatch(addBatch);
+        }
+        return R.ok();
     }
 
     private void setJcjg(StringBuilder jcjgName, String memo, Jcjg addJcjg) {
@@ -212,11 +255,11 @@ public class YlybcxServiceImpl implements YlybcxService {
 
     @Override
     public R getGRDetailInfo(Ylybcx grDetailInfo) {
-        List<Grxx> grDetailList = ylYbCxMapper.getGRDetailInfo(grDetailInfo);
+        List<Ylybcx> grDetailList = ylYbCxMapper.getGRDetailInfo(grDetailInfo);
         if(grDetailList.size() > 0){
             return R.ok().put("data",grDetailList.get(0));
         }
-        return R.ok();
+        return R.ok().put("data",new Ylybcx());
     }
 
     @Override

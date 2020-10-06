@@ -113,4 +113,77 @@
         </foreach>
     </insert>
 
+
+    <update id="updateJcjgBatch" parameterType="java.util.List">
+        <foreach collection="list" item="temp" index="index" open="begin" close=";end;" separator=";">
+            update JC_JG
+            <set>
+                <if test="temp.ywxh != null">
+                    YWXH = #{temp.ywxh,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcr != null">
+                    JCR = #{temp.jcr,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcrq != null">
+                    JCRQ = #{temp.jcrq,jdbcType=DATE},
+                </if>
+                <if test="temp.jcjg != null">
+                    JCJG = #{temp.jcjg,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.memo != null">
+                    MEMO = #{temp.memo,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.xm != null">
+                    XM = #{temp.xm,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.cxjc != null">
+                    CXJC = #{temp.cxjc,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.mkdm != null">
+                    MKDM = #{temp.mkdm,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.mkmc != null">
+                    MKMC = #{temp.mkmc,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.grid != null">
+                    GRID = #{temp.grid,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcshr != null">
+                    JCSHR = #{temp.jcshr,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcshrq != null">
+                    JCSHRQ = TO_TIMESTAMP(to_char(#{temp.jcshrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6'),
+                </if>
+                <if test="temp.jcsh != null">
+                    JCSH = #{temp.jcsh,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcshjg != null">
+                    JCSHJG = #{temp.jcshjg,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.jcshbz != null">
+                    JCSHBZ = #{temp.jcshbz,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.cxjcjg != null">
+                    CXJCJG = #{temp.cxjcjg,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.cxxm != null">
+                    CXXM = #{temp.cxxm,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.cxjcrq != null">
+                    CXJCRQ = TO_TIMESTAMP(to_char(#{temp.cxjcrq},'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS.FF6'),
+                </if>
+                <if test="temp.cxjcr != null">
+                    CXJCR = #{temp.cxjcr,jdbcType=VARCHAR},
+                </if>
+                <if test="temp.cxmemo != null">
+                    CXMEMO = #{temp.cxmemo,jdbcType=VARCHAR}
+                </if>
+
+            </set>
+            <where>
+                 JCID=#{temp.jcid,jdbcType=VARCHAR}
+            </where>
+        </foreach>
+    </update>
+
 </mapper>

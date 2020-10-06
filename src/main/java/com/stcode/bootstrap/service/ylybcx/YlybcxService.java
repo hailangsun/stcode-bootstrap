@@ -30,6 +30,13 @@ public interface YlybcxService {
     R insertJcjg(Ylybcx ylybcx);
 
     /**
+     * 更新检查结果
+     * @param ylybcx
+     * @return
+     */
+    R updateJcjg(Ylybcx ylybcx);
+
+    /**
      * 全部检查
      * @param query
      * @return

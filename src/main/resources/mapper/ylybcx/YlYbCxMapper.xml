@@ -109,21 +109,35 @@
   </select>
 
 
-    <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Grxx" parameterType="com.stcode.bootstrap.model.Ylybcx">
-        SELECT
-            max(a.GRID) GRID,max(a.DWID) DWID,max(a.XM) GRNAME,max(a.BZHM) BZHM,max(a.BXH) BXH,max(a.GRSF) GRSF,max(b.FFDD) FFDD,max(c.DWMC) DWMC
-        FROM
-        GR_XX a
-        LEFT JOIN GR_YLZF_YMX 	b ON a.GRID = b.GRID
-        LEFT JOIN DW_XX				c ON a.DWID = c.DWID
-        WHERE
-        b.JBR <![CDATA[ <> ]]> 'sys' AND
-        a.GRID = #{grid,jdbcType=VARCHAR}
-        <if test="dwid != null and dwid != ''">
-            and a.DWID = #{dwid,jdbcType=VARCHAR}
-        </if>
-        GROUP BY
-        a.GRID,a.DWID,a.XM ,a.BZHM,a.BXH,a.GRSF,b.FFDD,c.DWMC
+    <select id="getGRDetailInfo" resultType="com.stcode.bootstrap.model.Ylybcx" parameterType="com.stcode.bootstrap.model.Ylybcx">
+       select
+        MAX(a.GRID)GRID,
+        MAX(a.DWID)DWID,
+        MAX(c.DWDM)DWDM,
+        MAX(c.DWMC)DWMC,
+        MAX(d.XM) grname,
+        MAX(d.BZHM)BZHM,
+        MAX(d.BXH)BXH,
+        MAX(d.GRSF)GRSF,
+        MAX(a.FFDD)FFDD,
+        sum(b.YLJ1)YLJ1,
+        sum(a.ZFZH)ZFZH,
+        sum(a.ZFBC)ZFBC,
+        sum(a.ZFJE)ZFJE,
+        sum(b.YLJ1)YLJ1,
+        sum(b.YLJ3)YLJ3,
+        sum(b.YLJ2)YLJ2,
+        sum(a.ZFQN)ZFQN,
+        sum(a.ZFHL)ZFHL,
+        sum(a.ZFAZ)ZFAZ,
+        sum(a.ZFPC)ZFPC,
+        sum(a.ZFJJ)ZFJJ
+
+    FROM GR_YLZF_BZMX a
+    LEFT JOIN GR_YLZF_YMX b 	    on a.GRID = b.GRID
+    LEFT JOIN DW_XX c 				on a.DWID = c.DWID
+    LEFT JOIN GR_XX d				on a.GRID = d.GRID
+    WHERE a.JBR <![CDATA[ <> ]]> 'sys' and a.GRID = #{grid,jdbcType=VARCHAR}
 
 
     </select>

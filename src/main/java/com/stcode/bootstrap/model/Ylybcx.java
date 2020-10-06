@@ -95,6 +95,12 @@ public class Ylybcx {
     private String mainlimit;
 
     /**
+     * 二级页面细单导出用
+     */
+    private String detailoffset;
+    private String detaillimit;
+
+    /**
      * 职工养老月报外支付人员明细
      */
     private String grid;
@@ -168,5 +174,35 @@ public class Ylybcx {
     List<JcjgVo> jcjgs;
     //是否全部检查，用于判断是本页检查还是全部检查
     private String checkFlag;
+
+    /**
+     * 三级页面字段
+     */
+    //电脑序号
+    private String bxh;
+    //人员身份[0206]
+    private String grsf;
+    //离退休金
+    private String ylj1;
+    //一次性支付个人账户
+    private String zfzh;
+    //一次性支付补偿金
+    private String zfbc;
+    //丧葬抚恤补助 【附言0109】
+    //补支基础性养老金[附言0102]
+    //补支过渡性养老金
+    private String ylj3;
+    //补支个人账户
+    private String ylj2;
+    //取暖补贴[附言0106]
+    private String zfqn;
+    //护理费
+    private String zfhl;
+    //异地安置费
+    private String zfaz;
+    //破产企业统筹外负担
+    private String zfpc;
+    //救济金
+    private String zfjj;
 
 }

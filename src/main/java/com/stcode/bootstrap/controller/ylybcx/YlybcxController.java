@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.stcode.bootstrap.common.BigDecimalUtils;
 import com.stcode.bootstrap.commonquery.ylybcx.YlybcxQuery;
 import com.stcode.bootstrap.domain.DmMx;
+import com.stcode.bootstrap.export.ylybcx.YlybcxDetailExport;
 import com.stcode.bootstrap.export.ylybcx.YlybcxExport;
 import com.stcode.bootstrap.mapper.DmMxMapper;
 import com.stcode.bootstrap.model.Ylybcx;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -37,6 +39,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/ylybcx")
 public class YlybcxController  {
+
+    private static String prePath = "\\src\\main\\java\\com\\stcode\\bootstrap\\exceltemplate\\yldetail.xlsx";
 
     @Resource
     private DmMxMapper dmMxMapper;
@@ -111,6 +115,16 @@ public class YlybcxController  {
         return ylybcxService.insertJcjg(insertJcjg);
     }
 
+    /**
+     * 二级页面 重新检查
+     * @param updateJcjg
+     * @return
+     */
+    @RequestMapping(value = "updateJcjg", method = RequestMethod.POST)
+    @ResponseBody
+    public R updateJcjg(@RequestBody Ylybcx updateJcjg) {
+        return ylybcxService.updateJcjg(updateJcjg);
+    }
 
     /**
      * 全部检查
@@ -159,17 +173,8 @@ public class YlybcxController  {
 
     //导出
     @RequestMapping(value = "/download")
-    public void test(HttpServletResponse response, HttpServletRequest request) throws IOException {
-        Map<String,String> parmMap=new HashMap<String,String>();
-        Enumeration<String> all = request.getParameterNames();
-        String name  = "";
-        String value = "";
-        while(all.hasMoreElements()){
-            name = all.nextElement();
-            value = request.getParameter(name);
-            parmMap.put(name, value);
-        }
-        Ylybcx ylybcx = JSON.parseObject(JSON.toJSONString(parmMap),Ylybcx.class);
+    public void download(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        Ylybcx ylybcx = getYlybcxParms(request);
         if("2".equals(ylybcx.getIsAllExprot())){
             ylybcx.setLimit(String.valueOf(Integer.MAX_VALUE));
             ylybcx.setOffset("0");
@@ -181,13 +186,40 @@ public class YlybcxController  {
         EasyExcel.write(response.getOutputStream(), YlybcxExport.class).registerWriteHandler(horizontalCellStyleStrategy).sheet("职工养老月报外支付查询").doWrite(data(ylybcx));
     }
 
+    //二级页面导出
+    @RequestMapping(value = "/detaildownload")
+    public void detaildownload(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        Ylybcx ylybcx = getYlybcxParms(request);
+        if("2".equals(ylybcx.getIsAllExprot())){
+            ylybcx.setLimit(String.valueOf(Integer.MAX_VALUE));
+            ylybcx.setOffset("0");
+        }else {
+            ylybcx.setLimit(ylybcx.getDetaillimit());
+            ylybcx.setOffset(ylybcx.getDetailoffset());
+        }
+        HorizontalCellStyleStrategy horizontalCellStyleStrategy = getExportCommon(response,"职工养老月报外支付人员明细");
+        EasyExcel.write(response.getOutputStream(), YlybcxDetailExport.class).registerWriteHandler(horizontalCellStyleStrategy).sheet("职工养老月报外支付人员明细").doWrite(detailData(ylybcx));
+    }
+
+
+
+    private Ylybcx getYlybcxParms(HttpServletRequest request) {
+        Map<String,String> parmMap=new HashMap<String,String>();
+        Enumeration<String> all = request.getParameterNames();
+        String name  = "";
+        String value = "";
+        while(all.hasMoreElements()){
+            name = all.nextElement();
+            value = request.getParameter(name);
+            parmMap.put(name, value);
+        }
+        Ylybcx ylybcx = JSON.parseObject(JSON.toJSONString(parmMap),Ylybcx.class);
+        return ylybcx;
+    }
+
 
     private HorizontalCellStyleStrategy getExportCommon(HttpServletResponse response,String excelName) throws UnsupportedEncodingException {
-        response.setContentType("application/vnd.ms-excel");
-        response.setCharacterEncoding("utf-8");
-        String fileName = URLEncoder.encode(excelName, "UTF-8");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-
+        setResponseHeader(response,excelName);
         // 头的策略
         WriteCellStyle headWriteCellStyle = new WriteCellStyle();
         // 背景设置为红色
@@ -236,4 +268,51 @@ public class YlybcxController  {
         }
         return list;
     }
+
+    private List<YlybcxDetailExport> detailData(Ylybcx data) {
+        List<YlybcxDetailExport> list = new ArrayList<YlybcxDetailExport>();
+        List<Ylybcx> ylList = (List<Ylybcx>) ylybcxService.getYlybzfDetail(data).get("rows");
+        for (Ylybcx ylybcx: ylList) {
+            YlybcxDetailExport yl = new YlybcxDetailExport();
+            BeanUtils.copyProperties(ylybcx, yl);
+            list.add(yl);
+        }
+        if(ylList.size() > 0){
+            YlybcxDetailExport total = new YlybcxDetailExport();
+            total.setDwdm("总合计金额");
+            total.setGrname(ylList.get(0).getDetailTotal());
+            total.setJbr("本页合计金额");
+            total.setZfje(ylList.get(0).getCurrentDetailTotal());
+            list.add(total);
+        }
+        return list;
+    }
+
+    private void setResponseHeader(HttpServletResponse response,String excelName)throws UnsupportedEncodingException{
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode(excelName, "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+    }
+
+    /**
+     * 三级页面导出
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("grdetaildownload")
+    public void download(HttpServletResponse response,String grid) throws IOException {
+        String getPath =  Class.class.getClass().getResource("/").getPath().replaceFirst("/", "");
+        String[] splitPath = getPath.split("/");
+        String path = splitPath[0] +  File.separator +  splitPath[1] + File.separator +splitPath[2];
+
+        String templateFileName =  path+prePath;
+        Ylybcx query = new Ylybcx();
+        query.setGrid(grid);
+        Ylybcx data = (Ylybcx) ylybcxService.getGRDetailInfo(query).get("data");
+
+        setResponseHeader(response, "养老月报外支付人员详细情况");
+        EasyExcel.write(response.getOutputStream(),Ylybcx.class).withTemplate(templateFileName).sheet().doFill(data);
+    }
+
 }
