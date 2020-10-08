@@ -7,13 +7,13 @@ $(function(){
         _grkszc.mainDataGrid();
     });
 
+
     //点击检查
     $("#check-btn").click(function () {
-        checkflag = '2';
         //判断是否有值
         var isRows = $('#mainDataGrid').bootstrapTable('getData',false);
         if(isRows.length <= 0){
-            bootbox.alert("没有可选择的记录!");
+            bootbox.alert("没有检查记录!");
             return;
         }
 
@@ -22,43 +22,45 @@ $(function(){
             bootbox.confirm("是否对本次查询结果中【未检查】记录全部检查?",
                 function(result) {
                     if (result) {
-                        $("#grkszcDetailCheck").modal('show');
+                        // 查询检查项 modalID:模态框ID,formID表单id,isCheck:检查和从新检查标记
+                        getCheckResultTable("grkszcDetailCheck","grkszcDetailForm","/grkszc/checkResultTable",1);
                     }
                 });
         }else {
-            $("#grkszcDetailCheck").modal('show');
+            if(alreadyCheck(rows)){
+                getCheckResultTable("grkszcDetailCheck","grkszcDetailForm","/grkszc/checkResultTable",2);
+            }
+        }
+    });
+
+    //点击重新检查
+    $("#restart-check-btn").click(function () {
+        if(cxcheck()){
+            getCheckResultTable("grkszcDetailCheck","grkszcDetailForm","/grkszc/checkResultTable",3);
         }
     });
 
 
     //检查确定
     $("#check-enter-btn").click(function () {
-        //重新检查
-        if(checkflag == '1'){
-            var params = checkCommon("grkszcDetailForm");
-            $.ajax({
-                type: "post",
-                contentType:"application/json;charset=utf-8",
-                dataType: "json",
-                url: "/grkszc/restartCheckJcjg",
-                data: params,
-                success: function(msg){
-                    if (msg.code == 0) {
-                        bootbox.alert({
-                            message: "重新检查完成",
-                            size: 'small'
-                        });
-                        //todo 需要清空checkbox
-                        $("#grkszcDetailCheck").modal('hide');
-                        $("#mainDataGrid").bootstrapTable('refresh');
-                    }else {
-                        bootbox.alert(msg.error);
-                    }
-                }
-            });
+        //获取选项检查结果
+        var temp = getOptionCheckResult("grkszcDetailForm");
 
-        }else {//检查
-            var params = checkCommon("grkszcDetailForm");
+        if(checkFlag == 1 || checkFlag == 2){ //检查
+
+            var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+            if(rows.length <= 0){
+                //获取当前全部
+                rows = $('#mainDataGrid').bootstrapTable('getData',false);
+            }
+            if(rows.length <=0){
+                bootbox.alert("没有数据，不能检查！");
+                return false;
+            }
+            var jcjgtemp = getJCJGS(rows);
+            var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+            params =(JSON.stringify($("#mainform").serializeJSON()) + params).replace(/}{/, ',');
+
             $.ajax({
                 type: "post",
                 contentType:"application/json;charset=utf-8",
@@ -67,11 +69,37 @@ $(function(){
                 data: params,
                 success: function(msg){
                     if (msg.code == 0) {
+                        $("#grkszcDetailCheck").modal('hide');
                         bootbox.alert({
-                            message: "检查完成",
+                            message: "检查完成,成功检查【"+msg.num+"】条。",
                             size: 'small'
                         });
-                        //todo 需要清空checkbox
+                        $("#mainDataGrid").bootstrapTable('refresh');
+                    }else {
+                        bootbox.alert(msg.error);
+                    }
+                }
+            });
+
+
+        }else {//重新检查
+
+            var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+            var jcjgtemp = getJCJGS(rows);
+            var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+
+            $.ajax({
+                type: "post",
+                contentType:"application/json;charset=utf-8",
+                dataType: "json",
+                url: "/grkszc/updateJcjg",
+                data: params,
+                success: function(msg){
+                    if (msg.code == 0) {
+                        bootbox.alert({
+                            message: "重新检查完成",
+                            size: 'small'
+                        });
                         $("#grkszcDetailCheck").modal('hide');
                         $("#mainDataGrid").bootstrapTable('refresh');
                     }else {
@@ -85,26 +113,24 @@ $(function(){
 
     });
 
-    //重新检查restart-check-btn
-    $("#restart-check-btn").click(function(){
-        checkflag = 1;
-        // todo 清空form表单 按照以前方式写
-        //值区分重新检查和检查审核 1重新检查 2检查审核
-        if(checkAndExamine("1")) {
-            $("#grkszcDetailCheck").modal('show');
-        }
-    });
 
     //检查审核
     $("#examine-btn").click(function(){
-        if(checkAndExamine("2")){
-            getCheckResultTable("examine-modal","examineModalForm","/grkszc/getjcshTable");
+        if(cxcheck()){
+            getCheckResultTable("examine-modal","examineModalForm","/grkszc/getjcshTable",4);
         }
+
     });
 
     //审核检查确定
     $("#examine-enter-btn").click(function(){
-        var params = checkCommon("examineModalForm");
+        //获取选项检查结果
+        var temp = getOptionCheckResult("examineModalForm");
+
+        var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+        var jcjgtemp = getJCJGS(rows);
+        var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+
         $.ajax({
             type: "post",
             contentType:"application/json;charset=utf-8",
@@ -117,7 +143,6 @@ $(function(){
                         message: "检查审核完成",
                         size: 'small'
                     });
-                    //todo 需要清空checkbox
                     $("#examine-modal").modal('hide');
                     $("#mainDataGrid").bootstrapTable('refresh');
                 }else {
@@ -127,72 +152,16 @@ $(function(){
         });
     });
 
+    //设置下拉框宽度
+    $("#dbjg").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
 
 });
-//检查和重新检查标记
-var checkflag = '0';
 
-//提取检查和检查审核通用效验
-function checkAndExamine(value) {
-    //1、选择含有未检查的给予提示
-    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
-    if(rows.length <= 0){
-        bootbox.alert("请选择已检查的记录");
-        return false;
-    }
-    var flag = false;
-    //2、选有检查过的，按钮可用
-    $.each(rows,function(index,item){
-        if(item.jc == "false" || item.jc == null){
-            flag =true;
-            return false;
-        }
-    });
-    if(flag){
-        flag = false;
-        bootbox.alert("您选择的记录包含未检查的记录，不能重新对未检查记录进行操作！");
-        return false;
-    }
-    return true;
-}
-
-//检查和重新检查共用
-function checkCommon(jqueryId) {
-    var formIds         = new Array();
-    var jcjgs           = new Array();
-    var memo;
-    //取提交的
-    // var formdata    =  $("#grkszcDetailForm").serializeArray();
-    var formdata    =  $("#"+jqueryId).serializeArray();
-    $.each(formdata,function(index,item){
-        if(item.name == "memo"){
-            memo = item.value;
-        } else {
-            formIds.push(item.value)
-        }
-    });
-    //获取选择的记录
-    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
-    if(rows.length > 0){
-        rows =  $("#mainDataGrid").bootstrapTable('getSelections');
-    }else {
-        //获取当前全部
-        rows = $('#mainDataGrid').bootstrapTable('getData',false);
-    }
-
-    for(var i=0;i<rows.length;i++){
-        var jcjg = {};
-        jcjg.grid = rows[i].grid;
-        jcjg.dwid = rows[i].dwid;
-        if(!_grkszc.isNull(rows[i].jcid)){
-            jcjg.jcid = rows[i].jcid;
-        }
-        jcjgs.push(jcjg);
-    }
-    var params = JSON.stringify({formIds:formIds,memo:memo,jcjgs:jcjgs});
-    return params;
-}
-
+//全局变量 1:检查,全部检查，2:检查，本页检查，3:重新检查，
+var checkFlag     = 0;
 
 //参保人员基本信息
 function grPayDetail(value , record , index) {
@@ -229,8 +198,9 @@ $.fn.setForm = function(jsonValue){
 
 
 
-// 查询检查项 modalID:模态框ID,formID表单id,
-function getCheckResultTable(modalID,formID,url){
+// 查询检查项 modalID:模态框ID,formID表单id,isCheck:检查和从新检查标记
+function getCheckResultTable(modalID,formID,url,isCheck){
+    checkFlag = isCheck;
     $.ajax({
         type: "post",
         url: url,
@@ -250,6 +220,92 @@ function getCheckResultTable(modalID,formID,url){
         }
     });
 
+}
+
+//检查前判断
+function alreadyCheck() {
+    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择要检查的记录!");
+        return false;
+    }
+
+    var flag = false;
+    //1、看是否已经检查了
+    $.each(rows,function(index,item){
+        if(item.jc == "true"){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录是已经检查的!");
+        return false;
+    }
+    return true;
+}
+
+//获取选择检查结果
+function getOptionCheckResult(id){
+    var formIds         = new Array();
+    var memo;
+    //取提交的
+    var formdata    =  $("#"+id).serializeArray();
+    $.each(formdata,function(index,item){
+        if(item.name == "memo"){
+            memo = item.value;
+        } else {
+            formIds.push(item.value)
+        }
+    });
+
+    var result = {
+        "formIds":formIds,
+        "memo":memo
+    }
+    return result;
+}
+
+function getJCJGS(rows){
+    //存放jcjg集合
+    var jcjgs           = new Array();
+    for(var i=0;i<rows.length;i++){
+        var jcjg = {};
+        jcjg.grid = rows[i].grid;
+        jcjg.dwid = rows[i].dwid;
+        jcjg.jcid = rows[i].jcid;
+        jcjgs.push(jcjg);
+    }
+
+    var result = {
+        "jcjgs":jcjgs
+    }
+    return result;
+}
+
+//重新检查验证
+function cxcheck() {
+    //1、选择含有未检查的给予提示
+    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择已检查的记录");
+        return false;
+    }
+    var flag = false;
+    //2、选有检查过的，按钮可用
+    $.each(rows,function(index,item){
+        if(item.jc == "false" || item.jc == null){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录包含未检查的记录！");
+        return false;
+    }
+    return true;
 }
 
 
@@ -328,34 +384,34 @@ _grkszc = {
                 [{checkbox: true,colspan: 1, rowspan: 2},
                     {title: 'grid', field: 'grid', visible: false, colspan: 1, rowspan: 2},
                     {title: 'jcid', field: 'jcid', visible: false, colspan: 1, rowspan: 2},
-                    {title: '序号', align: 'center', valign: 'middle', width: 100, sortable: true,colspan: 1, rowspan: 2,
+                    {title: '序号', align: 'center', valign: 'middle', width: 100, colspan: 1, rowspan: 2,
                         formatter: function(value, row, index) {
                             var pageSize    = $('#mainDataGrid').bootstrapTable('getOptions').pageSize;
                             var pageNumber  = $('#mainDataGrid').bootstrapTable('getOptions').pageNumber;
                             return pageSize * (pageNumber - 1) + index + 1;
                         }
                     },
-                    {title: '统一社区信用代码',    field: 'dwdm',         align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '单位名称',            field: 'dwmc',         align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '社会保障号码',        field: 'bzhm',         align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '姓名',                field: 'grname',       align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '性别',                field: 'xb',           align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '账户类型',            field: 'zhlb',         align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '转出地(原参保地址)',   field: 'zcsbmc',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '转入地(新参保地)',     field: 'zrsbmc',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '统一社区信用代码',    field: 'dwdm',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '单位名称',            field: 'dwmc',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '社会保障号码',        field: 'bzhm',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '姓名',                field: 'grname',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '性别',                field: 'xb',           align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '账户类型',            field: 'zhlb',         align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '转出地(原参保地址)',   field: 'zcsbmc',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '转入地(新参保地)',     field: 'zrsbmc',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '缴费凭证',             field: 'jfpz',        align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1, width: 100},
                     {title: '联系函',               field: 'lxh',         align: 'center',    valign: 'middle',  colspan: 2, rowspan: 1, width: 100},
                     {title: '信息表',               field: 'xxb',         align: 'center',    valign: 'middle',  colspan: 3, rowspan: 1, width: 100},
                     {title: '养老资金财务支付情况',  field: 'ylzjzfqk',    align: 'center',    valign: 'middle',  colspan: 5, rowspan: 1, width: 100},
-                    {title: '检查人',               field: 'jcr',          align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查人',               field: 'jcr',          align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查日期',             field: 'jcrq',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查',                 field: 'jc',          align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100,formatter: formatIsJC},
-                    {title: '重新检查',             field: 'cxjc',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100,formatter: formatIsCXJC},
-                    {title: '备注',                 field: 'memo',        align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核人',           field: 'jcshr',       align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查',                 field: 'jc',          align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100,formatter: formatIsJC},
+                    {title: '重新检查',             field: 'cxjc',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100,formatter: formatIsCXJC},
+                    {title: '备注',                 field: 'memo',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核人',           field: 'jcshr',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核日期',         field: 'jcshrq',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核',             field: 'jcsh',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核结果',         field: 'jcshjg',      align: 'center',    valign: 'middle', sortable: true, colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核',             field: 'jcsh',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核结果',         field: 'jcshjg',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
 
                 ],
                 [

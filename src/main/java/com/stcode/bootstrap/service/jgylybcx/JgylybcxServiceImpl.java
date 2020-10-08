@@ -153,8 +153,9 @@ public class JgylybcxServiceImpl implements JgylybcxService {
             addJcjg.setJcid(jcjg.getJcid());
             addJcjg.setJcshr("审核登录人");
             addJcjg.setJcshrq(new Date());
-            addJcjg.setJcsh(query.getShjg());
-            addJcjg.setJcshjg(query.getShyj());
+            addJcjg.setJcsh("true");
+            addJcjg.setJcshjg(query.getShjg());
+            addJcjg.setJcshbz(query.getShyj());
             addBatch.add(addJcjg);
         }
 

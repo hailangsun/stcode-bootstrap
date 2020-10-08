@@ -2,6 +2,7 @@ package com.stcode.bootstrap.mapper.grkszc;
 
 import com.stcode.bootstrap.model.Grkszc;
 import com.stcode.bootstrap.model.Grxx;
+import com.stcode.bootstrap.model.Jgylybcx;
 import com.stcode.bootstrap.model.Ylybcx;
 
 import java.util.List;
@@ -41,5 +42,14 @@ public interface GrkszcMapper {
      * @return
      */
     List<Grkszc> getSearchXxb(Grkszc grkszc);
+
+
+    /**
+     * 获取全部没有检查的
+     * @param query
+     * @return
+     */
+    List<Grkszc> getNoAllcheck(Grkszc query);
+
 
 }

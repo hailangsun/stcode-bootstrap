@@ -28,9 +28,9 @@ public class Grkszc {
     //公民身份证号码 -> 社会保障号码 ->GR_XX
     private String bzhm;
     //日期起
-    private String dateFrom;
+    private String datefrom;
     //日期止
-    private String dateTo;
+    private String dateto;
     //转入地行政区划代码 -> 转入地行政区划 -> GR_JFPZ_LXH
     private String zrxzqh;
     //转出地行政区划代码 -> 转出地行政区划 -> GR_JFPZ_LXH
@@ -230,5 +230,9 @@ public class Grkszc {
     private String zbnmljzhje;
     //至本年末账户累计存储额 个人缴费
     private String zbnmljgrjf;
+
+
+    //是否全部检查，用于判断是本页检查还是全部检查
+    private String checkFlag;
 
 }

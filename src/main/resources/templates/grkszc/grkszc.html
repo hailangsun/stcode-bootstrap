@@ -15,12 +15,19 @@
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+
+    <!-- 是否抽出公共方法   -->
+    <script type="application/javascript" th:src="@{/js/hogan/hogan.js}"></script>
+    <script type="application/javascript" th:src="@{/js/common/common.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/mm.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/temp.js}"></script>
+    <script type="application/javascript" th:src="@{/js/service/common/commonService.js}"></script>
+    <!--  公共方法  -->
+    <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+
     <script type="application/javascript" th:src="@{/js/grkszc/grkszc.js}"></script>
 
     <style>
-        label {
-            text-align: right;
-        }
 
         #hoverspan:hover{
             font-weight:bold;
@@ -31,6 +38,23 @@
             width: 150px;
             padding-right: 10px;
             font-weight: bold;
+        }
+
+        .datecss{
+            border-radius: 4px;
+            width: 250px !important;
+        }
+        .mylabelcss{
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+        }
+
+        .myinputcss{
+            width: 250px !important;
+        }
+        .alignCSS{
+            text-align: center;
         }
 
     </style>
@@ -46,106 +70,84 @@
 
         <div class="panel-body" style="width: auto">
 
-            <div class="row">
-                <!-- r1 -->
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
-                        <div class="col-md-8">
-                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
-                                <option th:value="0">请选择</option>
-                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">经(代)办机构</label>
+                        <select class="selectpicker" name="dbjg" id="dbjg" multiple>
+                            <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                        </select>
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">统一社会信用代码</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="xydm"/>
-                        </div>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">单位名称</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="dwmc"/>
-                            <span class="help-block"></span>
-                        </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss" >统一社会信用代码</label>
+                        <input class="form-control myinputcss" type="text" name="dwdm"/>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">社会保障号码</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="jgname"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label  class="col-md-4 control-label">办理日期起</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="date" name="dateFrom" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">转入地行政区划</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="bzjgdy"/>
-                            <span class="help-block"></span>
-                        </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">单位名称</label>
+                        <input class="form-control  myinputcss" type="text" name="dwmc"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">姓名</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="grname"/>
-                        </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">社会保障号码</label>
+                        <input class="form-control  myinputcss" type="text" name="bzhm"/>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label  class="col-md-4 control-label">办理日期止</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="date" name="dateTo" />
-                        </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label  class="control-label mylabelcss">办理日期起</label>
+                        <input class="form-control myinputcss" type="date" name="datefrom" id="datefrom"/>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">转出地行政区划</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="bzjgdy"/>
-                            <span class="help-block"></span>
-                        </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">转入地行政区划</label>
+                        <input class="form-control myinputcss" type="text" name="bzjgdy"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
             </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">姓名</label>
+                        <input class="form-control  myinputcss" type="text" name="grname"/>
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label  class="control-label mylabelcss">办理日期止</label>
+                        <input class="form-control myinputcss" type="date" name="dateto" />
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">转出地行政区划</label>
+                        <input class="form-control myinputcss" type="text" name="bzjgdy"/>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label  mylabelcss" >检查类型</label>
+                        <select class="form-control myinputcss" name="jclx" id="jclx">
+                            <option value="0">请选择</option>
+                            <option value="1">已检查</option>
+                            <option value="2">未检查</option>
+                        </select>
+                        <span class="help-block"></span>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >检查类型</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="jbr" id="jbr"></select>
-                            <span class="help-block"></span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -163,7 +165,9 @@
 
 <!--主页table-->
 <div class="panel-body" id="queryResult">
-    <table id="mainDataGrid" class="table table-hover"></table>
+    <div class="table-responsive">
+        <table id="mainDataGrid" class="table text-nowrap"></table>
+    </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" id="check-btn" >检查</button>
@@ -270,7 +274,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -347,7 +351,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -421,20 +425,20 @@
                                         <td colspan="8" style="text-align: center; font-weight: bold;">养老保险基金转移信息</td>
                                     </tr>
                                     <tr>
-                                        <td class="myfieldClass" colspan="2">1998年1月1日前账户中个人缴费累计存储额1</td>
-                                        <td class="myfieldClass" colspan="2">1998年1月1日至调转上年末个人账户累计存储存额2</td>
-                                        <td class="myfieldClass">调转当年计入个人账户本金金额3</td>
-                                        <td class="myfieldClass">个人账户基金转移额4</td>
-                                        <td class="myfieldClass">统筹基金转移额5</td>
-                                        <td class="myfieldClass">转移基金总额6</td>
+                                        <td class="myfieldClass alignCSS" colspan="2">1998年1月1日前账户中个人缴费累计存储额</br>1</td>
+                                        <td class="myfieldClass alignCSS" colspan="2">1998年1月1日至调转上年末个人账户累计存储存额</br>2</td>
+                                        <td class="myfieldClass alignCSS">调转当年计入个人账户本金金额</br>3</td>
+                                        <td class="myfieldClass alignCSS">个人账户基金转移额</br>4</td>
+                                        <td class="myfieldClass alignCSS">统筹基金转移额</br>5</td>
+                                        <td class="myfieldClass alignCSS">转移基金总额</br>6</td>
                                     </tr>
                                     <tr>
-                                        <td width="150px" colspan="2"><span name="grjf_98q"></span></td>
-                                        <td width="150px" colspan="2"><span name="grzh_98h"></span></td>
-                                        <td width="150px"><span name="dngrzhbj"></span></td>
-                                        <td width="150px"><span name="grzhzyze"></span></td>
-                                        <td width="150px"><span name="tcjjzyze"></span></td>
-                                        <td width="150px"><span name="zyjjze"></span></td>
+                                        <td class="alignCSS" width="150px" colspan="2"><span name="grjf_98q"></span></td>
+                                        <td class="alignCSS" width="150px" colspan="2"><span name="grzh_98h"></span></td>
+                                        <td class="alignCSS" width="150px"><span name="dngrzhbj"></span></td>
+                                        <td class="alignCSS" width="150px"><span name="grzhzyze"></span></td>
+                                        <td class="alignCSS" width="150px"><span name="tcjjzyze"></span></td>
+                                        <td class="alignCSS" width="150px"><span name="zyjjze"></span></td>
                                     </tr>
                                     <tr height="30">
                                         <td colspan="8" style="text-align: center; font-weight: bold;">历年缴费及个人账户记账信息</td>
@@ -459,7 +463,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -467,7 +471,7 @@
     </div>
 </div>
 
-<!--检查页面or动态 两种方式 需要后续确定是动态还是静态写死 -->
+<!--检查页面 -->
 <div class="modal fade" id="grkszcDetailCheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" style="height: 580px;overflow-x:hidden;overflow-y:auto">
         <div class="modal-content">
@@ -479,21 +483,7 @@
 
                 <form id="grkszcDetailForm">
                     <table class="table table-bordered table-hover" id="grkszcDetailCheckTable">
-                        <tbody>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="one"    value="01"/></div></td><td>通过</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="two"    value="02"/></div></td><td>材料不齐全</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="three"  value="03"/></div></td><td>材料不合规</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="four"   value="04"/></div></td><td>没有复核</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="five"   value="05"/></div></td><td>没有审批</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="six"    value="06"/></div></td><td>表示不规范</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="seven"  value="07"/></div></td><td>制度不完善</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="eigth"  value="08"/></div></td><td>执行政策不到位</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="nine"   value="09"/></div></td><td>其他</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="ten"    value="10"/></div></td><td>经办违规造成基金损失</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="eleven" value="11"/></div></td><td>经办问题未造成资金损失</td></tr>
-                            <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="twelve" value="12"/></div></td><td>未造成资金损失，需要补正材料</td></tr>
-                            <tr><td><div style="text-align: center;margin:auto;">备注</div></td><td><textarea style='resize: none' class="form-control" type="text" name="memo"></textarea></td></tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </form>
             </div>
@@ -519,10 +509,6 @@
                 <form id="examineModalForm">
                     <table class="table table-bordered table-hover" id="examine-modalTable">
                         <tbody>
-<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="one"   value="01"/></div></td><td>通过</td></tr>-->
-<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="thirteen"   value="13" /></div></td><td>不通过</td></tr>-->
-<!--                        <tr><td><div class="checkbox"  style="text-align: center;margin:auto;"><input type="checkbox" name="nine" value="09"/></div></td><td>其他</td></tr>-->
-<!--                        <tr><td><div style="text-align: center;margin:auto;">备注</div></td><td><textarea style='resize: none' class="form-control" type="text" name="memo"></textarea></td></tr>-->
                         </tbody>
                     </table>
                 </form>

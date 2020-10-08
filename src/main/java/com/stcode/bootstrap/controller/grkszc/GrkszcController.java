@@ -44,6 +44,16 @@ public class GrkszcController {
         return map;
     }
 
+    /**
+     * 查询检查对话框
+     */
+    @RequestMapping("/checkResultTable")
+    @ResponseBody
+    public R checkResultTable(){
+        List<DmMx> dmmxList = dmMxMapper.getDmMxListByDmm("10101010");
+        return R.ok().put("data", dmmxList);
+    }
+
     @RequestMapping("index")
     public String index() {
         return "grkszc/grkszc";
@@ -78,9 +88,9 @@ public class GrkszcController {
     /**
      * 检查确定，生成检查结果
      */
-    @RequestMapping(value = "restartCheckJcjg", method = RequestMethod.POST)
+    @RequestMapping(value = "updateJcjg", method = RequestMethod.POST)
     @ResponseBody
-    public R restartCheckJcjg(@RequestBody Grkszc query) {
+    public R updateJcjg(@RequestBody Grkszc query) {
         return grkszcService.restartCheckJcjg(query);
     }
 
@@ -132,7 +142,7 @@ public class GrkszcController {
      */
     @RequestMapping("/getjcshTable")
     @ResponseBody
-    public R checkResultTable(){
+    public R getjcshTable(){
         //存到redis中
         List<DmMx> result = new ArrayList<>(4);
         List<DmMx> dmmxList = dmMxMapper.getDmMxListByDmm("10101010");
