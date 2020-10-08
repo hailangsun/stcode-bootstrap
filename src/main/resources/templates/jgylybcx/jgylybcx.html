@@ -15,6 +15,15 @@
     <script type="application/javascript" th:src="@{/plugins/bootbox/bootbox.locales.min.js}"></script>
     <script type="application/javascript" th:src="@{/plugins/bootstrap-date/bootstrap-datetimepicker.js}"></script>
     <script type="application/javascript" th:src="@{/js/jquery.serializejson.js}"></script>
+    <!-- 是否抽出公共方法   -->
+    <script type="application/javascript" th:src="@{/js/hogan/hogan.js}"></script>
+    <script type="application/javascript" th:src="@{/js/common/common.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/mm.js}"></script>
+    <script type="application/javascript" th:src="@{/js/util/temp.js}"></script>
+    <script type="application/javascript" th:src="@{/js/service/common/commonService.js}"></script>
+    <!--  公共方法  -->
+    <script type="application/javascript" th:src="@{/js/jgjcZcCommon.js}"></script>
+
     <script type="application/javascript" th:src="@{/js/jgylybcx/jgylybcx.js}"></script>
 
     <style>
@@ -132,7 +141,17 @@
                 <div class="col-md-4 column">
                     <div class="form-inline row">
                         <label class="control-label  mylabelcss" >审核状态</label>
-                        <select class="form-control  myinputcss" name="shbz" id="shbz"></select>
+                        <select class="form-control  myinputcss" name="shbz" id="shbz">
+                            <option value="0">请选择</option>
+                            <option value="1">未审核</option>
+                            <option value="2">已审核</option>
+                        </select>
+                        <input  type="hidden" name="mainoffset" id="mainoffset"/>
+                        <input  type="hidden" name="mainlimit"  id="mainlimit"/>
+                        <input  type="hidden" name="detailoffset" id="detailoffset"/>
+                        <input  type="hidden" name="detaillimit" id="detaillimit"/>
+                        <input  type="hidden" name="grid"  id="detailgrid"/>
+                        <input  type="hidden" name="dwid"  id="detaildwid"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -176,10 +195,12 @@
                 <h4 class="modal-title">机关事业养老保险月报外支付明细</h4>
             </div>
             <div class="modal-body">
-                <table id="jgylybzfDetailDataGrid" class="table table-hover"></table>
+                <div class="table-responsive">
+                    <table id="jgylybzfDetailDataGrid" class="table text-nowrap"></table>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" id="detail-export-btn">导出</button>
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -227,7 +248,11 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label  required-label" >审核结果</label>
                             <div class="col-md-10">
-                                <select class="form-control" name="shjg" id="shjg"></select>
+                                <select class="form-control" name="shjg" id="shjg">
+                                    <option value="0">请选择</option>
+                                    <option value="1">通过</option>
+                                    <option value="2">不通过</option>
+                                </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -244,13 +269,34 @@
                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >确定</button>
+                <button type="button" class="btn btn-default" id="sh-enter-btn">确定</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
         </div>
     </div>
 </div>
 
+<!--导出模态框-->
+<div class="modal fade" id="exportModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导出选择对话框</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    请选择【本页导出】、【全部导出】全部导出数据超过1万条时速度慢。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="currentExprot">【本页导出】</button>
+                <button type="button" class="btn btn-default" id="allExprot">【全部导出】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

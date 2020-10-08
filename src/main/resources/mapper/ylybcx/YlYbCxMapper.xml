@@ -105,7 +105,9 @@
     LEFT JOIN GR_XX d	    ON a.GRID = d.GRID
     LEFT JOIN JC_JG e	    ON a.GRID = e.GRID and e.mkdm = '1'
     WHERE a.JBR <![CDATA[ <> ]]> 'sys' and a.DWID = #{dwid,jdbcType=VARCHAR}
-
+      <if test="bzhm != null and bzhm != ''">
+          and d.bzhm = #{bzhm,jdbcType=VARCHAR}
+      </if>
   </select>
 
 

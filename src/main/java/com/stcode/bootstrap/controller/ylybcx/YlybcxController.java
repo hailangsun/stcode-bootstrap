@@ -201,6 +201,25 @@ public class YlybcxController  {
         EasyExcel.write(response.getOutputStream(), YlybcxDetailExport.class).registerWriteHandler(horizontalCellStyleStrategy).sheet("职工养老月报外支付人员明细").doWrite(detailData(ylybcx));
     }
 
+    /**
+     * 三级页面导出
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("grdetaildownload")
+    public void download(HttpServletResponse response,String grid) throws IOException {
+        String getPath =  Class.class.getClass().getResource("/").getPath().replaceFirst("/", "");
+        String[] splitPath = getPath.split("/");
+        String path = splitPath[0] +  File.separator +  splitPath[1] + File.separator +splitPath[2];
+
+        String templateFileName =  path+prePath;
+        Ylybcx query = new Ylybcx();
+        query.setGrid(grid);
+        Ylybcx data = (Ylybcx) ylybcxService.getGRDetailInfo(query).get("data");
+
+        setResponseHeader(response, "养老月报外支付人员详细情况");
+        EasyExcel.write(response.getOutputStream(),Ylybcx.class).withTemplate(templateFileName).sheet().doFill(data);
+    }
 
 
     private Ylybcx getYlybcxParms(HttpServletRequest request) {
@@ -295,24 +314,6 @@ public class YlybcxController  {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
     }
 
-    /**
-     * 三级页面导出
-     * @param response
-     * @throws IOException
-     */
-    @GetMapping("grdetaildownload")
-    public void download(HttpServletResponse response,String grid) throws IOException {
-        String getPath =  Class.class.getClass().getResource("/").getPath().replaceFirst("/", "");
-        String[] splitPath = getPath.split("/");
-        String path = splitPath[0] +  File.separator +  splitPath[1] + File.separator +splitPath[2];
 
-        String templateFileName =  path+prePath;
-        Ylybcx query = new Ylybcx();
-        query.setGrid(grid);
-        Ylybcx data = (Ylybcx) ylybcxService.getGRDetailInfo(query).get("data");
-
-        setResponseHeader(response, "养老月报外支付人员详细情况");
-        EasyExcel.write(response.getOutputStream(),Ylybcx.class).withTemplate(templateFileName).sheet().doFill(data);
-    }
 
 }

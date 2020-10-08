@@ -2,12 +2,14 @@ package com.stcode.bootstrap.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 1.2.22  监督检查-日常检查-机关养老月报外支付查询
- * [Grjgylzf -> 个人机关养老支付]
+ * [Jgylybcx -> 机关养老月报查询]
  */
 @Data
-public class Grjgylzf extends Jcjg{
+public class Jgylybcx extends Jcjg{
     /**
      * 条件查询
      */
@@ -19,9 +21,9 @@ public class Grjgylzf extends Jcjg{
     //统一社会信用代码 [组织机构代码]
     private String dwdm;
     //报表日期起
-    private String hzDateFrom;
+    private String datefrom;
     //报表日期止
-    private String hzDateTo;
+    private String dateto;
     //名称
     private String grname;
     //公民身份证号
@@ -89,6 +91,30 @@ public class Grjgylzf extends Jcjg{
      */
     private String offset;
     private String limit;
+    /**
+     * 主页导出用
+     */
+    private String mainoffset;
+    private String mainlimit;
+    private String detailoffset;
+    private String detaillimit;
+
+    //检查id
+    private String jcid;
+    //接收前台检查信息
+    List<JcjgVo> jcjgs;
+    //是否全部检查，用于判断是本页检查还是全部检查
+    private String checkFlag;
+    //审核意见
+    private String shyj;
+    //审核结果
+    private String shjg;
+    //检查日期
+    private String jcrqtostr;
+    //检查审核日期
+    private String jcshrqtostr;
+    //是否分页导出
+    private String isAllExprot;
 
 
 }
