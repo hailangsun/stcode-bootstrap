@@ -28,9 +28,6 @@
     <script type="application/javascript" th:src="@{/js/grjgzc/grjgzc.js}"></script>
 
     <style>
-        label {
-            text-align: right;
-        }
 
         #hoverspan:hover{
             font-weight:bold;
@@ -44,6 +41,15 @@
         }
         .alignCSS{
             text-align: center;
+        }
+        .mylabelcss{
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+        }
+
+        .myinputcss{
+            width: 250px !important;
         }
 
     </style>
@@ -59,118 +65,101 @@
 
         <div class="panel-body" style="width: auto">
 
-            <div class="row">
-                <!-- r1 -->
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label">经(代)办机构</label>
-                        <div class="col-md-8">
-                            <select class="selectpicker form-control" name="dbjg" id="dbjg" multiple>
-                                <option th:value="0">请选择</option>
-                                <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
-                            </select>
-                        </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">经(代)办机构</label>
+                        <select class="selectpicker" name="dbjg" id="dbjg" multiple>
+                            <option th:each="option : ${DBJG_options.entrySet()}" th:value="${option.key}" th:text="${option.value}"></option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">统一社会信用代码</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="dwdm"/>
-                        </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss" >统一社会信用代码</label>
+                        <input class="form-control myinputcss" type="text" name="dwdm"/>
                     </div>
                 </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">单位名称</label>
+                        <input class="form-control  myinputcss" type="text" name="dwmc"/>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">单位名称</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="dwmc"/>
-                            <span class="help-block"></span>
-                        </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">社会保障号码</label>
+                        <input class="form-control  myinputcss" type="text" name="bzhm"/>
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label  class="control-label mylabelcss">办理日期起</label>
+                        <input class="form-control myinputcss" type="date" name="datefrom" id="datefrom"/>
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">转入地行政区划</label>
+                        <input class="form-control myinputcss" type="text" name="bzjgdy"/>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">姓名</label>
+                        <input class="form-control  myinputcss" type="text" name="grname"/>
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label  class="control-label mylabelcss">办理日期止</label>
+                        <input class="form-control myinputcss" type="date" name="dateto" />
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss">转出地行政区划</label>
+                        <input class="form-control myinputcss" type="text" name="bzjgdy"/>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label  mylabelcss" >检查类型</label>
+                        <select class="form-control myinputcss" name="jclx" id="jclx">
+                            <option value="0">请选择</option>
+                            <option value="1">已检查</option>
+                            <option value="2">未检查</option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="form-inline row">
+                        <label class="control-label mylabelcss" >转出险种</label>
+                        <select class="form-control myinputcss" name="xzlx" id="xzlx"></select>
+                        <input  type="hidden" name="mainoffset" id="mainoffset"/>
+                        <input  type="hidden" name="mainlimit"  id="mainlimit"/>
+                        <span class="help-block"></span>
                     </div>
                 </div>
 
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">社会保障号码</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="bzhm"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label  class="col-md-4 control-label">办理日期起</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="date" name="dateFrom" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">转入地行政区划</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="zrxzqh"/>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">姓名</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="grname"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label  class="col-md-4 control-label">办理日期止</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="date" name="dateTo" />
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">转出地行政区划</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" name="bzjgdy"/>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >检查类型</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="jclx" id="jclx"></select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="col-md-4 control-label  required-label" >转出险种</label>
-                        <div class="col-md-8">
-                            <select class="form-control" name="xzlx" id="xzlx"></select>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" id="query_btn" >查询</button>
@@ -291,7 +280,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -377,7 +366,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -484,7 +473,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -602,7 +591,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -679,7 +668,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+<!--                <button type="button" class="btn btn-default" >导出</button>-->
                 <button type="button" class="btn btn-default" >打印</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
@@ -687,7 +676,77 @@
     </div>
 </div>
 
+<!--检查页面 -->
+<div class="modal fade" id="grjgzcDetailCheck" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="height: 580px;overflow-x:hidden;overflow-y:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查结果</h4>
+            </div>
+            <div class="modal-body">
 
+                <form id="grjgzcDetailForm">
+                    <table class="table table-bordered table-hover" id="grjgzcDetailCheckTable">
+                        <tbody></tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id = "check-enter-btn">【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【取消】</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--检查审核模态框-->
+<div class="modal fade" id="examine-modal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="height: 580px;overflow-x:hidden;overflow-y:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">检查审核结果</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="examineModalForm">
+                    <table class="table table-bordered table-hover" id="examine-modalTable">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id = "examine-enter-btn">【确定】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【取消】</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--导出模态框-->
+<div class="modal fade" id="exportModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导出选择对话框</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    请选择【本页导出】、【全部导出】全部导出数据超过1万条时速度慢。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="currentExprot">【本页导出】</button>
+                <button type="button" class="btn btn-default" id="allExprot">【全部导出】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

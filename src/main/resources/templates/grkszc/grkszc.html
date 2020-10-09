@@ -146,8 +146,9 @@
                             <option value="1">已检查</option>
                             <option value="2">未检查</option>
                         </select>
+                        <input  type="hidden" name="mainoffset" id="mainoffset"/>
+                        <input  type="hidden" name="mainlimit"  id="mainlimit"/>
                         <span class="help-block"></span>
-
                     </div>
                 </div>
             </div>
@@ -521,6 +522,27 @@
     </div>
 </div>
 
+<!--导出模态框-->
+<div class="modal fade" id="exportModal" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导出选择对话框</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    请选择【本页导出】、【全部导出】全部导出数据超过1万条时速度慢。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="currentExprot">【本页导出】</button>
+                <button type="button" class="btn btn-default" id="allExprot">【全部导出】</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">【返回】</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>

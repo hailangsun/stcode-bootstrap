@@ -119,7 +119,6 @@ $(function(){
         if(cxcheck()){
             getCheckResultTable("examine-modal","examineModalForm","/grkszc/getjcshTable",4);
         }
-
     });
 
     //审核检查确定
@@ -152,6 +151,31 @@ $(function(){
         });
     });
 
+    //导出
+    $("#export-btn").on('click', function() {
+        exportflag = 1;
+        //模态框
+        $("#exportModal").modal('show');
+    });
+
+    //本页导出
+    $("#currentExprot").click(function(){
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/grkszc/download","1");
+        }
+        $("#exportModal").modal('hide');
+    });
+
+    //全部导出
+    $("#allExprot").click(function(){
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/grkszc/download","2");
+        }
+        $("#exportModal").modal('hide');
+    });
+
     //设置下拉框宽度
     $("#dbjg").selectpicker({
         "width":250,
@@ -162,6 +186,8 @@ $(function(){
 
 //全局变量 1:检查,全部检查，2:检查，本页检查，3:重新检查，
 var checkFlag     = 0;
+//导出标记 1:一级页面导出，2：二级页面导出
+var exportflag    = 0
 
 //参保人员基本信息
 function grPayDetail(value , record , index) {
@@ -309,6 +335,51 @@ function cxcheck() {
 }
 
 
+function postExcelFile(params, url,isAllExprot) { //params是post请求需要的参数，url是请求url地址
+    var form            = document.createElement("form");
+    form.style.display  = 'none';
+    form.action         = url;
+    form.method         = "post";
+    document.body.appendChild(form);
+
+    if(exportflag == 1){//一级页面导出
+        var moreselet       = "";
+        $.each(params,function(i,item){
+            if(item.name == 'dbjg'){
+                if(!isNull(item.value)){
+                    moreselet+=item.value+",";
+                }
+            }else {
+                var input   = document.createElement("input");
+                input.type  = "hidden";
+                input.name  = item.name;
+                input.value = item.value;
+                form.appendChild(input);
+            }
+
+        });
+        var input   = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = "dbjg";
+        input.value = moreselet;
+        form.appendChild(input);
+    }
+
+
+    //是本页导出还是全部导出
+    if(isAllExprot == "2"){
+        var input   = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = "isAllExprot";
+        input.value = "2";
+        form.appendChild(input);
+    }
+
+    form.submit();
+    form.remove();
+}
+
+
 _grkszc = {
     init: function () {
         this.mainDataGrid();
@@ -373,6 +444,10 @@ _grkszc = {
             cache: false,
             pageList: [5, 25, 50, 100],
             queryParams: function(params) {
+                //导出使用
+                $("#mainoffset").val(params.offset);
+                $("#mainlimit").val(params.limit);
+
                 var formdata    = $("#mainform").serialize();
                 var paging      = formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 return paging;

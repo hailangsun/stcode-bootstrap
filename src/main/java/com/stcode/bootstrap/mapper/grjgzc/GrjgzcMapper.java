@@ -61,5 +61,11 @@ public interface GrjgzcMapper {
      */
     List<Grjgzc> grxxbnjInfo(Grjgzc query);
 
+    /**
+     * 获取全部没有检查的
+     * @param query
+     * @return
+     */
+    List<Grjgzc> getNoAllcheck(Grjgzc query);
 
 }

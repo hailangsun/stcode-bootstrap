@@ -210,9 +210,13 @@ public class YlybcxController  {
     public void download(HttpServletResponse response,String grid) throws IOException {
         String getPath =  Class.class.getClass().getResource("/").getPath().replaceFirst("/", "");
         String[] splitPath = getPath.split("/");
-        String path = splitPath[0] +  File.separator +  splitPath[1] + File.separator +splitPath[2];
+        splitPath = Arrays.copyOf(splitPath, splitPath.length - 2);
+        StringBuilder sb = new StringBuilder();
+        for (String str: splitPath) {
+           sb.append(str).append(File.separator);
+        }
 
-        String templateFileName =  path+prePath;
+        String templateFileName =  sb.toString().substring(0, sb.length() - 1)+prePath;
         Ylybcx query = new Ylybcx();
         query.setGrid(grid);
         Ylybcx data = (Ylybcx) ylybcxService.getGRDetailInfo(query).get("data");

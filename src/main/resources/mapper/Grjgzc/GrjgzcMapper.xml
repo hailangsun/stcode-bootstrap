@@ -6,6 +6,7 @@
        SELECT
             a.GRID,
             a.DWID,
+            j.jcid,
             b.DWDM,
             b.DWMC,
             c.BZHM,
@@ -26,21 +27,54 @@
             a.GRZHZYZE,
             f.sqyzfje,
             g.scrq bpscrq,
-            i.BLRQ hpblrq
+            i.BLRQ hpblrq,
+            j.jcr,
+            TO_CHAR( j.JCRQ, 'yyyy-MM-dd HH24:mi:ss' ) jcrqtostr,
+            j.jc,
+            j.cxjc,
+            j.memo,
+            j.jcshr,
+            TO_CHAR( j.jcshrq, 'yyyy-MM-dd HH24:mi:ss' ) jcshrqtostr,
+            j.jcsh,
+            j.jcshjg
         FROM GR_YLJF_ZYD a
-        LEFT JOIN DW_XX b 						on a.DWID = b.DWID
-        LEFT JOIN GR_XX c 						on a.GRID = c.GRID
-        LEFT JOIN GR_JGSY_JFPZ_LXH 	d           on a.GRID = d.GRID
-        LEFT JOIN GR_JFPZ e 					on a.GRID = e.GRID
-        LEFT JOIN GR_ZYNJ_ZYD_BPMX f 	        on a.GRID = f.GRID
-        LEFT JOIN GR_ZYNJ_ZYD_BP 	 	g       on f.BPID = g.ID
-        LEFT JOIN GR_ZYNJ_ZYD_DPMX  h           on a.GRID = h.GRID
-        LEFT JOIN GR_ZYNJ_ZYD_DP  	i	        on h.NJID = i.id
-
+        LEFT JOIN DW_XX             b   on a.DWID = b.DWID
+        LEFT JOIN GR_XX             c   on a.GRID = c.GRID
+        LEFT JOIN GR_JGSY_JFPZ_LXH 	d   on a.GRID = d.GRID
+        LEFT JOIN GR_JFPZ           e   on a.GRID = e.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_BPMX  f   on a.GRID = f.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_BP 	g   on f.BPID = g.ID
+        LEFT JOIN GR_ZYNJ_ZYD_DPMX  h   on a.GRID = h.GRID
+        LEFT JOIN GR_ZYNJ_ZYD_DP  	i   on h.NJID = i.id
+        LEFT JOIN JC_JG  	        j   on a.GRID = j.GRID and a.DWID = j.DWID and j.MKDM='4'
         WHERE
         1=1
+        <if test="dbjg != null and dbjg != ''">
+            and a.ZFQX in
+            <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+                #{temp}
+            </foreach>
+        </if>
+        <if test="dwdm != null and dwdm != ''">
+            and b.DWDM = #{dwdm,jdbcType=VARCHAR}
+        </if>
+        <if test="dwmc != null and dwmc != ''">
+            and b.DWMC LIKE '%'||#{dwmc}||'%'
+        </if>
         <if test="bzhm != null and bzhm != ''">
-            AND c.bzhm = #{bzhm,jdbcType=VARCHAR}
+            and c.bzhm = #{bzhm,jdbcType=VARCHAR}
+        </if>
+        <if test="datefrom != null and datefrom != null and dateto != '' and dateto != ''">
+            and a.BLRQ BETWEEN TO_DATE(#{datefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{dateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+        </if>
+        <if test="zcsbmc != null and zcsbmc != ''">
+            and a.ZCSBMC = #{zcsbmc,jdbcType=VARCHAR}
+        </if>
+        <if test="zrsbmc != null and zrsbmc != ''">
+            and a.ZRSBMC = #{zrsbmc,jdbcType=VARCHAR}
+        </if>
+        <if test="grname != null and grname != ''">
+            and c.xm LIKE '%'||#{grname}||'%'
         </if>
 
 
@@ -218,5 +252,45 @@
   </select>
 
 
-
+    <select id="getNoAllcheck" resultType="com.stcode.bootstrap.model.Grjgzc">
+        SELECT DWID,GRID
+            FROM(
+                SELECT
+                a.DWID,
+                a.GRID
+                FROM GR_YLJF_ZYD a
+                LEFT JOIN DW_XX b 						on a.DWID = b.DWID
+                LEFT JOIN GR_XX c 						on a.GRID = c.GRID
+            WHERE
+            NOT EXISTS (SELECT * FROM JC_JG WHERE a.GRID=GRID AND MKDM='4')
+            <if test="dbjg != null and dbjg != ''">
+                and a.ZFQX in
+                <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+                    #{temp}
+                </foreach>
+            </if>
+            <if test="dwdm != null and dwdm != ''">
+                and b.DWDM = #{dwdm,jdbcType=VARCHAR}
+            </if>
+            <if test="dwmc != null and dwmc != ''">
+                and b.DWMC LIKE '%'||#{dwmc}||'%'
+            </if>
+            <if test="bzhm != null and bzhm != ''">
+                and c.bzhm = #{bzhm,jdbcType=VARCHAR}
+            </if>
+            <if test="datefrom != null and datefrom != null and dateto != '' and dateto != ''">
+                and a.BLRQ BETWEEN TO_DATE(#{datefrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{dateto,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+            </if>
+            <if test="zcsbmc != null and zcsbmc != ''">
+                and a.ZCSBMC = #{zcsbmc,jdbcType=VARCHAR}
+            </if>
+            <if test="zrsbmc != null and zrsbmc != ''">
+                and a.ZRSBMC = #{zrsbmc,jdbcType=VARCHAR}
+            </if>
+            <if test="grname != null and grname != ''">
+                and c.xm LIKE '%'||#{grname}||'%'
+            </if>
+        )
+        GROUP BY GRID,DWID
+    </select>
 </mapper>

@@ -10,6 +10,182 @@ $(function(){
         _grjgzc.mainDataGrid();
     });
 
+    //点击检查
+    $("#check-btn").click(function () {
+        //判断是否有值
+        var isRows = $('#mainDataGrid').bootstrapTable('getData',false);
+        if(isRows.length <= 0){
+            bootbox.alert("没有检查记录!");
+            return;
+        }
+
+        var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+        if(rows.length <= 0){
+            bootbox.confirm("是否对本次查询结果中【未检查】记录全部检查?",
+                function(result) {
+                    if (result) {
+                        // 查询检查项 modalID:模态框ID,formID表单id,isCheck:检查和从新检查标记
+                        getCheckResultTable("grjgzcDetailCheck","grjgzcDetailForm","/grjgzc/checkResultTable",1);
+                    }
+                });
+        }else {
+            if(alreadyCheck(rows)){
+                getCheckResultTable("grjgzcDetailCheck","grjgzcDetailForm","/grjgzc/checkResultTable",2);
+            }
+        }
+    });
+
+    //点击重新检查
+    $("#restart-check-btn").click(function () {
+        if(cxcheck()){
+            getCheckResultTable("grjgzcDetailCheck","grjgzcDetailForm","/grjgzc/checkResultTable",3);
+        }
+    });
+
+    //检查审核
+    $("#examine-btn").click(function(){
+        if(cxcheck()){
+            getCheckResultTable("examine-modal","examineModalForm","/grjgzc/getjcshTable",4);
+        }
+
+    });
+
+
+
+    //检查确定
+    $("#check-enter-btn").click(function () {
+        //获取选项检查结果
+        var temp = getOptionCheckResult("grjgzcDetailForm");
+
+        if(checkFlag == 1 || checkFlag == 2){ //检查
+
+            var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+            if(rows.length <= 0){
+                //获取当前全部
+                rows = $('#mainDataGrid').bootstrapTable('getData',false);
+            }
+            if(rows.length <=0){
+                bootbox.alert("没有数据，不能检查！");
+                return false;
+            }
+            var jcjgtemp = getJCJGS(rows);
+            var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+            params =(JSON.stringify($("#mainform").serializeJSON()) + params).replace(/}{/, ',');
+
+            $.ajax({
+                type: "post",
+                contentType:"application/json;charset=utf-8",
+                dataType: "json",
+                url: "/grjgzc/insertJcjg",
+                data: params,
+                success: function(msg){
+                    if (msg.code == 0) {
+                        $("#grjgzcDetailCheck").modal('hide');
+                        bootbox.alert({
+                            message: "检查完成,成功检查【"+msg.num+"】条。",
+                            size: 'small'
+                        });
+                        $("#mainDataGrid").bootstrapTable('refresh');
+                    }else {
+                        bootbox.alert(msg.error);
+                    }
+                }
+            });
+
+
+        }else {//重新检查
+
+            var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+            var jcjgtemp = getJCJGS(rows);
+            var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+
+            $.ajax({
+                type: "post",
+                contentType:"application/json;charset=utf-8",
+                dataType: "json",
+                url: "/grjgzc/updateJcjg",
+                data: params,
+                success: function(msg){
+                    if (msg.code == 0) {
+                        bootbox.alert({
+                            message: "重新检查完成",
+                            size: 'small'
+                        });
+                        $("#grjgzcDetailCheck").modal('hide');
+                        $("#mainDataGrid").bootstrapTable('refresh');
+                    }else {
+                        bootbox.alert(msg.error);
+                    }
+                }
+            });
+        }
+
+    });
+
+
+    //审核检查确定
+    $("#examine-enter-btn").click(function(){
+        //获取选项检查结果
+        var temp = getOptionCheckResult("examineModalForm");
+
+        var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+        var jcjgtemp = getJCJGS(rows);
+        var params = JSON.stringify({formIds:temp.formIds,memo:temp.memo,jcjgs:jcjgtemp.jcjgs,checkFlag:checkFlag});
+
+        $.ajax({
+            type: "post",
+            contentType:"application/json;charset=utf-8",
+            dataType: "json",
+            url: "/grjgzc/examineCheckJcjg",
+            data: params,
+            success: function(msg){
+                if (msg.code == 0) {
+                    bootbox.alert({
+                        message: "检查审核完成",
+                        size: 'small'
+                    });
+                    $("#examine-modal").modal('hide');
+                    $("#mainDataGrid").bootstrapTable('refresh');
+                }else {
+                    bootbox.alert(msg.error);
+                }
+            }
+        });
+    });
+
+    //导出
+    $("#export-btn").on('click', function() {
+        exportflag = 1;
+        //模态框
+        $("#exportModal").modal('show');
+    });
+
+    //本页导出
+    $("#currentExprot").click(function(){
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/grjgzc/download","1");
+        }
+        $("#exportModal").modal('hide');
+    });
+
+    //全部导出
+    $("#allExprot").click(function(){
+        if(exportflag == 1){//一级页面导出
+            var data = $("#mainform").serializeArray();
+            postExcelFile(data, "/grjgzc/download","2");
+        }
+        $("#exportModal").modal('hide');
+    });
+
+    //设置下拉框宽度
+    $("#dbjg").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
+
+
+
 });
 
 //参保人员基本信息
@@ -36,6 +212,164 @@ function formatIsJC(value, row, index) {
 function formatIsCXJC(value, row, index) {
     return value == 'true' ? "是" : "否";
 }
+
+//检查前判断
+function alreadyCheck() {
+    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择要检查的记录!");
+        return false;
+    }
+
+    var flag = false;
+    //1、看是否已经检查了
+    $.each(rows,function(index,item){
+        if(item.jc == "true"){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录是已经检查的!");
+        return false;
+    }
+    return true;
+}
+
+// 查询检查项 modalID:模态框ID,formID表单id,isCheck:检查和从新检查标记
+function getCheckResultTable(modalID,formID,url,isCheck){
+    checkFlag = isCheck;
+    $.ajax({
+        type: "post",
+        url: url,
+        data: "",
+        success: function(msg){
+            if (msg.code == 0) {
+                $("#"+formID).find("tbody").empty();
+                var datalist = msg.data;
+                $.each(datalist,function(index,item){
+                    $("#"+formID).find("tbody").append("<tr><td><div class=\"checkbox\"  style=\"text-align: center;margin:auto;\"><input type=\"checkbox\" name='"+item.mxdm+"' value='"+item.dmmxid+"'/></div></td><td>"+item.mxmc+"</td></tr>");
+                });
+                $("#"+formID).find("tbody").append("<tr><td><div style=\"text-align: center;margin:auto;\">备注</div></td><td><textarea style='resize: none' class=\"form-control\" type=\"text\" name=\"memo\"></textarea></td></tr>");
+            } else {
+                bootbox.alert(msg.error);
+            }
+            $("#"+modalID).modal('show');
+        }
+    });
+
+}
+
+//获取选择检查结果
+function getOptionCheckResult(id){
+    var formIds         = new Array();
+    var memo;
+    //取提交的
+    var formdata    =  $("#"+id).serializeArray();
+    $.each(formdata,function(index,item){
+        if(item.name == "memo"){
+            memo = item.value;
+        } else {
+            formIds.push(item.value)
+        }
+    });
+
+    var result = {
+        "formIds":formIds,
+        "memo":memo
+    }
+    return result;
+}
+
+function getJCJGS(rows){
+    //存放jcjg集合
+    var jcjgs           = new Array();
+    for(var i=0;i<rows.length;i++){
+        var jcjg = {};
+        jcjg.grid = rows[i].grid;
+        jcjg.dwid = rows[i].dwid;
+        jcjg.jcid = rows[i].jcid;
+        jcjgs.push(jcjg);
+    }
+
+    var result = {
+        "jcjgs":jcjgs
+    }
+    return result;
+}
+
+//重新检查验证
+function cxcheck() {
+    //1、选择含有未检查的给予提示
+    var rows =  $("#mainDataGrid").bootstrapTable('getSelections');
+    if(rows.length <= 0){
+        bootbox.alert("请选择已检查的记录");
+        return false;
+    }
+    var flag = false;
+    //2、选有检查过的，按钮可用
+    $.each(rows,function(index,item){
+        if(item.jc == "false" || item.jc == null){
+            flag =true;
+            return false;
+        }
+    });
+    if(flag){
+        flag = false;
+        bootbox.alert("您选择的记录包含未检查的记录！");
+        return false;
+    }
+    return true;
+}
+
+//导出标记 1:一级页面导出，2：二级页面导出
+var exportflag    = 0
+
+function postExcelFile(params, url,isAllExprot) { //params是post请求需要的参数，url是请求url地址
+    var form            = document.createElement("form");
+    form.style.display  = 'none';
+    form.action         = url;
+    form.method         = "post";
+    document.body.appendChild(form);
+
+    if(exportflag == 1){//一级页面导出
+        var moreselet       = "";
+        $.each(params,function(i,item){
+            if(item.name == 'dbjg'){
+                if(!isNull(item.value)){
+                    moreselet+=item.value+",";
+                }
+            }else {
+                var input   = document.createElement("input");
+                input.type  = "hidden";
+                input.name  = item.name;
+                input.value = item.value;
+                form.appendChild(input);
+            }
+
+        });
+        var input   = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = "dbjg";
+        input.value = moreselet;
+        form.appendChild(input);
+    }
+
+
+    //是本页导出还是全部导出
+    if(isAllExprot == "2"){
+        var input   = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = "isAllExprot";
+        input.value = "2";
+        form.appendChild(input);
+    }
+
+    form.submit();
+    form.remove();
+}
+
 
 _grjgzc = {
     init: function () {
@@ -134,6 +468,10 @@ _grjgzc = {
             cache: false,
             pageList: [5, 25, 50, 100],
             queryParams: function(params) {
+                //导出使用
+                $("#mainoffset").val(params.offset);
+                $("#mainlimit").val(params.limit);
+
                 var formdata    = $("#mainform").serialize();
                 var paging      = formdata+"&offset="+params.offset+"&"+"limit="+params.limit;
                 return paging;
@@ -141,10 +479,11 @@ _grjgzc = {
 
             columns: [
 
-                [{"title": "机关事业单位转出人员信息查询", "halign": "center", "align": "center", "colspan": 37}],
+                [{"title": "机关事业单位转出人员信息查询", "halign": "center", "align": "center", "colspan": 38}],
                 [{checkbox: true,colspan: 1, rowspan: 2},
                     {title: 'grid', field: 'grid', visible: false, colspan: 1, rowspan: 2},
                     {title: 'jcid', field: 'jcid', visible: false, colspan: 1, rowspan: 2},
+                    {title: 'dwid', field: 'dwid', visible: false, colspan: 1, rowspan: 2},
                     {title: '序号', align: 'center', valign: 'middle', width: 100, colspan: 1, rowspan: 2,
                         formatter: function(value, row, index) {
                             var pageSize    = $('#mainDataGrid').bootstrapTable('getOptions').pageSize;
@@ -169,12 +508,12 @@ _grjgzc = {
 
 
                     {title: '检查人',               field: 'jcr',          align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查日期',             field: 'jcrq',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查日期',             field: 'jcrqtostr',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查',                 field: 'jc',          align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100,formatter: formatIsJC},
                     {title: '重新检查',             field: 'cxjc',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100,formatter: formatIsCXJC},
                     {title: '备注',                 field: 'memo',        align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核人',           field: 'jcshr',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
-                    {title: '检查审核日期',         field: 'jcshrq',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
+                    {title: '检查审核日期',         field: 'jcshrqtostr',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核',             field: 'jcsh',       align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
                     {title: '检查审核结果',         field: 'jcshjg',      align: 'center',    valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
 

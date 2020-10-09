@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 public class Grjgzc extends Jcjg {
 
-    //个人id
-    private String grid;
     //代办机构
     private String dbjg;
     //多选
@@ -221,4 +219,24 @@ public class Grjgzc extends Jcjg {
     private String offset;
     private String limit;
 
+    //日期起
+    private String datefrom;
+    //日期止
+    private String dateto;
+
+    //是否全部检查，用于判断是本页检查还是全部检查
+    private String checkFlag;
+    //是否分页导出
+    private String isAllExprot;
+    //检查日期
+    private String jcrqtostr;
+    //检查审核日期
+    private String jcshrqtostr;
+
+
+    /**
+     * 主页导出用
+     */
+    private String mainoffset;
+    private String mainlimit;
 }

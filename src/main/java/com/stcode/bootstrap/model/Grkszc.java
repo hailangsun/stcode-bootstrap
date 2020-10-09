@@ -234,5 +234,11 @@ public class Grkszc {
 
     //是否全部检查，用于判断是本页检查还是全部检查
     private String checkFlag;
-
+    //是否分页导出
+    private String isAllExprot;
+    /**
+     * 主页导出用
+     */
+    private String mainoffset;
+    private String mainlimit;
 }

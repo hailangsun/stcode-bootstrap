@@ -69,5 +69,21 @@ public interface GrjgzcService {
     R grxxbnjInfo(Grjgzc query);
 
 
+    /**
+     * 新增检查结果jcjg
+     */
+    R insertJcjg(Grjgzc query);
 
+    /**
+     * 新增检查结果jcjg
+     */
+    R restartCheckJcjg(Grjgzc query);
+
+
+    /**
+     * 检查审核，生成检查审核结果
+     * @param query
+     * @return
+     */
+    R examineCheckJcjg(Grjgzc query);
 }

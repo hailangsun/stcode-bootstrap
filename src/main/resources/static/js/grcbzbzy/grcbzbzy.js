@@ -6,6 +6,12 @@ $(function(){
         $("#mainDataGrid").bootstrapTable("destroy");
         _grcbzbzy.mainDataGrid();
     });
+
+    //设置下拉框宽度
+    $("#dbjg").selectpicker({
+        "width":250,
+        noneSelectedText:'请选择'
+    });
 });
 
 function grzyDetail(value , record , index) {
