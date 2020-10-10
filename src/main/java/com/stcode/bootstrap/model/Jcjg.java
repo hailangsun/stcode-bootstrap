@@ -37,7 +37,6 @@ public class Jcjg {
     //模块名称
     private String mkmc;
 
-
     //检查审核人
     private String jcshr;
     //检查审核日期

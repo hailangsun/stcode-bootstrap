@@ -1,0 +1,22 @@
+#hoverspan:hover{
+    font-weight:bold;
+    color: red;
+}
+.myfieldClass{
+    text-align: right;
+    width: 150px;
+    padding-right: 10px;
+    font-weight: bold;
+}
+.alignCSS{
+    text-align: center;
+}
+.mylabelcss{
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+}
+
+.myinputcss{
+    width: 250px !important;
+}

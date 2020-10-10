@@ -29,7 +29,7 @@ $(function(){
                     }
                 });
         }else {
-            if(alreadyCheck(rows)){
+            if(alreadyCheck()){
                 getCheckResultTable("grjgzcDetailCheck","grjgzcDetailForm","/grjgzc/checkResultTable",2);
             }
         }
@@ -325,6 +325,9 @@ function cxcheck() {
 
 //导出标记 1:一级页面导出，2：二级页面导出
 var exportflag    = 0
+//全局变量 1:检查,全部检查，2:检查，本页检查，3:重新检查，
+var checkFlag     = 0;
+
 
 function postExcelFile(params, url,isAllExprot) { //params是post请求需要的参数，url是请求url地址
     var form            = document.createElement("form");

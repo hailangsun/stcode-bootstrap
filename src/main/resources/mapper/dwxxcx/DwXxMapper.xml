@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stcode.bootstrap.mapper.dwxxcx.DwXxMapper">
+  <select id="getCbdwxx" parameterType="com.stcode.bootstrap.model.Dwxxcx" resultType="com.stcode.bootstrap.model.Dwxxcx">
+
+    SELECT
+      a.DWID,
+      a.DWMC,
+      a.SSQX,
+      a.DWDM,
+      a.DWLX,
+      a.LSGX,
+      c.MXMC HYDM,
+      a.JBR,
+      d.MXMC ZJFS,
+      b.ZJRQ,
+      ( CASE WHEN b.XZDM = '01' THEN '养老' ELSE NULL END ) yl,
+      ( CASE WHEN b.XZDM = '02' THEN '失业' ELSE NULL END ) sy,
+      ( CASE WHEN b.XZDM = '04' THEN '工伤' ELSE NULL END ) gs,
+      ( CASE WHEN b.XZDM = '06' THEN '养老机关' ELSE NULL END ) jgyl,
+      e.jcid,
+      e.JCR,
+      e.jcrq,
+      e.JC,
+      e.CXJC,
+      e.JCJG,
+      e.MEMO,
+      a.FLAG
+
+    FROM
+    DW_XX a
+    LEFT JOIN DW_ZJ b ON a.DWID = b.DWID
+    LEFT JOIN DM_MX c ON a.HYDM = c.DMMXID AND c.DMLBID = '1108'
+    LEFT JOIN DM_MX d ON b.ZJFS = d.DMMXID AND d.DMLBID = '0173'
+    LEFT JOIN JC_JG e ON a.DWID = e.DWID   AND e.mkdm ='105'
+
+    WHERE 1=1
+    <if test="dbjg != null and dbjg != ''">
+      and a.SSQX in
+      <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+        #{temp}
+      </foreach>
+    </if>
+    <if test="dwdm != null and dwdm != ''">
+      and a.DWDM = #{dwdm,jdbcType=VARCHAR}
+    </if>
+    <if test="dwmc != null and dwmc != ''">
+      and a.DWMC LIKE '%'||#{dwmc}||'%'
+    </if>
+    <if test="xz != null and xz != ''">
+      and a.FLAG =  #{xz,jdbcType=VARCHAR}
+    </if>
+    <if test="dwlx != null and dwlx != ''">
+      and a.DWLX = #{dwlx,jdbcType=VARCHAR}
+    </if>
+    <if test="zjfs != null and zjfs != ''">
+      and b.ZJFS = #{zjfs,jdbcType=VARCHAR}
+    </if>
+    <if test="dateFrom != null and dateTo != null and dateFrom != '' and dateTo != ''">
+      and b.ZJRQ BETWEEN TO_DATE(#{dateFrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{dateTo,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+    </if>
+    <if test="jftj != null and jftj != ''">
+      and a.JFTJ = #{jftj,jdbcType=VARCHAR}
+    </if>
+    <if test="lsgx != null and lsgx != ''">
+      and a.LSGX = #{lsgx,jdbcType=VARCHAR}
+    </if>
+    <if test="hydm != null and hydm != ''">
+      and a.HYDM = #{hydm,jdbcType=VARCHAR}
+    </if>
+    <if test="jbr != null and jbr != ''">
+      and a.jbr = #{jbr,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="selectJcjgByDwid"  resultType="com.stcode.bootstrap.model.Dwxxcx">
+    select JCID,XM,JCR,JCRQ,JCJG,MEMO,CXJC from JC_JG where mkdm='105'  AND DWID = #{dwid}
+  </select>
+
+
+  <select id="getZJByDwid"  resultType="com.stcode.bootstrap.model.Dwxxcx" >
+    SELECT
+      xx.DWID,
+      xx.DWMC,
+      xx.DWDM,
+      zj.JFQX,
+      xx.DJZH,
+      ( CASE WHEN zj.XZDM = '01' THEN '养老' ELSE NULL END ) yl,
+      ( CASE WHEN zj.XZDM = '02' THEN '失业' ELSE NULL END ) sy,
+      ( CASE WHEN zj.XZDM = '04' THEN '工伤' ELSE NULL END ) gs,
+      ( CASE WHEN zj.XZDM = '06' THEN '养老机关' ELSE NULL END ) jgyl,
+      zj.ZJRQ,
+      zj.BZ MEMO,
+      zj.JBR,
+      zj.ZFQX
+  FROM
+      DW_ZJ zj
+      LEFT JOIN DW_XX xx ON zj.DWID = XX.DWID
+  WHERE
+      xx.DWID =  #{ dwid}
+  </select>
+
+
+  <select id="getNoAllcheck" resultType="com.stcode.bootstrap.model.Dwxxcx">
+    SELECT
+      a.DWID
+    FROM
+    DW_XX a
+    LEFT JOIN DW_ZJ b ON a.DWID = b.DWID
+    LEFT JOIN DM_MX c ON a.HYDM = c.DMMXID AND c.DMLBID = '1108'
+    LEFT JOIN DM_MX d ON b.ZJFS = d.DMMXID AND d.DMLBID = '0173'
+    LEFT JOIN JC_JG e ON a.DWID = e.DWID   AND e.mkdm ='105'
+    WHERE
+      NOT EXISTS (SELECT * FROM JC_JG WHERE a.DWID=DWID AND MKDM='105')
+      <if test="dbjg != null and dbjg != ''">
+        and a.SSQX in
+        <foreach item="temp" collection="dbjgs"  open="(" separator="," close=")">
+          #{temp}
+        </foreach>
+      </if>
+      <if test="dwdm != null and dwdm != ''">
+        and a.DWDM = #{dwdm,jdbcType=VARCHAR}
+      </if>
+      <if test="dwmc != null and dwmc != ''">
+        and a.DWMC LIKE '%'||#{dwmc}||'%'
+      </if>
+      <if test="xz != null and xz != ''">
+        and a.FLAG =  #{xz,jdbcType=VARCHAR}
+      </if>
+      <if test="dwlx != null and dwlx != ''">
+        and a.DWLX = #{dwlx,jdbcType=VARCHAR}
+      </if>
+      <if test="zjfs != null and zjfs != ''">
+        and b.ZJFS = #{zjfs,jdbcType=VARCHAR}
+      </if>
+      <if test="dateFrom != null and dateTo != null and dateFrom != '' and dateTo != ''">
+        and b.ZJRQ BETWEEN TO_DATE(#{dateFrom,jdbcType=VARCHAR}, 'yyyy-mm-dd') and TO_DATE(#{dateTo,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+      </if>
+      <if test="jftj != null and jftj != ''">
+        and a.JFTJ = #{jftj,jdbcType=VARCHAR}
+      </if>
+      <if test="lsgx != null and lsgx != ''">
+        and a.LSGX = #{lsgx,jdbcType=VARCHAR}
+      </if>
+      <if test="hydm != null and hydm != ''">
+        and a.HYDM = #{hydm,jdbcType=VARCHAR}
+      </if>
+      <if test="jbr != null and jbr != ''">
+        and a.jbr = #{jbr,jdbcType=VARCHAR}
+      </if>
+	GROUP BY a.DWID
+  </select>
+
+
+</mapper>

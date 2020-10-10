@@ -2,18 +2,15 @@ package com.stcode.bootstrap;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
-import com.stcode.bootstrap.domain.DwXx;
-import com.stcode.bootstrap.domain.Dwxxcx;
 import com.stcode.bootstrap.export.ComplexHeadData;
 import com.stcode.bootstrap.export.DemoData;
-import com.stcode.bootstrap.export.DwxxcxExport;
-import com.stcode.bootstrap.export.demo.Data1;
-import com.stcode.bootstrap.service.DwxxcxService;
+import com.stcode.bootstrap.export.dwxxcx.DwxxcxExport;
+import com.stcode.bootstrap.model.Dwxxcx;
+import com.stcode.bootstrap.service.dwxxcx.DwxxcxService;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -22,11 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -74,8 +67,8 @@ class StcodeBootstrapApplicationTests {
         data.setOffset(data.getOffset());
         data.setLimit(data.getLimit());
         List<DwxxcxExport> list = new ArrayList<DwxxcxExport>();
-        List<DwXx> cbdwxx = (List<DwXx>) dwxxcxService.getCbdwxx(data).get("rows");
-        for (DwXx dwxx: cbdwxx) {
+        List<Dwxxcx> cbdwxx = (List<Dwxxcx>) dwxxcxService.search(data).get("rows");
+        for (Dwxxcx dwxx: cbdwxx) {
             DwxxcxExport de = new DwxxcxExport();
             BeanUtils.copyProperties(dwxx, de);
             list.add(de);
