@@ -82,10 +82,12 @@
       JCRQ,
       JCJG,
       MEMO,
-      CXJCR,
+      CXJCRQ,
+	  CXJCR,
       CXJC,
       CXXM,
-      CXJCJG
+      CXJCJG,
+      CXMEMO
     from JC_JG where mkdm='105'  AND DWID = #{dwid}
   </select>
 
