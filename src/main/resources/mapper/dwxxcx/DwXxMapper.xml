@@ -75,7 +75,18 @@
 
 
   <select id="selectJcjgByDwid"  resultType="com.stcode.bootstrap.model.Dwxxcx">
-    select JCID,XM,JCR,JCRQ,JCJG,MEMO,CXJC from JC_JG where mkdm='105'  AND DWID = #{dwid}
+    select
+      JCID,
+      XM,
+      JCR,
+      JCRQ,
+      JCJG,
+      MEMO,
+      CXJCR,
+      CXJC,
+      CXXM,
+      CXJCJG
+    from JC_JG where mkdm='105'  AND DWID = #{dwid}
   </select>
 
 

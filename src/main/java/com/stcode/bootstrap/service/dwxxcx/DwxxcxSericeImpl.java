@@ -12,6 +12,7 @@ import com.stcode.bootstrap.model.JcjgVo;
 import com.stcode.bootstrap.utils.GenerateId;
 import com.stcode.bootstrap.utils.R;
 import com.stcode.bootstrap.utils.ServerResponse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -181,8 +182,22 @@ public class DwxxcxSericeImpl implements DwxxcxService {
 
     @Override
     public R selectJcjgByDwid(Dwxxcx query) {
+        List<Dwxxcx> result = new ArrayList<>(2);
         List<Dwxxcx> jcjgList = dwXxMapper.selectJcjgByDwid(query);
-        return R.ok().put("data",jcjgList);
+        if(jcjgList.size() > 0){
+            Dwxxcx dw1 = new Dwxxcx();
+            BeanUtils.copyProperties(jcjgList.get(0), dw1);
+            result.add(dw1);
+            Dwxxcx dw2 = new Dwxxcx();
+            BeanUtils.copyProperties(jcjgList.get(0), dw2);
+            dw2.setXm("2");
+            dw2.setJcr(jcjgList.get(0).getCxjcr());
+            dw2.setJcrq(jcjgList.get(0).getCxjcrq());
+            dw2.setJcjg(jcjgList.get(0).getCxjcjg());
+            dw2.setMemo(jcjgList.get(0).getCxmemo());
+            result.add(dw2);
+        }
+        return R.ok().put("data",result);
     }
 
     @Override

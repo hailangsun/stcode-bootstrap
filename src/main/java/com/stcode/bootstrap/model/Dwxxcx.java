@@ -52,7 +52,6 @@ public class Dwxxcx extends Jcjg{
 
     //目录
     private String xm;
-
     private String[] dmids;
 
     //

@@ -399,7 +399,7 @@ var _dwxxcx = {
     cxjgDataGrid:function (record) {
         $('#cxjgDataGrid').bootstrapTable({
             method: 'post',
-            url: "dwxxcx/cxjg", // 请求路径
+            url: "/dwxxcx/cxjg", // 请求路径
             striped: true, // 是否显示行间隔色
             pageNumber: 1, // 初始化加载第一页
             pagination: true, // 是否分页

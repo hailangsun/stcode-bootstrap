@@ -114,3 +114,10 @@ function cxcheck(id) {
     return true;
 }
 
+//设置表单值
+$.fn.setForm = function(jsonValue){
+    var obj = this;
+    $.each(jsonValue,function(name,ival){
+        obj.find("[name="+name+"]").text(ival);
+    })
+}

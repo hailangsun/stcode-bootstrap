@@ -44,7 +44,7 @@ public class DwxxcxController extends JdjcCommonController {
     @Resource
     private DmMxMapper dmMxMapper;
 
-    //经办人
+    //经办机构
     @ModelAttribute(value = "DBJG_options")
     public Map<String, String> DBJG_options() {
         Map<String, String> map = new HashMap<>();
