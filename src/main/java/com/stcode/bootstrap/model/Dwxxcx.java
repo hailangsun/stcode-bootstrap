@@ -1,6 +1,7 @@
 package com.stcode.bootstrap.model;
 
 
+import com.stcode.bootstrap.common.annotation.Dict;
 import lombok.Data;
 
 import java.util.Date;
@@ -24,7 +25,9 @@ public class Dwxxcx extends Jcjg{
     //单位名称
     private String dwmc;
     //单位类型
+    @Dict(dictCode = "01011")
     private String dwlx;
+    private String dwlxText;
     //日期
     private String dateFrom;
     private String dateTo;

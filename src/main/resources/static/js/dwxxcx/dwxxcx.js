@@ -312,7 +312,7 @@ var _dwxxcx = {
                         {title: '单位名称',           field: 'dwmc', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100,formatter: operateEvents},
                         {title: '经代办机构',         field: 'ssqx', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
                         {title: '统一社区信用代码',   field: 'dwdm', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
-                        {title: '单位类型',           field: 'dwlx', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
+                        {title: '单位类型',           field: 'dwlxText', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
                         {title: '隶属关系',           field: 'lsgx', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
                         {title: '行业类型',           field: 'hydm', align: 'center', valign: 'middle', colspan: 1, rowspan: 2, width: 100},
                         {title: '经办人',             field: 'jbr', align: 'center', valign: 'middle',  colspan: 1, rowspan: 2, width: 100},
